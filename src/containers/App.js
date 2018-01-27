@@ -5,10 +5,6 @@ import { ConnectedRouter } from 'react-router-redux'
 import store, { history } from '../store'
 
 import Home from './Home';
-import Playlists from './Playlists';
-import Videos from './Videos';
-import Playlist from './Playlist';
-import Video from './Video';
 
 import Header from '../components/Header';
 
@@ -24,10 +20,6 @@ class App extends Component {
 
             <main role='main' className='container'>
               <Route exact path='/' component={Home} />
-              <Route exact path='/playlists' component={Playlists} />
-              <Route exact path='/videos' component={Videos} />
-              <Route path='/playlist/:id' component={Playlist} />
-              <Route path='/video/:id' component={Video} />
             </main>
           </div>
         </ConnectedRouter>
