@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
+import moment from 'moment';
 
 import * as actions from '../modules/weather-actions';
 
 class GetWeatherButton extends Component {
   static propTypes = {
     locationInput: PropTypes.string.isRequired,
-    dateInput: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.instanceOf(Date)]).isRequired
+    dateInput: PropTypes.instanceOf(moment).isRequired
   }
 
   constructor(props) {
@@ -33,7 +34,7 @@ class GetWeatherButton extends Component {
 export default connect(
   state => ({
     locationInput: state.weather.locationInput,
-    dateInput: state.weather.dateInput
+    dateInput: moment(state.weather.dateInput)
   }),
   dispatch => bindActionCreators({
     fetchWeather: actions.fetchWeather

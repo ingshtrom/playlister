@@ -3,10 +3,6 @@ export function fetchWeather(location, date) {
     return Promise.reject(new Error('Invalid location'));
   }
 
-  if (typeof date !== 'number') {
-    return Promise.reject(new Error('Invalid date'));
-  }
-
   return Promise.resolve({
 latitude: 42.3601,
 longitude: -71.0589,
