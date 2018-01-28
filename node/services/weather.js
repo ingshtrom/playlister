@@ -1,4 +1,5 @@
 const DarkSky = require('forecast.io');
+const fetch = require('node-fetch');
 
 if (!process.env.DARKSKY_API_KEY) {
   throw new Error('No DarkSkip API Key defined. Please use the "DARKSKY_API_KEY" environment variable.');
