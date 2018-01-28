@@ -35,7 +35,9 @@ describe("Weather", function () {
           'time',
           'temperature',
           'uvIndex',
+          'type',
           'precipProbability',
+          'precipAccumulation',
           'visibility'
         ]);
       });
