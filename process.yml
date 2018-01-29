@@ -1,0 +1,13 @@
+apps:
+  - script: bin/www
+    name: node-api
+    watch: false
+    cwd: ./node
+  - script: bin/www
+    cwd: ./source-api
+    name: source-api
+    watch: false
+  - script: scripts/start.js
+    cwd: ./react
+    name: frontend-react
+    watch: false
