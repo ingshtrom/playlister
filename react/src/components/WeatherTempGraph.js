@@ -40,15 +40,15 @@ class WeatherTempGraph extends Component {
   }
 
   static getLabel(stats) {
-    return `${stats.temperature}° F\n`;
+    return `${new Date(stats.time)}\n${stats.temperature}° F`;
   }
 
   render() {
     const data = this.props.data.map(
       (stats, hourIndex) => ({
-        x: Number(moment(stats.time * 1000).format('H')), // need the number formatting for Victory to evenly space domain ticks
+        x: Number(moment(stats.time).format('H')), // need the number formatting for Victory to evenly space domain ticks
         y: stats.temperature,
-        fill: WeatherTempGraph.getTempColor,
+        fill: WeatherTempGraph.getTempColor(stats),
         label: WeatherTempGraph.getLabel(stats)
       })
     );

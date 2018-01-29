@@ -2,7 +2,7 @@ import moment from 'moment';
 
 const defaultState = {
   locationInput: 'Indianapolis, IN',
-  dateInput: moment(),
+  dateInput: Date.now(),
   weatherData: {},
   errorMessage: ''
 };

@@ -20,7 +20,7 @@ class WeatherPrecipitationGraph extends Component {
   }
 
   static getLabelFromStats(stats) {
-    let label = `probability: ${stats.precipProbability * 100}%`;
+    let label = `probability: ${stats.precipProbability}%`;
 
     if (stats.precipType) {
       label += `\ntype: ${stats.precipType}`;
@@ -37,7 +37,7 @@ class WeatherPrecipitationGraph extends Component {
     const data = this.props.data.map(
       (stats, hourIndex) => ({
         x: hourIndex,
-        y: stats.precipProbability * 100,
+        y: stats.precipProbability,
         label: WeatherPrecipitationGraph.getLabelFromStats(stats)
       })
     );

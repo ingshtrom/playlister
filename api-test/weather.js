@@ -25,7 +25,7 @@ describe("Weather", function () {
   });
 
   it("should return data in the correct shape for Noblesville and now", function () {
-    return chakram.get(`${baseUrl}/weather?l=Noblesville, IN&d=${Math.floor(Date.now() / 1000)}`)
+    return chakram.get(`${baseUrl}/weather?l=Noblesville, IN&d=${Math.floor(Date.now())}`)
       .then((res) => {
         expect(res.response.statusCode).to.equal(200);
         expect(res.body.error).to.be.undefined;

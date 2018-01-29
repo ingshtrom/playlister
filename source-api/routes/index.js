@@ -13,14 +13,13 @@ function getRandomInt(min, max) {
 }
 
 router.get('/forecast/:lat,:long,:time', (req, res) => {
-  const timeInMs = req.params.time * 1000;
+  const timeInMs = req.params.time;
   const msSinceStartOfDay = timeInMs % 86400000
   const startOfDayUnixMs = timeInMs - msSinceStartOfDay;
   const hourlyArray = []
 
 
   for (let i = 0; i < 24; i++) {
-  console.log('startOfDayUnixMs', { startOfDayUnixMs, hourInMs, i, total: startOfDayUnixMs + (hourInMs * i) });
     hourlyArray.push({
       time: startOfDayUnixMs + (hourInMs * i),
       temperature: getRandomInt(-50, 150),

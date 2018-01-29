@@ -15,9 +15,13 @@ class Footer extends Component {
     return (
       <footer className='footer bg-dark'>
         <div className='text-center'>
+          <span className='h3 text-light align-middle'>
+            USED TO BE...
+          </span>
           <a
             href='https://darksky.net/poweredby/'
             target='_blank'
+            rel='noopener noreferrer'
           >
             <img
               alt='Powered By DarkSky'
