@@ -11,7 +11,7 @@ import {
 import moment from 'moment';
 
 
-class WeatherTempGraph extends Component {
+export class WeatherTempGraph extends Component {
   static propTypes = {
     data: PropTypes.arrayOf(
       PropTypes.shape({

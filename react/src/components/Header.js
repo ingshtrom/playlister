@@ -4,14 +4,6 @@ import { Link } from 'react-router-dom';
 import SearchForm from './SearchForm';
 
 class Header extends Component {
-  closeMenu() {
-    try {
-      document.getElementsByClassName('navbar-toggler')[0].click();
-    } catch (err) {
-      console.error('trying to close the navbar on mobile. Ignore.', err);
-    }
-  }
-
   render() {
     return (
       <header>

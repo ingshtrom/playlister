@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header snapshot 1`] = `
+<form
+  action="#"
+  className="form-inline"
+>
+  <input
+    className="form-control mr-2 mb-2 mb-md-0"
+    onChange={[Function]}
+    placeholder="Noblesville, IN"
+    type="text"
+    value="Indianapolis, IN"
+  />
+  <span
+    className="mr-2 mb-2 mb-md-0"
+    id="date-picker-wrapper"
+    style={
+      Object {
+        "display": "inline-block",
+      }
+    }
+  >
+    <div>
+      <div
+        className="react-datepicker-wrapper"
+      >
+        <div
+          className="react-datepicker__input-container"
+        >
+          <input
+            autoComplete={undefined}
+            autoFocus={undefined}
+            className="form-control"
+            disabled={false}
+            id={undefined}
+            name={undefined}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            placeholder={undefined}
+            readOnly={undefined}
+            required={undefined}
+            tabIndex={undefined}
+            title={undefined}
+            type="text"
+            value="01/29/2018"
+          />
+        </div>
+      </div>
+    </div>
+  </span>
+  <button
+    className="btn btn-outline-success mb-2 mb-md-0"
+    onClick={[Function]}
+    type="button"
+  >
+    Get Weather
+  </button>
+</form>
+`;
