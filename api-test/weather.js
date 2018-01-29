@@ -8,25 +8,25 @@ if (!baseUrl) {
   throw new Error('BASE_URL not defined.');
 }
 
-describe("Weather", function () {
-  it("should throw error if no location set", function () {
+describe('Weather', function () {
+  it('should throw error if no location set', function () {
     return chakram.get(`${baseUrl}/weather?d=1`)
-      .then((res) => {
+      .then(res => {
         expect(res.response.statusCode).to.equal(400);
         expect(res.body.error).to.equal('Invalid location');
       });
   });
-  it("should throw error if no date set", function () {
+  it('should throw error if no date set', function () {
     return chakram.get(`${baseUrl}/weather?l=Noblesville,IN`)
-      .then((res) => {
+      .then(res => {
         expect(res.response.statusCode).to.equal(400);
         expect(res.body.error).to.equal('Invalid date');
       });
   });
 
-  it("should return data in the correct shape for Noblesville and now", function () {
-    return chakram.get(`${baseUrl}/weather?l=Noblesville, IN&d=${Math.floor(Date.now())}`)
-      .then((res) => {
+  it('should return data in the correct shape for Noblesville and now', function () {
+    return chakram.get(`${baseUrl}/weather?l=Noblesville, IN&d=${Date.now()}`)
+      .then(res => {
         expect(res.response.statusCode).to.equal(200);
         expect(res.body.error).to.be.undefined;
         expect(res.body.hourly.data).to.exist;
@@ -40,6 +40,28 @@ describe("Weather", function () {
           'precipAccumulation',
           'visibility'
         ]);
+      });
+  });
+
+  it('should set the header `x-cached: 0` for the first call', function () {
+    return chakram.get(`${baseUrl}/weather?l=Noblesville, IN&d=${Date.now()}`)
+      .then(res => {
+        expect(res.response.statusCode).to.equal(200);
+        expect(res.response.headers['x-cached']).to.equal('0');
+      });
+  });
+
+  it('should set the header `x-cached: 1` for repeated calls', function () {
+    const date = Date.now();
+    return chakram.get(`${baseUrl}/weather?l=Noblesville, IN&d=${date}`)
+      .then(res => {
+        expect(res.response.statusCode).to.equal(200);
+        expect(res.response.headers['x-cached']).to.equal('0');
+        return chakram.get(`${baseUrl}/weather?l=Noblesville, IN&d=${date}`);
+      })
+      .then(res => {
+        expect(res.response.statusCode).to.equal(200);
+        expect(res.response.headers['x-cached']).to.equal('1');
       });
   });
 });
