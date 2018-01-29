@@ -26,7 +26,6 @@ router.get('/', async (req, res) => {
     res.set(cacheHeader, '1');
     res.status(200).json(data);
   } catch (err) {
-    console.error('error getting cache data', cacheKey, err);
     maps.getLatLong(location)
       .then(latLong => weather.getWeatherAtTime(latLong.latitude, latLong.longitude, date))
       .then(async results => {
