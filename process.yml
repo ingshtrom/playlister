@@ -1,13 +1,11 @@
 apps:
   - script: bin/www
-    name: node-api
-    watch: false
+    name: api
+    watch: true
     cwd: ./node
-  - script: bin/www
-    cwd: ./source-api
-    name: source-api
-    watch: false
   - script: scripts/start.js
     cwd: ./react
-    name: frontend-react
+    name: web
     watch: false
+    env:
+      NODE_ENV: development

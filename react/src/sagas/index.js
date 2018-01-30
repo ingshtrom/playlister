@@ -1,11 +1,11 @@
 import { takeLatest } from 'redux-saga/effects';
 
 import {
-  fetchWeather
-} from './weather';
+  getContent
+} from './content';
 
 function* sagas() {
-  yield takeLatest('FETCH_WEATHER_REQUEST', fetchWeather);
+  yield takeLatest('GET_CONTENT_REQUEST', getContent);
 }
 
 export default sagas;

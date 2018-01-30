@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 import store, { history } from '../store'
 
-import Home from './Home';
+import ContentList from './ContentList';
+import Playlist from './Playlist';
+import NotFound from './NotFound';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -20,7 +22,11 @@ class App extends Component {
             <Header />
 
             <main role='main' className='container'>
-              <Route exact path='/' component={Home} />
+              <Switch>
+                <Route path='/old-404' component={NotFound} />
+                <Route path='/playlist/:id' component={Playlist} />
+                <Route path='/*' component={ContentList} />
+              </Switch>
             </main>
 
             <Footer />

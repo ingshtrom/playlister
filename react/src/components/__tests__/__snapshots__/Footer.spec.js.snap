@@ -2,31 +2,16 @@
 
 exports[`Footer snapshot 1`] = `
 <footer
-  className="footer bg-dark"
+  className="footer bg-primary p-3 p-3"
 >
   <div
     className="text-center"
   >
     <span
-      className="h3 text-light align-middle"
+      className="h6 text-light align-middle justify-content-center"
     >
-      USED TO BE...
+      Built by rad people at Northview Church!
     </span>
-    <a
-      href="https://darksky.net/poweredby/"
-      rel="noopener noreferrer"
-      target="_blank"
-    >
-      <img
-        alt="Powered By DarkSky"
-        src="poweredby-darksky-darkbackground.png"
-        style={
-          Object {
-            "width": "50%",
-          }
-        }
-      />
-    </a>
   </div>
 </footer>
 `;
