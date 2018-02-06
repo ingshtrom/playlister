@@ -11,11 +11,11 @@ export default function contentReducer(state = defaultState, action) {
   switch(action.type) {
     case 'GET_CONTENT_REQUEST':
     case 'GET_MEDIA_REQUEST':
-      return getContentRequest(state, action);
+      return handleRequest(state, action);
 
     case 'GET_CONTENT_FAILURE':
     case 'GET_MEDIA_FAILURE':
-      return getContentFailure(state, action);
+      return handleFailure(state, action);
 
     case 'GET_CONTENT_SUCCESS':
       return getContentSuccess(state, action);
@@ -28,21 +28,21 @@ export default function contentReducer(state = defaultState, action) {
   }
 }
 
-function getContentRequest(state, action) {
+function handleRequest(state, action) {
   return state
     .set('isLoading', true)
     .set('errorMessage', '');
 }
 
-function getContentSuccess(state, action) {
+function handleFailure(state, action) {
   return state
-    .updateIn(['data'], data => data.mergeDeep(action.data))
+    .set('errorMessage', action.errorMessage)
     .set('isLoading', false);
 }
 
-function getContentFailure(state, action) {
+function getContentSuccess(state, action) {
   return state
-    .set('errorMessage', action.errorMessage)
+    .updateIn(['data'], data => data.mergeDeep(action.data))
     .set('isLoading', false);
 }
 
