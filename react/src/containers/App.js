@@ -4,9 +4,7 @@ import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'react-router-redux'
 import store, { history } from '../store'
 
-import ContentList from './ContentList';
-import Playlist from './Playlist';
-import NotFound from './NotFound';
+import Content from './Content';
 
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -23,9 +21,7 @@ class App extends Component {
 
             <main role='main' className='container'>
               <Switch>
-                <Route path='/old-404' component={NotFound} />
-                <Route path='/playlist/:id' component={Playlist} />
-                <Route path='/*' component={ContentList} />
+                <Route path='/*' component={Content} />
               </Switch>
             </main>
 
