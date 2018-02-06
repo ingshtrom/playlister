@@ -2,16 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { normalizeRootUrl } from '../util/url';
+
 import FolderModel from '../models/Folder';
 import PlaylistModel from '../models/Playlist';
 
-
-import * as contentActions from '../modules/content-actions';
+import { getContent } from '../modules/content-actions';
 
 import ContentList from '../components/ContentList';
 import NotFound from '../components/NotFound';
-import Playlist from './Playlist';
+import Playlist from '../components/Playlist';
 
 class Content extends Component {
   static propTypes = {
@@ -35,7 +34,7 @@ class Content extends Component {
     this.renderMainContent = this.renderMainContent.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const { url } = this.props.match;
     this.props.getContent(url);
   }
@@ -67,22 +66,21 @@ class Content extends Component {
     return null;
   }
 
-  getMainComponent(type) {
-    if (type === 'PLAYLIST') {
-      return Playlist;
-    }
-
-    return ContentList;
-  }
-
   renderMainContent(content, match) {
-    if (content && content.get('content')) {
-      console.log('getting main component', content.get('content'));
-      const MainComponent = this.getMainComponent(content.type);
+    if (content) {
+      if (content.get('type') === 'PLAYLIST') {
+        return (
+          <Playlist playlist={content} />
+        );
+      }
 
-      return (
-        <MainComponent match={match} content={content.get('content')} />
-      );
+      if (content.get('content')) {
+        console.log('getting main component', content.get('content'));
+
+        return (
+          <ContentList match={match} content={content.get('content')} />
+        );
+      }
     }
 
     return (null);
@@ -106,34 +104,34 @@ class Content extends Component {
 
 export default connect(
   (state, props) => ({
-    content: mapStateAndPropsToContent(state, props),
+    content: state.content.getIn(['data', props.match.url]),
     errorMessage: state.content.get('errorMessage'),
     isLoading: state.content.get('isLoading')
   }),
   dispatch => bindActionCreators({
-    getContent: contentActions.getContent
+    getContent
   }, dispatch)
 )(Content);
 
-function mapStateAndPropsToContent(state, props) {
-  const mainContent = state.content.getIn(['data', props.match.url]);
+// function mapStateAndPropsToContent(state, props) {
+//   const mainContent = state.content.getIn(['data', props.match.url]);
 
-  if (mainContent) {
-    const x = mainContent
-      .updateIn(['content'],
-        childNames => childNames.map(
-          childName => {
-            console.log('map child content', childName);
-            const fullUrl = `${normalizeRootUrl(props.match.url)}/${childName}`;
-            return state.content.getIn(['data', fullUrl]);
-          }
-        )
-      );
+//   if (mainContent) {
+//     const x = mainContent
+//       .updateIn(['content'],
+//         childNames => childNames.map(
+//           childName => {
+//             console.log('map child content', childName);
+//             const fullUrl = `${normalizeRootUrl(props.match.url)}/${childName}`;
+//             return state.content.getIn(['data', fullUrl]);
+//           }
+//         )
+//       );
 
-    console.log('mapStateAndPropsToContent result', x.toJS());
-    return x;
-  }
+//     console.log('mapStateAndPropsToContent result', x.toJS());
+//     return x;
+//   }
 
-  return mainContent;
-}
+//   return mainContent;
+// }
 

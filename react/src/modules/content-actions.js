@@ -1,7 +1,13 @@
-export function getContent(prefix) {
+export function getContent() {
   return {
-    type: 'GET_CONTENT_REQUEST',
-    prefix
+    type: 'GET_CONTENT_REQUEST'
+  };
+}
+
+export function getMedia(ids) {
+  return {
+    type: 'GET_MEDIA_REQUEST',
+    ids
   };
 }
 

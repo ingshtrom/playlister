@@ -1,26 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { connect } from 'react-redux';
 
-import FolderModel from '../models/Folder';
-import PlaylistModel from '../models/Playlist';
+import { normalizeRootUrl } from '../util/url';
+import * as models from '../models';
 
 import ContentListItem from '../components/ContentListItem';
 import NotFound from './NotFound';
 
 class ContentList extends Component {
-  static propTypes = {
-    content: ImmutablePropTypes.listOf(
-      PropTypes.oneOfType([
-        PropTypes.instanceOf(FolderModel),
-        PropTypes.instanceOf(PlaylistModel)
-      ])
-    ).isRequired,
-    match: PropTypes.shape({
-      url: PropTypes.string.isRequired
-    }).isRequired
-  }
-
   constructor(props) {
     super(props);
 
@@ -59,17 +48,44 @@ class ContentList extends Component {
   }
 
   render() {
-    const { content } = this.props;
+    const { resultContent } = this.props;
 
-    console.log('ContentList', content);
+    console.log('ContentList', resultContent);
 
     return (
       <div>
-        { content.map(this.renderContentItem) }
+        { resultContent.map(this.renderContentItem) }
       </div>
     );
   }
 }
 
-export default ContentList;
+ContentList.propTypes = {
+  content: ImmutablePropTypes.listOf(PropTypes.string).isRequired, // these is the array of IDs passed in 
+  resultContent: ImmutablePropTypes.listOf( // these are the mapped Records from `content`
+    PropTypes.oneOfType([
+      PropTypes.instanceOf(models.Folder),
+      PropTypes.instanceOf(models.Playlist)
+    ])
+  ),
+  match: PropTypes.shape({
+    url: PropTypes.string.isRequired
+  }).isRequired
+};
+
+export default connect(
+  (state, props) => ({
+    resultContent: mapIdsToRecords(state, props)
+  })
+)(ContentList);
+
+function mapIdsToRecords(state, props) {
+  const result = props.content.map(childName => {
+    const fullUrl = `${normalizeRootUrl(props.match.url)}/${childName}`;
+    return state.content.getIn(['data', fullUrl]);
+  });
+
+  console.log('mapIdsToRecords', result);
+  return result;
+}
 

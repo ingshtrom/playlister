@@ -1,6 +1,6 @@
 import { Map } from 'immutable';
-import Folder from '../models/Folder';
-import Playlist from '../models/Playlist';
+
+import * as models from '../models';
 
 const fakeData = {
   '/': {
@@ -26,7 +26,7 @@ const fakeData = {
   '/foo/bar2/blubber': {
     name: 'blubber',
     type: 'PLAYLIST',
-    content: []
+    content: [ 'media-1', 'media-2', 'media-3' ]
   },
   '/bar': {
     name: 'bar',
@@ -36,7 +36,30 @@ const fakeData = {
   '/bar/baz': {
     name: 'baz',
     type: 'PLAYLIST',
-    content: []
+    content: [ 'media-4' ]
+  }
+};
+
+const fakeMedia = {
+  'media-1': {
+    name: 'shotshotshotshotshots',
+    blobUrl: 'https://some-url/io23ji2ff.png',
+    type: 'IMAGE'
+  },
+  'media-2': {
+    name: 'Dog Kicking',
+    blobUrl: 'https://some-url/io23jilasliefwl2ff.mp4',
+    type: 'VIDEO'
+  },
+  'media-3': {
+    name: 'Cat Field Goal',
+    blobUrl: 'https://some-url/io23hekoehjif.mp4',
+    type: 'VIDEO'
+  },
+  'media-4': {
+    name: 'shotshotshotshotshots',
+    blobUrl: 'https://some-url/io23ji2ff.png',
+    type: 'IMAGE'
   }
 };
 
@@ -53,9 +76,9 @@ export function getContent() {
 
             switch (obj.type) {
               case 'PLAYLIST':
-                return new Playlist(obj);
+                return new models.Playlist(obj);
               default:
-                return new Folder(obj);
+                return new models.Folder(obj);
             }
           })
           .reduce((prev, next) => {
@@ -63,35 +86,45 @@ export function getContent() {
           }, Map());
 
         resolve(data);
-        console.log('done!', data);
+        console.log('api.getContent done!', data);
       } catch (err) {
-        console.error('error getting content', err);
+        console.error('api.getContent error', err);
         reject(err);
       }
     }, 1000);
   });
 }
 
-// export function getContent(prefix) {
-//   return new Promise((resolve, reject) => {
-//     setTimeout(() => {
-//       try {
-//         console.log('starting api.getContent');
-//         // TODO: make actual API request. Assume we load the whole tree for now
-//         // TODO: error handling for going farther than we have data for
-//         const prefixList = prefix.split('/').filter(i => !!i);
-//         let dataForPrefix = fakeData;
-//         for (let i = 0; i < prefixList.length; i++) {
-//           const nextPrefix = prefixList[i];
-//           dataForPrefix = dataForPrefix.content.find(el => el.name === nextPrefix);
-//         }
+export function getMedia(ids) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        console.log('starting api.getMedia', ids);
 
-//         resolve(dataForPrefix);
-//         console.log('done!');
-//       } catch (err) {
-//         reject(err);
-//       }
-//     }, 2000);
-//   });
-// }
+        const media = ids.map(id => {
+          const mediaObject = fakeMedia[id]
+
+          if (!mediaObject) return null;
+
+          switch (mediaObject.type) {
+            case 'VIDEO':
+              return new models.Video(mediaObject);
+            default:
+              return new models.Image(mediaObject);
+          }
+        })
+        .filter(m => m)
+        .reduce((prev, next) => {
+          return prev.set(next.fullUrl, next);
+        }, Map());
+
+        resolve(media);
+        console.log('api.getMedia done!', media);
+      } catch (err) {
+        console.error('api.getMedia error', err);
+        reject(err);
+      }
+    }, 1000);
+  });
+}
 

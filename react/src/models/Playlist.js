@@ -5,6 +5,7 @@ const PlaylistRecord = Record({
   name: null,
   type: 'PLAYLIST',
   content: List(),
+  createdBy: null,
   createdOn: null,
   updatedOn: null
 });
