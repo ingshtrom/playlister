@@ -1,4 +1,4 @@
-import { List, Record } from 'immutable';
+import { Record } from 'immutable';
 
 const ImageRecord = Record({
   id: null,

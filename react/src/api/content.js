@@ -103,6 +103,7 @@ export function getMedia(ids) {
 
         const media = ids.map(id => {
           const mediaObject = fakeMedia[id]
+          mediaObject.id = id;
 
           if (!mediaObject) return null;
 
@@ -115,7 +116,7 @@ export function getMedia(ids) {
         })
         .filter(m => m)
         .reduce((prev, next) => {
-          return prev.set(next.fullUrl, next);
+          return prev.set(next.id, next);
         }, Map());
 
         resolve(media);

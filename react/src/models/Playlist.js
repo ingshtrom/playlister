@@ -12,8 +12,8 @@ const PlaylistRecord = Record({
 
 class Playlist extends PlaylistRecord {
   constructor(fromObject) {
-    super(fromObject);
-    this.set('content', List(fromObject.content));
+    const record = super(fromObject);
+    return record.set('content', List(record.get('content')));
   }
 }
 

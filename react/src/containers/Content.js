@@ -75,8 +75,6 @@ class Content extends Component {
       }
 
       if (content.get('content')) {
-        console.log('getting main component', content.get('content'));
-
         return (
           <ContentList match={match} content={content.get('content')} />
         );
@@ -112,26 +110,4 @@ export default connect(
     getContent
   }, dispatch)
 )(Content);
-
-// function mapStateAndPropsToContent(state, props) {
-//   const mainContent = state.content.getIn(['data', props.match.url]);
-
-//   if (mainContent) {
-//     const x = mainContent
-//       .updateIn(['content'],
-//         childNames => childNames.map(
-//           childName => {
-//             console.log('map child content', childName);
-//             const fullUrl = `${normalizeRootUrl(props.match.url)}/${childName}`;
-//             return state.content.getIn(['data', fullUrl]);
-//           }
-//         )
-//       );
-
-//     console.log('mapStateAndPropsToContent result', x.toJS());
-//     return x;
-//   }
-
-//   return mainContent;
-// }
 
