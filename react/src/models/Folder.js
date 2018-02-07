@@ -5,7 +5,7 @@ const FolderRecord = Record({
   name: null,
   type: 'FOLDER',
   content: List(),
-  createdby: null,
+  createdBy: null,
   createdOn: null,
   updatedOn: null
 });

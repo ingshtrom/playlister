@@ -2,21 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
-import FolderModel from '../models/Folder';
-import PlaylistModel from '../models/Playlist';
+import * as models from '../models';
 
 import { getContent } from '../modules/content-actions';
 
+import Breadcrumbs from '../components/Breadcrumbs';
 import ContentList from '../components/ContentList';
 import NotFound from '../components/NotFound';
 import Playlist from '../components/Playlist';
 
-class Content extends Component {
+export class Content extends Component {
   static propTypes = {
     content: PropTypes.oneOfType([
-      PropTypes.instanceOf(FolderModel),
-      PropTypes.instanceOf(PlaylistModel)
+      PropTypes.instanceOf(models.Folder),
+      PropTypes.instanceOf(models.Playlist)
     ]),
     errorMessage: PropTypes.string,
     getContent: PropTypes.func.isRequired,
@@ -41,29 +42,33 @@ class Content extends Component {
 
   renderErrorMessage() {
     const { errorMessage } = this.props;
-    if (errorMessage) {
-      return (
-        <div>
-          <NotFound />
-          <br />
-        </div>
-      );
-    }
 
-    return (null);
+    const classes = classnames({
+      'display-none': !errorMessage
+    });
+
+    return (
+      <div id='notfound-wrapper' className={classes}>
+        <NotFound />
+        <br />
+      </div>
+    );
   }
 
   renderLoader() {
     const { isLoading } = this.props;
-    if (isLoading) {
-      return (
-        <div className='loading-modal justify-content-center'>
-          <div className='loader'></div>
-        </div>
-      );
-    }
 
-    return null;
+    const classes = classnames({
+      'loading-modal': true,
+      'justify-content-center': true,
+      'display-none': !isLoading
+    });
+
+    return (
+      <div id='content-loader' className={classes}>
+        <div className='loader'></div>
+      </div>
+    );
   }
 
   renderMainContent(content, match) {
@@ -89,8 +94,7 @@ class Content extends Component {
 
     return (
       <div>
-        { match.url }
-        <hr />
+        <Breadcrumbs match={match} />
         { this.renderErrorMessage() }
         { this.renderMainContent(content, match) }
 
