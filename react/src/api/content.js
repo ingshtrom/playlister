@@ -71,8 +71,11 @@ export function getContent() {
         const data = Object.keys(fakeData)
           .map(key => {
             const obj = fakeData[key];
+
+            if (!obj) return null
+
+
             obj.fullUrl = key;
-            console.log('obj', obj);
 
             switch (obj.type) {
               case 'PLAYLIST':
@@ -81,6 +84,7 @@ export function getContent() {
                 return new models.Folder(obj);
             }
           })
+          .filter(x => x)
           .reduce((prev, next) => {
             return prev.set(next.fullUrl, next);
           }, Map());
@@ -103,9 +107,11 @@ export function getMedia(ids) {
 
         const media = ids.map(id => {
           const mediaObject = fakeMedia[id]
-          mediaObject.id = id;
+          console.log('api.getMedia', id, mediaObject);
 
           if (!mediaObject) return null;
+
+          mediaObject.id = id;
 
           switch (mediaObject.type) {
             case 'VIDEO':
@@ -114,7 +120,7 @@ export function getMedia(ids) {
               return new models.Image(mediaObject);
           }
         })
-        .filter(m => m)
+        .filter(x => x)
         .reduce((prev, next) => {
           return prev.set(next.id, next);
         }, Map());
