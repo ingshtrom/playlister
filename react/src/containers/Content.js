@@ -37,11 +37,7 @@ export class Content extends React.Component {
       match,
     } = this.props;
 
-    let MainComponent = NOOP;
-
-    if (content && content.get('type')) {
-      MainComponent = Content.getComponentToLoad(content.get('type'));
-    }
+    const MainComponent = Content.getComponentToLoad(content);
 
     return (
       <div>
@@ -49,7 +45,7 @@ export class Content extends React.Component {
         <ErrorMessage message={errorMessage} />
         <Loader isLoading={isLoading} />
 
-        <Pass id='content-main-component-pas'>
+        <Pass id='content-main-component-pass'>
           <MainComponent match={match} content={content} />
         </Pass>
       </div>
@@ -57,18 +53,11 @@ export class Content extends React.Component {
   }
 }
 
-Content.defaultProps = {
-  folderContent: List(),
-  playlistContent: List(),
-  ChildComponent: NOOP
-};
-
 Content.propTypes = {
   content: PropTypes.oneOfType([
     PropTypes.instanceOf(models.Folder),
     PropTypes.instanceOf(models.Playlist)
   ]),
-  ChildComponent: PropTypes.func.isRequired,
   errorMessage: PropTypes.string,
   getContent: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
@@ -77,7 +66,12 @@ Content.propTypes = {
   }).isRequired
 }
 
-Content.getComponentToLoad = (type) => {
+Content.getComponentToLoad = content => {
+  if (!content) return NOOP;
+
+  const type = content.get('type');
+  if (!type) return NOOP;
+
   if (type === 'PLAYLIST') {
     return Playlist;
   }

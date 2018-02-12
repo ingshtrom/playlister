@@ -1,52 +1,32 @@
 import React from 'react';
-import Enzyme, { render } from 'enzyme';
+import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import rewire from 'rewire';
 
+import { Content } from '../Content';
+import { Playlist } from '../Playlist';
+import { ContentList } from '../ContentList';
+import { NOOP } from '../../util/react';
 import * as models from '../../models';
-
-const { Content } = rewire('../Content');
-const PlaylistMock = jest.fn(() => {
-  return (<div id='playlist'></div>);
-});
-const ContentListMock = jest.fn(() => {
-  return (<div id='content-list'></div>);
-});
-
-Content.__set__('Playlist', PlaylistMock);
-Content.__set__('ContentList', ContentListMock);
 
 Enzyme.configure({ adapter: new Adapter() });
 
-test('Loading overlay has display-none class by default', () => {
-  const component = render(Content.renderLoader());
-
-  expect(component.hasClass('display-none')).toEqual(true);
+test('ContentList.getComponentToLoad returns NOOP if content is falsy', () => {
+  expect(Content.getComponentToLoad()).toEqual(NOOP);
 });
 
-test('Loading overlay does NOT have "display-none" class if `isLoading===true`', () => {
-  const component = render(Content.renderLoader(true));
-
-  expect(component.find('#content-loader').hasClass('display-none')).toEqual(false);
+test('ContentList.getComponentToLoad returns NOOP if content.get(\'type\') is falsy', () => {
+  let content = new models.Folder();
+  content = content.set('type', '');
+  expect(Content.getComponentToLoad(content)).toEqual(NOOP);
 });
 
-test('NotFound component has "display-none" class if `errorMessage` is an empty string', () => {
-  const component = render(Content.renderErrorMessage(''));
-
-  expect(component.hasClass('display-none')).toEqual(true);
-});
-
-test('NotFound component does NOT have "display-none" class if `errorMessage` is defined', () => {
-  const component = render(Content.renderErrorMessage('Something crazy happened'));
-
-  expect(component.hasClass('display-none')).toEqual(false);
-});
-
-test('ContentList componet is rendered if a Folder is passed in for the `content` prop', () => {
+test('ContentList.getComponentToLoad returns ContentList component if content.get(\'type\') is "FOLDER"', () => {
   const content = new models.Folder();
-  const match = { url: '/foo' };
-  const component = render(Content.renderMainContent(content, match));
+  expect(Content.getComponentToLoad(content).WrappedComponent).toEqual(ContentList);
+});
 
-  expect(component.html()).toEqual(true);
+test('ContentList.getComponentToLoad returns Playlist component if content.get(\'type\') is "PLAYLIST"', () => {
+  const content = new models.Playlist();
+  expect(Content.getComponentToLoad(content).WrappedComponent).toEqual(Playlist);
 });
 

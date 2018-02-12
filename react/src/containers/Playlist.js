@@ -8,7 +8,7 @@ import { List } from 'immutable';
 import * as models from '../models';
 import { getMedia } from '../modules/content-actions';
 
-class Playlist extends Component {
+export class Playlist extends Component {
   componentDidMount() {
     const { content, getMedia } = this.props;
     const ids = content.get('content');

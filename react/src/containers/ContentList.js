@@ -9,7 +9,7 @@ import * as models from '../models';
 
 import ContentListItem from '../components/ContentListItem';
 
-class ContentList extends Component {
+export class ContentList extends Component {
   render() {
     const { childContent } = this.props;
 
