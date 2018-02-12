@@ -13,8 +13,6 @@ export class ContentList extends Component {
   render() {
     const { childContent } = this.props;
 
-    console.log('ContentList', childContent);
-
     return (
       <div>
         { childContent.map(ContentList.renderContentItem) }
@@ -56,8 +54,6 @@ export default connect(
 
 export function getChildContent(state, props) {
   const { content } = props;
-
-  console.log('getChildContent', content);
 
   if (!content || !content.get('content')) {
     return List();

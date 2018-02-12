@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NotFound snapshot 1`] = `
+<div
+  className="jumbotron justify-content-middle text-center"
+>
+  <p
+    className="lead h3"
+  >
+    We're trying to find what you are looking for... but it is proving difficult...
+  </p>
+  <img
+    alt="Fat Cat"
+    className="img-fluid"
+    src="cat.gif"
+    style={
+      Object {
+        "width": "80%",
+      }
+    }
+  />
+</div>
+`;
