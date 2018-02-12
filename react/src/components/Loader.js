@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-import NotFound from '../components/NotFound';
-
 class Loader extends React.Component {
   render() {
     const { isLoading } = this.props;

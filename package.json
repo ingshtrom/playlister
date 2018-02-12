@@ -9,6 +9,7 @@
     "test": "./node_modules/.bin/mocha api-test"
   },
   "dependencies": {
+    "mysql2": "^1.5.2",
     "pm2": "^2.9.3"
   }
 }

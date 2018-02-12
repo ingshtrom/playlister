@@ -3,6 +3,9 @@ apps:
     name: api
     watch: true
     cwd: ./node
+    env:
+      NODE_ENV: development
+      PORT: 3001
   - script: scripts/start.js
     cwd: ./react
     name: web

@@ -8,3 +8,16 @@
   yarn
   yarn start
 ```
+
+# API
+
+```
+function createContainer(path, type) {}
+function removeContainer(path) {}
+
+function getContainerContents(path) {}
+
+function getMediaById(id) {}
+function createMediaInContainer(path, media) {}
+function deleteMediaInContainer(path) {}
+```

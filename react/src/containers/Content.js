@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { List } from 'immutable';
 
 import * as models from '../models';
 import { NOOP } from '../util/react';
