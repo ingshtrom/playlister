@@ -58,7 +58,7 @@ export default connect(
 )(Playlist);
 
 
-function mapStateToProps(state, props) {
+export function mapStateToProps(state, props) {
   const content = props.content;
   const childContent = content
     .get('content')

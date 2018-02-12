@@ -20,6 +20,8 @@ const defaultState = {
 }
 
 test('return empty list if content is falsy', () => {
+  expect.assertions(2);
+
   const state = defaultState;
   const props = { content: null, match: { url: '/foo' }};
 
@@ -29,6 +31,8 @@ test('return empty list if content is falsy', () => {
 });
 
 test('return empty list if content.content is empty', () => {
+  expect.assertions(2);
+
   const state = defaultState;
   const props = { content: new models.Folder({ content: [] }), match: { url: '/foo' }};
 
@@ -38,6 +42,8 @@ test('return empty list if content.content is empty', () => {
 });
 
 test('return empty list if match.url is not defined', () => {
+  expect.assertions(2);
+
   const state = defaultState;
   const props = { content: new models.Folder(), match: { url: null }};
 
@@ -47,6 +53,8 @@ test('return empty list if match.url is not defined', () => {
 });
 
 test('return list with mapped content correctly', () => {
+  expect.assertions(4);
+
   const state = defaultState;
   const props = {
     content: new models.Folder({ content: [ 'bar' ] }),
@@ -57,10 +65,12 @@ test('return list with mapped content correctly', () => {
   expect(result).toBeInstanceOf(List);
   expect(result.size).toEqual(1);
   expect(result.get(0)).toBeInstanceOf(models.Folder);
-  expect(result.get(0)).toMatchObject(defaultState.content.getIn(['data', '/foo/bar']));
+  expect(result.get(0)).toMatchObject(state.content.getIn(['data', '/foo/bar']));
 });
 
 test('return list with mapped content by filtering out falsy results', () => {
+  expect.assertions(4);
+
   const state = defaultState;
   const props = {
     content: new models.Folder({ content: [ 'bar', 'baz' ] }),
@@ -71,7 +81,7 @@ test('return list with mapped content by filtering out falsy results', () => {
   expect(result).toBeInstanceOf(List);
   expect(result.size).toEqual(1);
   expect(result.get(0)).toBeInstanceOf(models.Folder);
-  expect(result.get(0)).toMatchObject(defaultState.content.getIn(['data', '/foo/bar']));
+  expect(result.get(0)).toMatchObject(state.content.getIn(['data', '/foo/bar']));
 });
 
 
