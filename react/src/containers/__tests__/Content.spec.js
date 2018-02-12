@@ -1,14 +1,8 @@
-import React from 'react';
-import Enzyme, { shallow } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-
 import { Content } from '../Content';
 import { Playlist } from '../Playlist';
 import { ContentList } from '../ContentList';
 import { NOOP } from '../../util/react';
 import * as models from '../../models';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 test('ContentList.getComponentToLoad returns NOOP if content is falsy', () => {
   expect(Content.getComponentToLoad()).toEqual(NOOP);
