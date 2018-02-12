@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Loader renders correctly when isLoading=false 1`] = `
+<div
+  className="content-loader loading-modal justify-content-center display-none"
+>
+  <div
+    className="loader"
+  />
+</div>
+`;
+
+exports[`Loader renders correctly when isLoading=true 1`] = `
+<div
+  className="content-loader loading-modal justify-content-center"
+>
+  <div
+    className="loader"
+  />
+</div>
+`;

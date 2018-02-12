@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ErrorMessage renders correctly if an error message is provided 1`] = `
+<div
+  className=""
+  id="notfound-wrapper"
+>
+  <div
+    className="jumbotron justify-content-middle text-center"
+  >
+    <p
+      className="lead h3"
+    >
+      We're trying to find what you are looking for... but it is proving difficult...
+    </p>
+    <img
+      alt="Fat Cat"
+      className="img-fluid"
+      src="cat.gif"
+      style={
+        Object {
+          "width": "80%",
+        }
+      }
+    />
+  </div>
+  <br />
+</div>
+`;
+
+exports[`ErrorMessage renders correctly if no message is provided 1`] = `
+<div
+  className="display-none"
+  id="notfound-wrapper"
+>
+  <div
+    className="jumbotron justify-content-middle text-center"
+  >
+    <p
+      className="lead h3"
+    >
+      We're trying to find what you are looking for... but it is proving difficult...
+    </p>
+    <img
+      alt="Fat Cat"
+      className="img-fluid"
+      src="cat.gif"
+      style={
+        Object {
+          "width": "80%",
+        }
+      }
+    />
+  </div>
+  <br />
+</div>
+`;
