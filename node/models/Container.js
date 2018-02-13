@@ -41,6 +41,11 @@ module.exports = function exportContainer(sequelize, models) {
     createdBy: {
       type: Sequelize.STRING,
       allowNull: true
+    },
+    isLocked: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: false
     }
   });
 };

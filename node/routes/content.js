@@ -1,4 +1,8 @@
+const { Op } = require('sequelize');
 const express = require('express');
+
+const { getModels } = require('../services/mysql');
+
 const router = express.Router();
 
 const fakeData = {
@@ -66,7 +70,7 @@ router.get('/containers', async (req, res) => {
   res.status(200).json(fakeData);
 });
 
-router.get('/media', async (req, res) => {
+router.get('/media', async (req, res, next) => {
   try {
     let  ids = req.query.ids;
     if (!ids) return res.status(400).send();
@@ -74,8 +78,78 @@ router.get('/media', async (req, res) => {
     res.status(200).json(fakeMedia);
   } catch (err) {
     console.error('Error getting media', err);
-    throw err;
+    next(err);
   }
 });
+
+// CREATE a container
+router.post('/containers', async (req, res, next) => {
+  try {
+    const body = req.body;
+
+    if (typeof body.isLocked !== 'undefined') return res.status(400).json({ error: 'Cannot set the isLocked column' });
+    if (typeof body.id !== 'undefined') return res.status(400).json({ error: 'Cannot set the id column' });
+    if (typeof body.updatedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the updatedAt column' });
+    if (typeof body.createdAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the createdAt column' });
+
+    const models = await getModels();
+    const container = await models.Container.create({
+      ...body
+    });
+
+    res.status(201).json(container);
+  } catch (err) {
+    console.error('Error creating container', err);
+    next(err);
+  }
+});
+
+// DELETE a container
+router.delete('/containers/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ error: 'No id specified' });
+
+    const models = await getModels();
+    await models.Container.destroy({
+      where: {
+        id
+      }
+    });
+
+    res.status(204).end();
+  } catch (err) {
+    console.error('Error creating container', err);
+    next(err);
+  }
+});
+
+// GET container contents
+router.get('/containers/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    if (!id) return res.status(400).json({ error: 'No id specified' });
+
+    const models = await getModels();
+    const containers = await models.Container.findAll({
+      where: {
+        [Op.or]: [
+          {
+            parent: id
+          },
+          {
+            id
+          }
+        ]
+      }
+    });
+
+    res.status(200).json({ data: containers });
+  } catch (err) {
+    console.error('Error creating container', err);
+    next(err);
+  }
+});
+
 
 module.exports = router;
