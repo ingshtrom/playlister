@@ -7,10 +7,10 @@ beforeEach(async () => {
   await resetDb();
 });
 
-test('GET /content/containers?path=/ gets root container and content successfully', async () => {
+test('GET /containers?path=/ gets root container and content successfully', async () => {
   expect.assertions(10);
 
-  const res1 = await chakram.post(`${baseUrl}/content/containers`, {
+  const res1 = await chakram.post(`${baseUrl}/containers`, {
     name: 'foo',
     fullPath: '/foo',
     parentId: 1
@@ -30,7 +30,7 @@ test('GET /content/containers?path=/ gets root container and content successfull
     })
   );
 
-  const res2 = await chakram.post(`${baseUrl}/content/containers`, {
+  const res2 = await chakram.post(`${baseUrl}/containers`, {
     name: 'bar',
     fullPath: '/bar',
     parentId: 1
@@ -50,7 +50,7 @@ test('GET /content/containers?path=/ gets root container and content successfull
     })
   );
 
-  const res3 = await chakram.post(`${baseUrl}/content/containers`, {
+  const res3 = await chakram.post(`${baseUrl}/containers`, {
     name: 'baz',
     fullPath: '/baz',
     parentId: 1
@@ -71,7 +71,7 @@ test('GET /content/containers?path=/ gets root container and content successfull
     })
   );
 
-  const res = await chakram.get(`${baseUrl}/content/containers?path=/`);
+  const res = await chakram.get(`${baseUrl}/containers?path=/`);
 
   expect(res.response.statusCode).toEqual(200);
   expect(res.response.body).toHaveProperty('data.content');
@@ -121,10 +121,10 @@ test('GET /content/containers?path=/ gets root container and content successfull
   );
 });
 
-test('GET /content/containers/:id gets Container and content successfully', async () => {
+test('GET /containers/:id gets Container and content successfully', async () => {
   expect.assertions(10);
 
-  const res1 = await chakram.post(`${baseUrl}/content/containers`, {
+  const res1 = await chakram.post(`${baseUrl}/containers`, {
     name: 'foo',
     fullPath: '/foo',
     parentId: 1
@@ -144,7 +144,7 @@ test('GET /content/containers/:id gets Container and content successfully', asyn
     })
   );
 
-  const res2 = await chakram.post(`${baseUrl}/content/containers`, {
+  const res2 = await chakram.post(`${baseUrl}/containers`, {
     name: 'bar',
     fullPath: '/bar',
     parentId: 1
@@ -164,7 +164,7 @@ test('GET /content/containers/:id gets Container and content successfully', asyn
     })
   );
 
-  const res3 = await chakram.post(`${baseUrl}/content/containers`, {
+  const res3 = await chakram.post(`${baseUrl}/containers`, {
     name: 'baz',
     fullPath: '/baz',
     parentId: 1
@@ -185,7 +185,7 @@ test('GET /content/containers/:id gets Container and content successfully', asyn
     })
   );
 
-  const res = await chakram.get(`${baseUrl}/content/containers/1`);
+  const res = await chakram.get(`${baseUrl}/containers/1`);
 
   expect(res.response.statusCode).toEqual(200);
   expect(res.response.body).toHaveProperty('data.content');
@@ -235,7 +235,7 @@ test('GET /content/containers/:id gets Container and content successfully', asyn
   );
 });
 
-test('GET /content/containers/:id gets Container and mediaContent successfully', async () => {
+test('GET /containers/:id gets Container and mediaContent successfully', async () => {
   expect.assertions(4);
 
   const models = await getModels();
@@ -264,7 +264,7 @@ test('GET /content/containers/:id gets Container and mediaContent successfully',
     }]
   });
 
-  const res = await chakram.get(`${baseUrl}/content/containers/${playlist.id}`);
+  const res = await chakram.get(`${baseUrl}/containers/${playlist.id}`);
 
   expect(res.response.statusCode).toEqual(200);
   expect(res.response.body).toHaveProperty('data.mediaContent');
@@ -301,7 +301,7 @@ test('GET /content/containers/:id gets Container and mediaContent successfully',
   );
 });
 
-test('GET /content/containers?path=/foo gets Container and mediaContent successfully', async () => {
+test('GET /containers?path=/foo gets Container and mediaContent successfully', async () => {
   expect.assertions(4);
 
   const models = await getModels();
@@ -330,7 +330,7 @@ test('GET /content/containers?path=/foo gets Container and mediaContent successf
     }]
   });
 
-  const res = await chakram.get(`${baseUrl}/content/containers?path=/foo`);
+  const res = await chakram.get(`${baseUrl}/containers?path=/foo`);
 
   expect(res.response.statusCode).toEqual(200);
   expect(res.response.body).toHaveProperty('data.mediaContent');

@@ -1,12 +1,14 @@
 # node api
 
-## Running
+## setup .env for local dev
 
 ```
-  echo 'GOOGLEMAPS_API_KEY=<YOUR_GOOGLE_MAPS_API_KEY>' > .env
-  echo 'PORT=3001' > .env
-  yarn
-  yarn start
+  echo 'BASE_URL=http://localhoset:3001>' > .env # for api testing
+  echo 'PORT=3001' >> .env
+  echo 'MYSQL_HOST=[mysql_host]' >> .env
+  echo 'MYSQL_USER=[mysql_user]' >> .env
+  echo 'MYSQL_PASSWORD=[mysql_password]' >> .env
+  echo 'MYSQL_DATABASE=[mysql_database]' >> .env
 ```
 
 # API
@@ -16,13 +18,13 @@
 function createContainer(path, type) {}
 function removeContainer(path) {}
 
-// these both return media as well
+// NOTE: these both return media as well
 function getContainerContentsById(id) {}
 function getContainerContentsByPath(path) {}
 
 // TODO
-function getMediaById(id) {}
 function deleteMediaById(id) {}
-function createMediaInContainer(path, media) {}
+function createMediaInContainer(media) {}
+function uploadDataToBlob(mediaId, rawData) {}
 ```
 

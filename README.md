@@ -1,4 +1,4 @@
-# weather-zylo
+# playlister
 
 # Testing
 
@@ -16,5 +16,5 @@
 ```
   npm i -g pm2
   pm2 start process.yml
-  pm2 logs
+  pm2 logs -f
 ```

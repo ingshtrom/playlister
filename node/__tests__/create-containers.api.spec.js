@@ -6,10 +6,10 @@ beforeEach(async () => {
   await resetDb();
 });
 
-test('POST /content/containers cannot set id', async () => {
+test('POST /containers cannot set id', async () => {
   expect.assertions(2);
 
-  const { response } = await chakram.post(`${baseUrl}/content/containers`, {
+  const { response } = await chakram.post(`${baseUrl}/containers`, {
     id: 1
   });
 
@@ -20,10 +20,10 @@ test('POST /content/containers cannot set id', async () => {
   });
 });
 
-test('POST /content/containers cannot set updatedAt', async () => {
+test('POST /containers cannot set updatedAt', async () => {
   expect.assertions(2);
 
-  const { response } = await chakram.post(`${baseUrl}/content/containers`, {
+  const { response } = await chakram.post(`${baseUrl}/containers`, {
     updatedAt: new Date()
   });
 
@@ -34,10 +34,10 @@ test('POST /content/containers cannot set updatedAt', async () => {
   });
 });
 
-test('POST /content/containers cannot set createdAt', async () => {
+test('POST /containers cannot set createdAt', async () => {
   expect.assertions(2);
 
-  const { response } = await chakram.post(`${baseUrl}/content/containers`, {
+  const { response } = await chakram.post(`${baseUrl}/containers`, {
     createdAt: new Date()
   });
 
@@ -48,10 +48,10 @@ test('POST /content/containers cannot set createdAt', async () => {
   });
 });
 
-test('POST /content/containers cannot set isLocked to null', async () => {
+test('POST /containers cannot set isLocked to null', async () => {
   expect.assertions(4);
 
-  let res = await chakram.post(`${baseUrl}/content/containers`, {
+  let res = await chakram.post(`${baseUrl}/containers`, {
     isLocked: true
   });
 
@@ -60,7 +60,7 @@ test('POST /content/containers cannot set isLocked to null', async () => {
     error: 'Cannot set the isLocked column',
   });
 
-  res = await chakram.post(`${baseUrl}/content/containers`, {
+  res = await chakram.post(`${baseUrl}/containers`, {
     isLocked: false
   });
 
@@ -71,10 +71,10 @@ test('POST /content/containers cannot set isLocked to null', async () => {
   });
 });
 
-test('POST /content/containers creates new Container successfully', async () => {
+test('POST /containers creates new Container successfully', async () => {
   expect.assertions(2);
 
-  const { response } = await chakram.post(`${baseUrl}/content/containers`, {
+  const { response } = await chakram.post(`${baseUrl}/containers`, {
     name: 'foo',
     fullPath: '/foo',
   });

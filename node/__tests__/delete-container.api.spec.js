@@ -6,16 +6,16 @@ beforeEach(async () => {
   await resetDb();
 });
 
-test('DELETE /content/containers/:id fails if the Container cannot be found', async () => {
+test('DELETE /containers/:id fails if the Container cannot be found', async () => {
   expect.assertions(2);
 
-  res = await chakram.delete(`${baseUrl}/content/containers/2`); // only row with id=1 should be created at this point
+  res = await chakram.delete(`${baseUrl}/containers/2`); // only row with id=1 should be created at this point
 
   expect(res.response.statusCode).toEqual(400);
   expect(res.response.body).toMatchObject({ error: 'Could not find container to delete' });
 });
 
-test('DELETE /content/containers/:id fails if the Container is locked', async () => {
+test('DELETE /containers/:id fails if the Container is locked', async () => {
   expect.assertions(3);
 
   const models = await getModels();
@@ -26,7 +26,7 @@ test('DELETE /content/containers/:id fails if the Container is locked', async ()
     isLocked: true
   });
 
-  res = await chakram.delete(`${baseUrl}/content/containers/${container.id}`);
+  res = await chakram.delete(`${baseUrl}/containers/${container.id}`);
 
   container = await models.Container.find({ where: { id: container.id }});
 
@@ -35,7 +35,7 @@ test('DELETE /content/containers/:id fails if the Container is locked', async ()
   expect(container).not.toEqual(null);
 });
 
-test('DELETE /content/containers/:id deletes Container successfully', async () => {
+test('DELETE /containers/:id deletes Container successfully', async () => {
   expect.assertions(2);
 
   const models = await getModels();
@@ -46,7 +46,7 @@ test('DELETE /content/containers/:id deletes Container successfully', async () =
     isLocked: false
   });
 
-  res = await chakram.delete(`${baseUrl}/content/containers/${container.id}`);
+  res = await chakram.delete(`${baseUrl}/containers/${container.id}`);
 
   container = await models.Container.find({ where: { id: container.id }});
 

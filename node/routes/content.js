@@ -5,41 +5,6 @@ const { getModels } = require('../services/mysql');
 
 const router = express.Router();
 
-const fakeMedia = {
-  'media-1': {
-    name: 'shotshotshotshotshots',
-    blobUrl: 'https://some-url/io23ji2ff.png',
-    type: 'IMAGE'
-  },
-  'media-2': {
-    name: 'Dog Kicking',
-    blobUrl: 'https://some-url/io23jilasliefwl2ff.mp4',
-    type: 'VIDEO'
-  },
-  'media-3': {
-    name: 'Cat Field Goal',
-    blobUrl: 'https://some-url/io23hekoehjif.mp4',
-    type: 'VIDEO'
-  },
-  'media-4': {
-    name: 'shotshotshotshotshots',
-    blobUrl: 'https://some-url/io23ji2ff.png',
-    type: 'IMAGE'
-  }
-};
-
-router.get('/media', async (req, res, next) => {
-  try {
-    let  ids = req.query.ids;
-    if (!ids) return res.status(400).send();
-
-    res.status(200).json(fakeMedia);
-  } catch (err) {
-    console.error('Error getting media', err);
-    next(err);
-  }
-});
-
 // CREATE a container
 router.post('/containers', async (req, res, next) => {
   try {
@@ -81,7 +46,7 @@ router.delete('/containers/:id', async (req, res, next) => {
 
     res.status(204).end();
   } catch (err) {
-    console.error('Error creating container', err);
+    console.error('Error deleting container', err);
     next(err);
   }
 });
@@ -108,7 +73,7 @@ router.get('/containers/:id', async (req, res, next) => {
 
     res.status(200).json({ data: container });
   } catch (err) {
-    console.error('Error creating container', err);
+    console.error('Error fetching container', err);
     next(err);
   }
 });
@@ -136,7 +101,7 @@ router.get('/containers', async (req, res, next) => {
 
     res.status(200).json({ data: container });
   } catch (err) {
-    console.error('Error creating container', err);
+    console.error('Error fetching container', err);
     next(err);
   }
 });
