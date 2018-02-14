@@ -11,7 +11,13 @@ module.exports = function exportMedia(sequelize, models) {
     playlistIndex: {
       type: Sequelize.INTEGER,
       allowNull: false,
-      defaultValue: 1
+      defaultValue: 1,
+      unique: 'playlistIndexUnique'
+    },
+    containerId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      unique: 'playlistIndexUnique'
     },
     url: {
       type: Sequelize.STRING,
