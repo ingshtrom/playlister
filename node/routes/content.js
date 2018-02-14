@@ -5,44 +5,6 @@ const { getModels } = require('../services/mysql');
 
 const router = express.Router();
 
-// const fakeData = {
-//   '/': {
-//     name: 'root',
-//     type: 'FOLDER',
-//     content: [ 'foo', 'bar' ]
-//   },
-//   '/foo': {
-//     name: 'foo',
-//     type: 'FOLDER',
-//     content: [ 'bar', 'bar2' ]
-//   },
-//   '/foo/bar': {
-//     name: 'bar',
-//     type: 'FOLDER',
-//     content: []
-//   },
-//   '/foo/bar2': {
-//     name: 'bar2',
-//     type: 'FOLDER',
-//     content: [ 'blubber' ]
-//   },
-//   '/foo/bar2/blubber': {
-//     name: 'blubber',
-//     type: 'PLAYLIST',
-//     content: [ 'media-1', 'media-2', 'media-3' ]
-//   },
-//   '/bar': {
-//     name: 'bar',
-//     type: 'FOLDER',
-//     content: [ 'baz' ]
-//   },
-//   '/bar/baz': {
-//     name: 'baz',
-//     type: 'PLAYLIST',
-//     content: [ 'media-4' ]
-//   }
-// };
-
 const fakeMedia = {
   'media-1': {
     name: 'shotshotshotshotshots',
@@ -153,13 +115,14 @@ router.get('/containers/:id', async (req, res, next) => {
 });
 
 // GET container contents by container path
+// can also return playlists since a container can be a folder or playlist
 router.get('/containers', async (req, res, next) => {
   try {
     const path = req.query.path;
     if (!path) return res.status(400).json({ error: 'No path specified' });
 
     const models = await getModels();
-    const containers = await models.Container.findAll({
+    const container = await models.Container.find({
       where: {
         fullPath: path
       },
@@ -169,7 +132,7 @@ router.get('/containers', async (req, res, next) => {
       }]
     });
 
-    res.status(200).json({ data: containers });
+    res.status(200).json({ data: container });
   } catch (err) {
     console.error('Error creating container', err);
     next(err);

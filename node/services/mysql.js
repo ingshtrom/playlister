@@ -37,7 +37,7 @@ const syncPromise = main()
 
 async function main() {
   // models
-  models.Playlist = require('../models/Playlist')(sequelize, models);
+  // models.Playlist = require('../models/Playlist')(sequelize, models);
   models.Container = require('../models/Container')(sequelize, models);
   models.Media = require('../models/Media')(sequelize, models);
 
@@ -45,11 +45,27 @@ async function main() {
   models.Container.hasMany(models.Container, {
     as: 'content',
     foreignKey: 'parentId',
-    useJunctionTable: false
+    constraints: true,
+    onDelete: 'cascade',
   });
+  models.Container.hasMany(models.Media, {
+    as: 'mediaContent',
+    foreignKey: 'containerId',
+    constraints: true,
+    onDelete: 'cascade',
+  });
+  models.Media.belongsTo(models.Container, {
+    foreignKey: 'containerId',
+    constraints: true,
+    scope: {
+      type: 'FOLDER',
+    },
+  });
+
 
   await sequelize.sync();
 
+  // we always need a root record otherwise no other things will have a place to live
   await models.Container.findOrCreate({
     where: {
       fullPath: '/'

@@ -22,14 +22,14 @@ module.exports = function exportContainer(sequelize, models) {
       allowNull: false,
       defaultValue: 'FOLDER'
     },
-    playlistId: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-      references: {
-        model: models.Playlist,
-        key: 'id'
-      }
-    },
+    // playlistId: {
+    //   type: Sequelize.INTEGER,
+    //   allowNull: true,
+    //   references: {
+    //     model: models.Playlist,
+    //     key: 'id'
+    //   }
+    // },
     updatedBy: {
       type: Sequelize.STRING,
       allowNull: true
