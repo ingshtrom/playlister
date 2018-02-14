@@ -89,7 +89,6 @@ test('GET /contnet/containers?path=/ gets root container and content successfull
       updatedBy: '__root__',
       deletedAt: null,
       deletedBy: null,
-      playlistId: null,
       parentId: null,
       content: expect.arrayContaining([
         expect.objectContaining({
@@ -204,7 +203,6 @@ test('GET /content/containers/:id gets Container and content successfully', asyn
       updatedBy: '__root__',
       deletedAt: null,
       deletedBy: null,
-      playlistId: null,
       parentId: null,
       content: expect.arrayContaining([
         expect.objectContaining({

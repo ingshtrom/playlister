@@ -14,30 +14,25 @@ if (!user) throw new Error('MYSQL_USER must be defined');
 if (!password) throw new Error('MYSQL_PASSWORD must be defined');
 if (!database) throw new Error('MYSQL_DATABASE must be defined');
 
-const sequelize = new Sequelize(database, user, password, {
-  host,
-  dialect,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 10000,
-    idle: 5000
-  },
-  logging,
-  operatorsAliases: false
-});
-
 const models = {};
-const syncPromise = main()
-  .catch(err => {
-    console.error('OMGOMGOMGOMGOMGOMG something went wrong with mysql init', err);
-    throw err;
-  });
-
+let sequelize = null
+let syncPromise = null;
 
 async function main() {
+  sequelize = new Sequelize(database, user, password, {
+    host,
+    dialect,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 10000,
+      idle: 5000
+    },
+    logging,
+    operatorsAliases: false
+  });
+
   // models
-  // models.Playlist = require('../models/Playlist')(sequelize, models);
   models.Container = require('../models/Container')(sequelize, models);
   models.Media = require('../models/Media')(sequelize, models);
 
@@ -87,12 +82,20 @@ async function main() {
 async function getModels() {
   // don't allow anyone to do anything until the
   // synchonization has been completed
+  if (!syncPromise) {
+    syncPromise = main()
+      .catch(err => {
+        console.error('OMGOMGOMGOMGOMGOMG something went wrong with mysql init', err);
+        throw err;
+      });
+  }
   await syncPromise;
   return models;
 }
 
 async function close() {
   await sequelize.close();
+  syncPromise = null;
 }
 
 module.exports.getModels = getModels;

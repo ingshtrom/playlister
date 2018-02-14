@@ -22,15 +22,6 @@ global.resetDb = async function truncateAllTables() {
     },
     force: true,
   });
-
-  models.Playlist.destroy({
-    where: {
-      id: {
-        [Op.not]: null
-      }
-    },
-    force: true,
-  });
   models.Media.destroy({
     where: {
       id: {

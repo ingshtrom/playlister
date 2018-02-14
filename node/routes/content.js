@@ -28,10 +28,6 @@ const fakeMedia = {
   }
 };
 
-// router.get('/containers', async (req, res) => {
-//   res.status(200).json(fakeData);
-// });
-
 router.get('/media', async (req, res, next) => {
   try {
     let  ids = req.query.ids;
@@ -104,6 +100,9 @@ router.get('/containers/:id', async (req, res, next) => {
       include: [{
         model: models.Container,
         as: 'content'
+      }, {
+        model: models.Media,
+        as: 'mediaContent'
       }]
     });
 
@@ -129,6 +128,9 @@ router.get('/containers', async (req, res, next) => {
       include: [{
         model: models.Container,
         as: 'content'
+      }, {
+        model: models.Media,
+        as: 'mediaContent'
       }]
     });
 
