@@ -8,10 +8,13 @@ if (!baseUrl) {
 }
 
 afterAll(async () => {
+  // NOTE: this can be commented out in order to
+  // see the DB state when a test fails
+  await resetDb();
   await close();
 });
 
-global.resetDb = async function truncateAllTables() {
+global.resetDb = async function resetDb() {
   const models = await getModels();
 
   models.Container.destroy({

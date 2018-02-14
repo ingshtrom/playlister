@@ -7,7 +7,7 @@ beforeEach(async () => {
   await resetDb();
 });
 
-test('GET /contnet/containers?path=/ gets root container and content successfully', async () => {
+test('GET /content/containers?path=/ gets root container and content successfully', async () => {
   expect.assertions(10);
 
   const res1 = await chakram.post(`${baseUrl}/content/containers`, {

@@ -15,13 +15,14 @@
 // DONE
 function createContainer(path, type) {}
 function removeContainer(path) {}
+
+// these both return media as well
 function getContainerContentsById(id) {}
+function getContainerContentsByPath(path) {}
 
 // TODO
-function getContainerContentsByPath(path) {}
 function getMediaById(id) {}
+function deleteMediaById(id) {}
 function createMediaInContainer(path, media) {}
-function deleteMediaInContainer(path) {}
-function createMedia(path, media) {}
 ```
 
