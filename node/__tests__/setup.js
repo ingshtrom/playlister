@@ -2,16 +2,16 @@ require('dotenv').config();
 const { Op } = require('sequelize');
 const { close, getModels } = require('../services/mysql');
 
-beforeEach(async () => {
-  await truncateAllTables();
-});
+global.baseUrl = process.env.BASE_URL;
+if (!baseUrl) {
+  throw new Error('BASE_URL not defined.');
+}
 
 afterAll(async () => {
-  await truncateAllTables();
   await close();
 });
 
-async function truncateAllTables() {
+global.resetDb = async function truncateAllTables() {
   const models = await getModels();
 
   models.Container.destroy({
@@ -20,6 +20,7 @@ async function truncateAllTables() {
         [Op.not]: 1
       }
     },
+    force: true,
   });
 
   models.Playlist.destroy({
@@ -28,6 +29,7 @@ async function truncateAllTables() {
         [Op.not]: null
       }
     },
+    force: true,
   });
   models.Media.destroy({
     where: {
@@ -35,5 +37,6 @@ async function truncateAllTables() {
         [Op.not]: null
       }
     },
+    force: true,
   });
 }

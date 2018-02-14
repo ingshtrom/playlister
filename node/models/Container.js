@@ -43,14 +43,12 @@ module.exports = function exportContainer(sequelize, models) {
       allowNull: false,
       defaultValue: false
     },
-    deletedAt: {
-      type: Sequelize.DATE,
-      allowNull: true
-    },
     deletedBy: {
       type: Sequelize.STRING,
       allowNull: true
     }
+  }, {
+    paranoid: true
   });
 };
 

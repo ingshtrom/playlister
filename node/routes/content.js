@@ -5,43 +5,43 @@ const { getModels } = require('../services/mysql');
 
 const router = express.Router();
 
-const fakeData = {
-  '/': {
-    name: 'root',
-    type: 'FOLDER',
-    content: [ 'foo', 'bar' ]
-  },
-  '/foo': {
-    name: 'foo',
-    type: 'FOLDER',
-    content: [ 'bar', 'bar2' ]
-  },
-  '/foo/bar': {
-    name: 'bar',
-    type: 'FOLDER',
-    content: []
-  },
-  '/foo/bar2': {
-    name: 'bar2',
-    type: 'FOLDER',
-    content: [ 'blubber' ]
-  },
-  '/foo/bar2/blubber': {
-    name: 'blubber',
-    type: 'PLAYLIST',
-    content: [ 'media-1', 'media-2', 'media-3' ]
-  },
-  '/bar': {
-    name: 'bar',
-    type: 'FOLDER',
-    content: [ 'baz' ]
-  },
-  '/bar/baz': {
-    name: 'baz',
-    type: 'PLAYLIST',
-    content: [ 'media-4' ]
-  }
-};
+// const fakeData = {
+//   '/': {
+//     name: 'root',
+//     type: 'FOLDER',
+//     content: [ 'foo', 'bar' ]
+//   },
+//   '/foo': {
+//     name: 'foo',
+//     type: 'FOLDER',
+//     content: [ 'bar', 'bar2' ]
+//   },
+//   '/foo/bar': {
+//     name: 'bar',
+//     type: 'FOLDER',
+//     content: []
+//   },
+//   '/foo/bar2': {
+//     name: 'bar2',
+//     type: 'FOLDER',
+//     content: [ 'blubber' ]
+//   },
+//   '/foo/bar2/blubber': {
+//     name: 'blubber',
+//     type: 'PLAYLIST',
+//     content: [ 'media-1', 'media-2', 'media-3' ]
+//   },
+//   '/bar': {
+//     name: 'bar',
+//     type: 'FOLDER',
+//     content: [ 'baz' ]
+//   },
+//   '/bar/baz': {
+//     name: 'baz',
+//     type: 'PLAYLIST',
+//     content: [ 'media-4' ]
+//   }
+// };
 
 const fakeMedia = {
   'media-1': {
@@ -111,11 +111,15 @@ router.delete('/containers/:id', async (req, res, next) => {
     if (!id) return res.status(400).json({ error: 'No id specified' });
 
     const models = await getModels();
-    await models.Container.destroy({
+    const rowsDeleted = await models.Container.destroy({
       where: {
-        id
+        id,
+        isLocked: false
       }
     });
+
+    console.log(`${req.path} => number of rows deleted: ${rowsDeleted}`);
+    if (rowsDeleted === 0) return res.status(400).json({ error: 'Could not find container to delete' });
 
     res.status(204).end();
   } catch (err) {
@@ -131,7 +135,7 @@ router.get('/containers/:id', async (req, res, next) => {
     if (!id) return res.status(400).json({ error: 'No id specified' });
 
     const models = await getModels();
-    const containers = await models.Container.findAll({
+    const container = await models.Container.find({
       where: {
         id
       },
@@ -141,14 +145,14 @@ router.get('/containers/:id', async (req, res, next) => {
       }]
     });
 
-    res.status(200).json({ data: containers });
+    res.status(200).json({ data: container });
   } catch (err) {
     console.error('Error creating container', err);
     next(err);
   }
 });
 
-// GET container contents by container id
+// GET container contents by container path
 router.get('/containers', async (req, res, next) => {
   try {
     const path = req.query.path;

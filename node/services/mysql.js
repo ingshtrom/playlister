@@ -7,7 +7,7 @@ const user = process.env.MYSQL_USER;
 const password = process.env.MYSQL_PASSWORD;
 const database = process.env.MYSQL_DATABASE;
 const dialect = process.env.SEQUELIZE_DIALECT || 'mysql';
-const logging = process.env.SEQUELIZE_SYNC_LOGGING === 'false' ? false : console.log.bind(console);
+const logging = process.env.SEQUELIZE_SYNC_LOGGING === 'false' ? false : console.log;
 
 if (!host) throw new Error('MYSQL_HOST must be defined');
 if (!user) throw new Error('MYSQL_USER must be defined');
@@ -23,7 +23,8 @@ const sequelize = new Sequelize(database, user, password, {
     acquire: 10000,
     idle: 5000
   },
-  logging
+  logging,
+  operatorsAliases: false
 });
 
 const models = {};
