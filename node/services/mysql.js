@@ -35,9 +35,17 @@ const syncPromise = main()
 
 
 async function main() {
+  // models
   models.Playlist = require('../models/Playlist')(sequelize, models);
   models.Container = require('../models/Container')(sequelize, models);
   models.Media = require('../models/Media')(sequelize, models);
+
+  // relations
+  models.Container.hasMany(models.Container, {
+    as: 'content',
+    foreignKey: 'parentId',
+    useJunctionTable: false
+  });
 
   await sequelize.sync();
 

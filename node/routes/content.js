@@ -1,4 +1,4 @@
-const { Op } = require('sequelize');
+const Sequelize = require('sequelize');
 const express = require('express');
 
 const { getModels } = require('../services/mysql');
@@ -66,9 +66,9 @@ const fakeMedia = {
   }
 };
 
-router.get('/containers', async (req, res) => {
-  res.status(200).json(fakeData);
-});
+// router.get('/containers', async (req, res) => {
+//   res.status(200).json(fakeData);
+// });
 
 router.get('/media', async (req, res, next) => {
   try {
@@ -124,7 +124,7 @@ router.delete('/containers/:id', async (req, res, next) => {
   }
 });
 
-// GET container contents
+// GET container contents by container id
 router.get('/containers/:id', async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -133,15 +133,12 @@ router.get('/containers/:id', async (req, res, next) => {
     const models = await getModels();
     const containers = await models.Container.findAll({
       where: {
-        [Op.or]: [
-          {
-            parent: id
-          },
-          {
-            id
-          }
-        ]
-      }
+        id
+      },
+      include: [{
+        model: models.Container,
+        as: 'content'
+      }]
     });
 
     res.status(200).json({ data: containers });
@@ -151,5 +148,28 @@ router.get('/containers/:id', async (req, res, next) => {
   }
 });
 
+// GET container contents by container id
+router.get('/containers', async (req, res, next) => {
+  try {
+    const path = req.query.path;
+    if (!path) return res.status(400).json({ error: 'No path specified' });
+
+    const models = await getModels();
+    const containers = await models.Container.findAll({
+      where: {
+        fullPath: path
+      },
+      include: [{
+        model: models.Container,
+        as: 'content'
+      }]
+    });
+
+    res.status(200).json({ data: containers });
+  } catch (err) {
+    console.error('Error creating container', err);
+    next(err);
+  }
+});
 
 module.exports = router;

@@ -12,23 +12,16 @@
 # API
 
 ```
+// DONE
 function createContainer(path, type) {}
 function removeContainer(path) {}
+function getContainerContentsById(id) {}
 
-function getContainerContents(path) {}
-
+// TODO
+function getContainerContentsByPath(path) {}
 function getMediaById(id) {}
 function createMediaInContainer(path, media) {}
 function deleteMediaInContainer(path) {}
 function createMedia(path, media) {}
-```
-
-Generally speaking you will always get an object that is a subset of the following schema:
-```
-{
-  error: <string>,
-  data: array of container objects
-  media: array of media objects
-}
 ```
 

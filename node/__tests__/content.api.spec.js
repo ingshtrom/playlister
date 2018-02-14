@@ -130,7 +130,7 @@ test('DELETE /content/containers/:id deletes Container successfully', async () =
   const res1 = await chakram.post(`${baseUrl}/content/containers`, {
     name: 'foo',
     fullPath: '/foo',
-    parent: 1
+    parentId: 1
   });
 
   expect(res1.response.statusCode).toEqual(201);
@@ -142,14 +142,15 @@ test('DELETE /content/containers/:id deletes Container successfully', async () =
       isLocked: false,
       name: expect.any(String),
       type: 'FOLDER',
-      updatedAt: expect.any(String)
+      updatedAt: expect.any(String),
+      parentId: 1
     })
   );
 
   const res2 = await chakram.post(`${baseUrl}/content/containers`, {
     name: 'bar',
     fullPath: '/bar',
-    parent: 1
+    parentId: 1
   });
 
   expect(res2.response.statusCode).toEqual(201);
@@ -161,14 +162,15 @@ test('DELETE /content/containers/:id deletes Container successfully', async () =
       isLocked: false,
       name: expect.any(String),
       type: 'FOLDER',
-      updatedAt: expect.any(String)
+      updatedAt: expect.any(String),
+      parentId: 1
     })
   );
 
   const res3 = await chakram.post(`${baseUrl}/content/containers`, {
     name: 'baz',
     fullPath: '/baz',
-    parent: 1
+    parentId: 1
   });
 
 
@@ -181,7 +183,8 @@ test('DELETE /content/containers/:id deletes Container successfully', async () =
       isLocked: false,
       name: expect.any(String),
       type: 'FOLDER',
-      updatedAt: expect.any(String)
+      updatedAt: expect.any(String),
+      parentId: 1
     })
   );
 

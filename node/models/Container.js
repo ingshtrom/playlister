@@ -17,10 +17,6 @@ module.exports = function exportContainer(sequelize, models) {
       allowNull: false,
       unique: true
     },
-    parent: {
-      type: Sequelize.INTEGER,
-      allowNull: true,
-    },
     type: {
       type: Sequelize.ENUM('FOLDER', 'PLAYLIST'),
       allowNull: false,
@@ -46,6 +42,14 @@ module.exports = function exportContainer(sequelize, models) {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue: false
+    },
+    deletedAt: {
+      type: Sequelize.DATE,
+      allowNull: true
+    },
+    deletedBy: {
+      type: Sequelize.STRING,
+      allowNull: true
     }
   });
 };
