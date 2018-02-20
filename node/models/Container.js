@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 
-module.exports = function exportContainer(sequelize, models) {
+module.exports = function exportContainer(sequelize) {
   return sequelize.define('Container', {
     id: {
       type: Sequelize.INTEGER,
@@ -22,14 +22,6 @@ module.exports = function exportContainer(sequelize, models) {
       allowNull: false,
       defaultValue: 'FOLDER'
     },
-    // playlistId: {
-    //   type: Sequelize.INTEGER,
-    //   allowNull: true,
-    //   references: {
-    //     model: models.Playlist,
-    //     key: 'id'
-    //   }
-    // },
     updatedBy: {
       type: Sequelize.STRING,
       allowNull: true

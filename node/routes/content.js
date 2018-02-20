@@ -1,8 +1,6 @@
 const Sequelize = require('sequelize');
 const express = require('express');
 
-const { getModels } = require('../services/mysql');
-
 const router = express.Router();
 
 // CREATE a container
@@ -14,9 +12,12 @@ router.post('/containers', async (req, res, next) => {
     if (typeof body.id !== 'undefined') return res.status(400).json({ error: 'Cannot set the id column' });
     if (typeof body.updatedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the updatedAt column' });
     if (typeof body.createdAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the createdAt column' });
+    if (typeof body.deletedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the deletedAt column' });
 
-    const models = await getModels();
-    const container = await models.Container.create({
+    console.log('body', body);
+
+    const { Container } = req.app.get('db').models;
+    const container = await Container.create({
       ...body
     });
 
@@ -33,8 +34,8 @@ router.delete('/containers/:id', async (req, res, next) => {
     const id = req.params.id;
     if (!id) return res.status(400).json({ error: 'No id specified' });
 
-    const models = await getModels();
-    const rowsDeleted = await models.Container.destroy({
+    const { Container } = req.app.get('db').models;
+    const rowsDeleted = await Container.destroy({
       where: {
         id,
         isLocked: false
@@ -57,16 +58,16 @@ router.get('/containers/:id', async (req, res, next) => {
     const id = req.params.id;
     if (!id) return res.status(400).json({ error: 'No id specified' });
 
-    const models = await getModels();
-    const container = await models.Container.find({
+    const { Container, Media } = req.app.get('db').models;
+    const container = await Container.find({
       where: {
         id
       },
       include: [{
-        model: models.Container,
+        model: Container,
         as: 'content'
       }, {
-        model: models.Media,
+        model: Media,
         as: 'mediaContent'
       }]
     });
@@ -85,16 +86,16 @@ router.get('/containers', async (req, res, next) => {
     const path = req.query.path;
     if (!path) return res.status(400).json({ error: 'No path specified' });
 
-    const models = await getModels();
-    const container = await models.Container.find({
+    const { Container, Media } = req.app.get('db').models;
+    const container = await Container.find({
       where: {
         fullPath: path
       },
       include: [{
-        model: models.Container,
+        model: Container,
         as: 'content'
       }, {
-        model: models.Media,
+        model: Media,
         as: 'mediaContent'
       }]
     });

@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test": "jest",
-    "test-api": "SEQUELIZE_SYNC_LOGGING=false jest api.spec.js --no-cache --setupTestFrameworkScriptFile='./__tests__/setup.js' --bail --ci --runInBand"
+    "test-api": "SEQUELIZE_POOLING=false SEQUELIZE_SYNC_LOGGING=false jest api.spec.js --no-cache --setupTestFrameworkScriptFile='./__tests__/setup.js' --runInBand"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
@@ -15,14 +14,13 @@
     "express": "~4.15.5",
     "morgan": "~1.9.0",
     "mysql2": "^1.5.2",
-    "node-fetch": "^1.7.3",
     "sequelize": "^4.33.3"
   },
   "devDependencies": {
-    "chakram": "^1.5.0",
     "jest": "^22.2.2",
+    "node-fetch": "^2.0.0",
     "nodemon": "^1.14.11",
-    "sqlite3": "^3.1.13"
+    "uuid": "^3.2.1"
   },
   "engine": {
     "node": ">=8.9"

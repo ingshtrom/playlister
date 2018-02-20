@@ -1,23 +1,43 @@
 require('dotenv').config();
 const { Op } = require('sequelize');
-const { close, getModels } = require('../services/mysql');
+const uuid = require('uuid/v4');
+const { handleError } = require('../services/errors');
+const { close, getDbInstance } = require('../services/mysql');
+const fetch = require('../services/http');
 
 global.baseUrl = process.env.BASE_URL;
-if (!baseUrl) {
+if (!global.baseUrl) {
   throw new Error('BASE_URL not defined.');
 }
 
-afterAll(async () => {
-  // NOTE: this can be commented out in order to
-  // see the DB state when a test fails
-  await resetDb();
-  await close();
+beforeAll(async () => {
+  try {
+    global.db = await getDbInstance({ pool: { max: 1, min: 1 }});
+  } catch (err) {
+    handleError('beforeAll error', err);
+  }
 });
 
-global.resetDb = async function resetDb() {
-  const models = await getModels();
+beforeEach(async () => {
+  try {
+    await resetDb();
+  } catch (err) {
+    handleError('beforeEach error', err);
+  }
+});
 
-  models.Container.destroy({
+afterAll(async () => {
+  try {
+    await close()
+  } catch (err) {
+    console.error('afterAll error', err);
+  }
+});
+
+async function resetDb() {
+  const { Container, Media } = db.models;
+
+  await Container.destroy({
     where: {
       id: {
         [Op.not]: 1
@@ -25,7 +45,8 @@ global.resetDb = async function resetDb() {
     },
     force: true,
   });
-  models.Media.destroy({
+
+  await Media.destroy({
     where: {
       id: {
         [Op.not]: null
@@ -34,3 +55,12 @@ global.resetDb = async function resetDb() {
     force: true,
   });
 }
+
+function getRandomName() {
+  return uuid.v4();
+}
+
+global.http = fetch;
+global.resetDb = resetDb;
+global.getRandomName = getRandomName;
+

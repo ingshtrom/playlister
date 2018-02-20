@@ -1,56 +1,50 @@
-require('dotenv').config();
-const chakram = require('chakram');
-const { getModels } = require('../services/mysql');
-
-beforeEach(async () => {
-  await resetDb();
-});
-
 test('DELETE /containers/:id fails if the Container cannot be found', async () => {
   expect.assertions(2);
 
-  res = await chakram.delete(`${baseUrl}/containers/2`); // only row with id=1 should be created at this point
+  const res = await http.delete(`${baseUrl}/containers/2`);
 
-  expect(res.response.statusCode).toEqual(400);
-  expect(res.response.body).toMatchObject({ error: 'Could not find container to delete' });
+  expect(res.status).toEqual(400);
+
+  const body = await res.json();
+  expect(body).toMatchObject({ error: 'Could not find container to delete' });
 });
 
 test('DELETE /containers/:id fails if the Container is locked', async () => {
+  const { Container } = db.models;
   expect.assertions(3);
 
-  const models = await getModels();
-
-  let container = await models.Container.create({
+  let container = await Container.create({
     name: 'foobarbaz',
     fullPath: '/foobarbaz',
     isLocked: true
   });
 
-  res = await chakram.delete(`${baseUrl}/containers/${container.id}`);
+  const res = await http.delete(`${baseUrl}/containers/${container.id}`);
 
-  container = await models.Container.find({ where: { id: container.id }});
+  container = await Container.find({ where: { id: container.id }});
 
-  expect(res.response.statusCode).toEqual(400);
-  expect(res.response.body).toMatchObject({ error: 'Could not find container to delete' });
+  expect(res.status).toEqual(400);
+
+  const body = await res.json();
+  expect(body).toMatchObject({ error: 'Could not find container to delete' });
   expect(container).not.toEqual(null);
 });
 
 test('DELETE /containers/:id deletes Container successfully', async () => {
+  const { Container } = db.models;
   expect.assertions(2);
 
-  const models = await getModels();
-
-  let container = await models.Container.create({
+  container = await Container.create({
     name: 'foobarbaz',
     fullPath: '/foobarbaz',
     isLocked: false
   });
 
-  res = await chakram.delete(`${baseUrl}/containers/${container.id}`);
+  const res = await http.delete(`${baseUrl}/containers/${container.id}`);
 
-  container = await models.Container.find({ where: { id: container.id }});
+  container = await Container.find({ where: { id: container.id }});
 
-  expect(res.response.statusCode).toEqual(204);
+  expect(res.status).toEqual(204);
   expect(container).toEqual(null);
 });
 

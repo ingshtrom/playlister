@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const express = require('express');
 
-const { getModels } = require('../services/mysql');
+const { getDbInstance } = require('../services/mysql');
 
 const router = express.Router();
 
@@ -18,8 +18,8 @@ router.delete('/media/:id', async (req, res, next) => {
     const id = req.params.id;
     if (!id) return res.status(400).json({ error: 'No id specified' });
 
-    const models = await getModels();
-    const rowsDeleted = await models.Media.destroy({
+    const { Media } = req.app.get('db').models;
+    const rowsDeleted = await Media.destroy({
       where: { id }
     });
 

@@ -1,23 +1,16 @@
-require('dotenv').config();
-
-const chakram = require('chakram');
-const { getModels } = require('../services/mysql');
-
-beforeEach(async () => {
-  await resetDb();
-});
-
 test('GET /containers?path=/ gets root container and content successfully', async () => {
   expect.assertions(10);
 
-  const res1 = await chakram.post(`${baseUrl}/containers`, {
+  const res1 = await http.post(`${baseUrl}/containers`, {
     name: 'foo',
     fullPath: '/foo',
     parentId: 1
   });
 
-  expect(res1.response.statusCode).toEqual(201);
-  expect(res1.response.body).toMatchObject(
+  expect(res1.status).toEqual(201);
+
+  const body1 = await res1.json();
+  expect(body1).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: expect.any(String),
@@ -30,14 +23,16 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
     })
   );
 
-  const res2 = await chakram.post(`${baseUrl}/containers`, {
+  const res2 = await http.post(`${baseUrl}/containers`, {
     name: 'bar',
     fullPath: '/bar',
     parentId: 1
   });
 
-  expect(res2.response.statusCode).toEqual(201);
-  expect(res2.response.body).toMatchObject(
+  expect(res2.status).toEqual(201);
+
+  const body2 = await res2.json();
+  expect(body2).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: expect.any(String),
@@ -50,15 +45,16 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
     })
   );
 
-  const res3 = await chakram.post(`${baseUrl}/containers`, {
+  const res3 = await http.post(`${baseUrl}/containers`, {
     name: 'baz',
     fullPath: '/baz',
     parentId: 1
   });
 
+  expect(res3.status).toEqual(201);
 
-  expect(res3.response.statusCode).toEqual(201);
-  expect(res3.response.body).toMatchObject(
+  const body3 = await res3.json();
+  expect(body3).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: expect.any(String),
@@ -71,13 +67,15 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
     })
   );
 
-  const res = await chakram.get(`${baseUrl}/containers?path=/`);
+  const res4 = await http.get(`${baseUrl}/containers?path=/`);
 
-  expect(res.response.statusCode).toEqual(200);
-  expect(res.response.body).toHaveProperty('data.content');
-  expect(res.response.body.data.content).toHaveLength(3);
+  expect(res4.status).toEqual(200);
 
-  expect(res.response.body.data).toMatchObject(
+  const body4 = await res4.json();
+  expect(body4).toHaveProperty('data.content');
+  expect(body4.data.content).toHaveLength(3);
+
+  expect(body4.data).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: '/',
@@ -93,7 +91,7 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
       parentId: null,
       content: expect.arrayContaining([
         expect.objectContaining({
-          ...res1.response.body,
+          ...body1,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           id: expect.any(Number),
@@ -101,7 +99,7 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
           parentId: 1,
         }),
         expect.objectContaining({
-          ...res2.response.body,
+          ...body2,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           id: expect.any(Number),
@@ -109,7 +107,7 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
           parentId: 1,
         }),
         expect.objectContaining({
-          ...res3.response.body,
+          ...body3,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           id: expect.any(Number),
@@ -124,14 +122,16 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
 test('GET /containers/:id gets Container and content successfully', async () => {
   expect.assertions(10);
 
-  const res1 = await chakram.post(`${baseUrl}/containers`, {
+  const res1 = await http.post(`${baseUrl}/containers`, {
     name: 'foo',
     fullPath: '/foo',
     parentId: 1
   });
 
-  expect(res1.response.statusCode).toEqual(201);
-  expect(res1.response.body).toMatchObject(
+  expect(res1.status).toEqual(201);
+
+  const body1 = await res1.json();
+  expect(body1).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: expect.any(String),
@@ -144,14 +144,16 @@ test('GET /containers/:id gets Container and content successfully', async () => 
     })
   );
 
-  const res2 = await chakram.post(`${baseUrl}/containers`, {
+  const res2 = await http.post(`${baseUrl}/containers`, {
     name: 'bar',
     fullPath: '/bar',
     parentId: 1
   });
 
-  expect(res2.response.statusCode).toEqual(201);
-  expect(res2.response.body).toMatchObject(
+  expect(res2.status).toEqual(201);
+
+  const body2 = await res2.json();
+  expect(body2).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: expect.any(String),
@@ -164,15 +166,16 @@ test('GET /containers/:id gets Container and content successfully', async () => 
     })
   );
 
-  const res3 = await chakram.post(`${baseUrl}/containers`, {
+  const res3 = await http.post(`${baseUrl}/containers`, {
     name: 'baz',
     fullPath: '/baz',
     parentId: 1
   });
 
+  expect(res3.status).toEqual(201);
 
-  expect(res3.response.statusCode).toEqual(201);
-  expect(res3.response.body).toMatchObject(
+  const body3 = await res3.json();
+  expect(body3).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: expect.any(String),
@@ -185,13 +188,15 @@ test('GET /containers/:id gets Container and content successfully', async () => 
     })
   );
 
-  const res = await chakram.get(`${baseUrl}/containers/1`);
+  const res = await http.get(`${baseUrl}/containers/1`);
 
-  expect(res.response.statusCode).toEqual(200);
-  expect(res.response.body).toHaveProperty('data.content');
-  expect(res.response.body.data.content).toHaveLength(3);
+  expect(res.status).toEqual(200);
 
-  expect(res.response.body.data).toMatchObject(
+  const body = await res.json();
+  expect(body).toHaveProperty('data.content');
+  expect(body.data.content).toHaveLength(3);
+
+  expect(body.data).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: '/',
@@ -207,7 +212,7 @@ test('GET /containers/:id gets Container and content successfully', async () => 
       parentId: null,
       content: expect.arrayContaining([
         expect.objectContaining({
-          ...res1.response.body,
+          ...body1,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           id: expect.any(Number),
@@ -215,7 +220,7 @@ test('GET /containers/:id gets Container and content successfully', async () => 
           parentId: 1,
         }),
         expect.objectContaining({
-          ...res2.response.body,
+          ...body2,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           id: expect.any(Number),
@@ -223,7 +228,7 @@ test('GET /containers/:id gets Container and content successfully', async () => 
           parentId: 1,
         }),
         expect.objectContaining({
-          ...res3.response.body,
+          ...body3,
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
           id: expect.any(Number),
@@ -236,11 +241,10 @@ test('GET /containers/:id gets Container and content successfully', async () => 
 });
 
 test('GET /containers/:id gets Container and mediaContent successfully', async () => {
+  const { Container, Media } = db.models;
   expect.assertions(4);
 
-  const models = await getModels();
-
-  const playlist = await models.Container.create({
+  const playlist = await Container.create({
     name: 'foo',
     fullPath: '/foo',
     parentId: 1,
@@ -259,18 +263,20 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
     ]
   }, {
     include: [{
-      model: models.Media,
+      model: Media,
       as: 'mediaContent'
     }]
   });
 
-  const res = await chakram.get(`${baseUrl}/containers/${playlist.id}`);
+  const res = await http.get(`${baseUrl}/containers/${playlist.id}`);
 
-  expect(res.response.statusCode).toEqual(200);
-  expect(res.response.body).toHaveProperty('data.mediaContent');
-  expect(res.response.body.data.mediaContent).toHaveLength(2);
+  expect(res.status).toEqual(200);
 
-  expect(res.response.body.data).toMatchObject(
+  const body = await res.json();
+  expect(body).toHaveProperty('data.mediaContent');
+  expect(body.data.mediaContent).toHaveLength(2);
+
+  expect(body.data).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       createdBy: null,
@@ -302,11 +308,10 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
 });
 
 test('GET /containers?path=/foo gets Container and mediaContent successfully', async () => {
+  const { Container, Media } = db.models;
   expect.assertions(4);
 
-  const models = await getModels();
-
-  const playlist = await models.Container.create({
+  const playlist = await Container.create({
     name: 'foo',
     fullPath: '/foo',
     parentId: 1,
@@ -325,18 +330,20 @@ test('GET /containers?path=/foo gets Container and mediaContent successfully', a
     ]
   }, {
     include: [{
-      model: models.Media,
+      model: Media,
       as: 'mediaContent'
     }]
   });
 
-  const res = await chakram.get(`${baseUrl}/containers?path=/foo`);
+  const res = await http.get(`${baseUrl}/containers?path=/foo`);
 
-  expect(res.response.statusCode).toEqual(200);
-  expect(res.response.body).toHaveProperty('data.mediaContent');
-  expect(res.response.body.data.mediaContent).toHaveLength(2);
+  expect(res.status).toEqual(200);
 
-  expect(res.response.body.data).toMatchObject(
+  const body = await res.json();
+  expect(body).toHaveProperty('data.mediaContent');
+  expect(body.data.mediaContent).toHaveLength(2);
+
+  expect(body.data).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
       createdBy: null,

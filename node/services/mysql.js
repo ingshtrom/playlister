@@ -14,11 +14,10 @@ if (!user) throw new Error('MYSQL_USER must be defined');
 if (!password) throw new Error('MYSQL_PASSWORD must be defined');
 if (!database) throw new Error('MYSQL_DATABASE must be defined');
 
-const models = {};
 let sequelize = null
 let syncPromise = null;
 
-async function main() {
+async function setupDb(options) {
   sequelize = new Sequelize(database, user, password, {
     host,
     dialect,
@@ -29,27 +28,28 @@ async function main() {
       idle: 5000
     },
     logging,
-    operatorsAliases: false
+    operatorsAliases: false,
+    ...options
   });
 
   // models
-  models.Container = require('../models/Container')(sequelize, models);
-  models.Media = require('../models/Media')(sequelize, models);
+  require('../models/Container')(sequelize);
+  require('../models/Media')(sequelize);
 
   // relations
-  models.Container.hasMany(models.Container, {
+  sequelize.models.Container.hasMany(sequelize.models.Container, {
     as: 'content',
     foreignKey: 'parentId',
     constraints: true,
     onDelete: 'cascade',
   });
-  models.Container.hasMany(models.Media, {
+  sequelize.models.Container.hasMany(sequelize.models.Media, {
     as: 'mediaContent',
     foreignKey: 'containerId',
     constraints: true,
     onDelete: 'cascade',
   });
-  models.Media.belongsTo(models.Container, {
+  sequelize.models.Media.belongsTo(sequelize.models.Container, {
     foreignKey: 'containerId',
     constraints: true,
     scope: {
@@ -61,7 +61,7 @@ async function main() {
   await sequelize.sync();
 
   // we always need a root record otherwise no other things will have a place to live
-  await models.Container.findOrCreate({
+  await sequelize.models.Container.findOrCreate({
     where: {
       fullPath: '/'
     },
@@ -76,21 +76,20 @@ async function main() {
       updatedBy: '__root__'
     }
   });
-
 }
 
-async function getModels() {
+async function getDbInstance(options) {
   // don't allow anyone to do anything until the
   // synchonization has been completed
   if (!syncPromise) {
-    syncPromise = main()
+    syncPromise = setupDb(options)
       .catch(err => {
         console.error('OMGOMGOMGOMGOMGOMG something went wrong with mysql init', err);
         throw err;
       });
   }
   await syncPromise;
-  return models;
+  return sequelize;
 }
 
 async function close() {
@@ -98,6 +97,6 @@ async function close() {
   syncPromise = null;
 }
 
-module.exports.getModels = getModels;
+module.exports.getDbInstance = getDbInstance;
 module.exports.close = close;
 
