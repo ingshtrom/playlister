@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { Op } = Sequelize;
 const express = require('express');
 
 const router = express.Router();
@@ -113,6 +114,53 @@ router.get('/containers', async (req, res, next) => {
     res.status(200).json({ data: container });
   } catch (err) {
     console.error('Error fetching container', err);
+    next(err);
+  }
+});
+
+// update the position of items in the playlist
+// [ 5, 7, 1, 4, 2 ] would mean that the new order is
+// 1st position: media item with id=5
+// 2nd position: media item with id=7
+// 3rd position: media item with id=1
+// 4th position: media item with id=4
+// 5th position: media item with id=2
+router.put('/container/:id/order', async (req, res, next) => {
+  try {
+    const playlistId = req.params.id;
+    if (!playlistId) return res.status(400).json({ error: 'No id specified' });
+
+    const newOrdering = req.body;
+    if (!newOrdering || !newOrdering.length) return res.status(400).json({ error: 'No media specified for ordering' });
+
+    for (let i = 0; i < newOrdering.length; i++) {
+      if (typeof newOrdering[i] !== 'number') return res.status(400).json({ error: 'Expected body to be an array of media IDs (numbers)' });
+    }
+
+    const db = req.app.get('db');
+    const { Container, Media } = db.models;
+
+    const media = await Media.findAll({
+      where: {
+        id: {
+          [Op.in]: newOrdering
+        }
+      }
+    });
+
+    await db.transaction(t => {
+      return Promise.all(
+        media.map(mediaItem => {
+          mediaItem.playlistIndex = newOrdering.indexOf(mediaItem.id);
+          return mediaItem.save({ transaction: t });
+        })
+      );
+    });
+
+    res.status(204).end();
+
+  } catch (err) {
+    console.error('Error ordering media in a playlist', err);
     next(err);
   }
 });

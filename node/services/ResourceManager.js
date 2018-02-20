@@ -18,7 +18,6 @@ class ResourceManager {
   }
 
   genContainerNames(count) {
-    console.log('genContainerNames', count);
     const names = ResourceManager.genNames(count);
     names.forEach(name => this.containers.push(name));
     return names;
@@ -66,8 +65,8 @@ class ResourceManager {
   async teardown() {
     const { Container, Media } = this.db.models;
 
-    console.log('found containers to cleanup. names: ', this.containers);
-    console.log('found media to cleanup. urls: ', this.mediaUrls);
+    // console.log('found containers to cleanup. names: ', this.containers);
+    // console.log('found media to cleanup. urls: ', this.mediaUrls);
 
     const containersDeleted = await Container.destroy({
       where: {

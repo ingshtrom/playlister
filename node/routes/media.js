@@ -13,9 +13,7 @@ const router = express.Router();
 //   // raw media data input
 // });
 
-// router.put('/media/:id', async (res, res, next) => {
-//   // update the position of the item
-// });
+
 
 router.delete('/media/:id', async (req, res, next) => {
   try {
