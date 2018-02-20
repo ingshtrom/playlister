@@ -14,11 +14,14 @@ router.post('/containers', async (req, res, next) => {
     if (typeof body.createdAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the createdAt column' });
     if (typeof body.deletedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the deletedAt column' });
 
-    console.log('body', body);
-
-    const { Container } = req.app.get('db').models;
+    const { Container, Media } = req.app.get('db').models;
     const container = await Container.create({
       ...body
+    }, {
+     include: [{
+      model: Media,
+      as: 'mediaContent'
+     }]
     });
 
     res.status(201).json(container);
@@ -34,12 +37,19 @@ router.delete('/containers/:id', async (req, res, next) => {
     const id = req.params.id;
     if (!id) return res.status(400).json({ error: 'No id specified' });
 
-    const { Container } = req.app.get('db').models;
+    const { Container, Media } = req.app.get('db').models;
     const rowsDeleted = await Container.destroy({
       where: {
         id,
         isLocked: false
-      }
+      },
+      include: [{
+        model: Container,
+        as: 'content'
+      }, {
+        mode: Media,
+        as: 'mediaContent'
+      }]
     });
 
     console.log(`${req.path} => number of rows deleted: ${rowsDeleted}`);

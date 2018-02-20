@@ -43,6 +43,10 @@ async function setupDb(options) {
     constraints: true,
     onDelete: 'cascade',
   });
+  sequelize.models.Container.belongsTo(sequelize.models.Container, {
+    foreignKey: 'parentId',
+    constraints: true
+  });
   sequelize.models.Container.hasMany(sequelize.models.Media, {
     as: 'mediaContent',
     foreignKey: 'containerId',

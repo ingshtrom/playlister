@@ -1,9 +1,15 @@
-test('GET /containers?path=/ gets root container and content successfully', async () => {
+test('GET /containers?path=/ gets container and content successfully', async () => {
   expect.assertions(10);
 
+  const [name1, name2, name3] = [
+    getRandomName(),
+    getRandomName(),
+    getRandomName()
+  ];
+
   const res1 = await http.post(`${baseUrl}/containers`, {
-    name: 'foo',
-    fullPath: '/foo',
+    name: name1,
+    fullPath: `/${name1}`,
     parentId: 1
   });
 
@@ -13,10 +19,10 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
   expect(body1).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
-      fullPath: expect.any(String),
+      fullPath: `/${name1}`,
       id: expect.any(Number),
       isLocked: false,
-      name: expect.any(String),
+      name: name1,
       type: 'FOLDER',
       updatedAt: expect.any(String),
       parentId: 1
@@ -24,8 +30,8 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
   );
 
   const res2 = await http.post(`${baseUrl}/containers`, {
-    name: 'bar',
-    fullPath: '/bar',
+    name: name2,
+    fullPath: `/${name2}`,
     parentId: 1
   });
 
@@ -35,10 +41,10 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
   expect(body2).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
-      fullPath: expect.any(String),
+      fullPath: `/${name2}`,
       id: expect.any(Number),
       isLocked: false,
-      name: expect.any(String),
+      name: name2,
       type: 'FOLDER',
       updatedAt: expect.any(String),
       parentId: 1
@@ -46,8 +52,8 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
   );
 
   const res3 = await http.post(`${baseUrl}/containers`, {
-    name: 'baz',
-    fullPath: '/baz',
+    name: name3,
+    fullPath: `/${name3}`,
     parentId: 1
   });
 
@@ -57,10 +63,10 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
   expect(body3).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
-      fullPath: expect.any(String),
+      fullPath: `/${name3}`,
       id: expect.any(Number),
       isLocked: false,
-      name: expect.any(String),
+      name: name3,
       type: 'FOLDER',
       updatedAt: expect.any(String),
       parentId: 1
@@ -122,9 +128,15 @@ test('GET /containers?path=/ gets root container and content successfully', asyn
 test('GET /containers/:id gets Container and content successfully', async () => {
   expect.assertions(10);
 
+ const [name1, name2, name3] = [
+    getRandomName(),
+    getRandomName(),
+    getRandomName()
+  ];
+
   const res1 = await http.post(`${baseUrl}/containers`, {
-    name: 'foo',
-    fullPath: '/foo',
+    name: name1,
+    fullPath: `/${name1}`,
     parentId: 1
   });
 
@@ -134,10 +146,10 @@ test('GET /containers/:id gets Container and content successfully', async () => 
   expect(body1).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
-      fullPath: expect.any(String),
+      fullPath: `/${name1}`,
       id: expect.any(Number),
       isLocked: false,
-      name: expect.any(String),
+      name: name1,
       type: 'FOLDER',
       updatedAt: expect.any(String),
       parentId: 1
@@ -145,8 +157,8 @@ test('GET /containers/:id gets Container and content successfully', async () => 
   );
 
   const res2 = await http.post(`${baseUrl}/containers`, {
-    name: 'bar',
-    fullPath: '/bar',
+    name: name2,
+    fullPath: `/${name2}`,
     parentId: 1
   });
 
@@ -156,10 +168,10 @@ test('GET /containers/:id gets Container and content successfully', async () => 
   expect(body2).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
-      fullPath: expect.any(String),
+      fullPath: `/${name2}`,
       id: expect.any(Number),
       isLocked: false,
-      name: expect.any(String),
+      name: name2,
       type: 'FOLDER',
       updatedAt: expect.any(String),
       parentId: 1
@@ -167,8 +179,8 @@ test('GET /containers/:id gets Container and content successfully', async () => 
   );
 
   const res3 = await http.post(`${baseUrl}/containers`, {
-    name: 'baz',
-    fullPath: '/baz',
+    name: name3,
+    fullPath: `/${name3}`,
     parentId: 1
   });
 
@@ -178,15 +190,15 @@ test('GET /containers/:id gets Container and content successfully', async () => 
   expect(body3).toMatchObject(
     expect.objectContaining({
       createdAt: expect.any(String),
-      fullPath: expect.any(String),
+      fullPath: `/${name3}`,
       id: expect.any(Number),
       isLocked: false,
-      name: expect.any(String),
+      name: name3,
       type: 'FOLDER',
       updatedAt: expect.any(String),
       parentId: 1
     })
-  );
+  ); 
 
   const res = await http.get(`${baseUrl}/containers/1`);
 
@@ -244,20 +256,22 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
   const { Container, Media } = db.models;
   expect.assertions(4);
 
+  const name = getRandomName();
+
   const playlist = await Container.create({
-    name: 'foo',
-    fullPath: '/foo',
+    name: name,
+    fullPath: `/${name}`,
     parentId: 1,
     type: 'PLAYLIST',
     mediaContent: [
       {
         playlistIndex: 1,
-        url: 'http://google.com/favicon.ico',
+        url: `http://google.com/${name}.ico`,
         type: 'IMAGE',
       },
       {
         playlistIndex: 2,
-        url: 'http://google.com/favicon.ico',
+        url: `http://google.com/${name}2.ico`,
         type: 'IMAGE',
       }
     ]
@@ -278,28 +292,18 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
 
   expect(body.data).toMatchObject(
     expect.objectContaining({
-      createdAt: expect.any(String),
-      createdBy: null,
-      fullPath: '/foo',
-      id: playlist.id,
-      isLocked: false,
-      name: 'foo',
+      fullPath: `/${name}`,
+      name: name,
       type: 'PLAYLIST',
-      updatedAt: expect.any(String),
-      updatedBy: null,
-      deletedAt: null,
-      deletedBy: null,
-      parentId: 1,
-      content: [],
       mediaContent: expect.arrayContaining([
         expect.objectContaining({
           playlistIndex: 1,
-          url: 'http://google.com/favicon.ico',
+          url: `http://google.com/${name}.ico`,
           type: 'IMAGE',
         }),
         expect.objectContaining({
           playlistIndex: 2,
-          url: 'http://google.com/favicon.ico',
+          url: `http://google.com/${name}2.ico`,
           type: 'IMAGE',
         })
       ])
@@ -307,24 +311,26 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
   );
 });
 
-test('GET /containers?path=/foo gets Container and mediaContent successfully', async () => {
+test('GET /containers?path=/<some_path> gets Container and mediaContent successfully', async () => {
   const { Container, Media } = db.models;
   expect.assertions(4);
 
+  const name = getRandomName();
+
   const playlist = await Container.create({
-    name: 'foo',
-    fullPath: '/foo',
+    name: name,
+    fullPath: `/${name}`,
     parentId: 1,
     type: 'PLAYLIST',
     mediaContent: [
       {
         playlistIndex: 1,
-        url: 'http://google.com/favicon.ico',
+        url: `http://google.com/${name}.ico`,
         type: 'IMAGE',
       },
       {
         playlistIndex: 2,
-        url: 'http://google.com/favicon.ico',
+        url: `http://google.com/${name}2.ico`,
         type: 'IMAGE',
       }
     ]
@@ -335,7 +341,7 @@ test('GET /containers?path=/foo gets Container and mediaContent successfully', a
     }]
   });
 
-  const res = await http.get(`${baseUrl}/containers?path=/foo`);
+  const res = await http.get(`${baseUrl}/containers?path=/${name}`);
 
   expect(res.status).toEqual(200);
 
@@ -345,28 +351,18 @@ test('GET /containers?path=/foo gets Container and mediaContent successfully', a
 
   expect(body.data).toMatchObject(
     expect.objectContaining({
-      createdAt: expect.any(String),
-      createdBy: null,
-      fullPath: '/foo',
-      id: playlist.id,
-      isLocked: false,
-      name: 'foo',
+      fullPath: `/${name}`,
+      name: name,
       type: 'PLAYLIST',
-      updatedAt: expect.any(String),
-      updatedBy: null,
-      deletedAt: null,
-      deletedBy: null,
-      parentId: 1,
-      content: [],
       mediaContent: expect.arrayContaining([
         expect.objectContaining({
           playlistIndex: 1,
-          url: 'http://google.com/favicon.ico',
+          url: `http://google.com/${name}.ico`,
           type: 'IMAGE',
         }),
         expect.objectContaining({
           playlistIndex: 2,
-          url: 'http://google.com/favicon.ico',
+          url: `http://google.com/${name}2.ico`,
           type: 'IMAGE',
         })
       ])

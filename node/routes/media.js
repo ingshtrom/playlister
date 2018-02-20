@@ -5,13 +5,17 @@ const { getDbInstance } = require('../services/mysql');
 
 const router = express.Router();
 
-router.post('/media', async (req, res, next) => {
-  // media object input
-});
+// router.post('/media', async (req, res, next) => {
+//   // media object input
+// });
 
-router.post('/media/:id/upload', async (req, res, next) => {
-  // raw media data input
-});
+// router.post('/media/:id/upload', async (req, res, next) => {
+//   // raw media data input
+// });
+
+// router.put('/media/:id', async (res, res, next) => {
+//   // update the position of the item
+// });
 
 router.delete('/media/:id', async (req, res, next) => {
   try {
