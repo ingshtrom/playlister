@@ -1,7 +1,8 @@
 test('DELETE /media/:id fails if the media cannot be found', async () => {
   expect.assertions(2);
 
-  const res = await http.delete(`${baseUrl}/media/1`);
+  // TODO: probably won't fix, but know that this will fail at some point...
+  const res = await http.delete(`${baseUrl}/media/12038349`);
 
   expect(res.status).toEqual(400);
 
@@ -14,10 +15,11 @@ test('DELETE /media/:id deletes media successfully', async () => {
 
   expect.assertions(2);
 
+  const [url] = RM.genMediaUrls(1);
+
   let media = await Media.create({
-    name: 'foobarbaz',
     type: 'IMAGE',
-    url: 'https://google.com/favicon.ico',
+    url: url,
     containerId: 1
   });
 

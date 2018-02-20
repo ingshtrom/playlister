@@ -1,7 +1,8 @@
 test('DELETE /containers/:id fails if the Container cannot be found', async () => {
   expect.assertions(2);
 
-  const res = await http.delete(`${baseUrl}/containers/2`);
+  // TODO: probably won't fix, but know that this will fail at some point...
+  const res = await http.delete(`${baseUrl}/containers/103820487`);
 
   expect(res.status).toEqual(400);
 
@@ -13,9 +14,11 @@ test('DELETE /containers/:id fails if the Container is locked', async () => {
   const { Container } = db.models;
   expect.assertions(3);
 
+  const [name] = RM.genContainerNames(1);
+
   let container = await Container.create({
-    name: 'foobarbaz',
-    fullPath: '/foobarbaz',
+    name: name,
+    fullPath: `/${name}`,
     isLocked: true
   });
 
@@ -34,9 +37,11 @@ test('DELETE /containers/:id deletes Container successfully', async () => {
   const { Container } = db.models;
   expect.assertions(2);
 
+  const [name] = RM.genContainerNames(1);
+
   container = await Container.create({
-    name: 'foobarbaz',
-    fullPath: '/foobarbaz',
+    name: name,
+    fullPath: `/${name}`,
     isLocked: false
   });
 

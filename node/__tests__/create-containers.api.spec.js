@@ -56,43 +56,48 @@ test('POST /containers cannot set deletedAt', async () => {
   });
 });
 
-test('POST /containers cannot set isLocked to null', async () => {
-  expect.assertions(4);
+test('POST /containers cannot set isLocked to true', async () => {
+  expect.assertions(2);
 
-  const name = getRandomName();
+  const [name] = RM.genContainerNames(1);
 
-  const res1 = await http.post(`${baseUrl}/containers`, {
+  const res = await http.post(`${baseUrl}/containers`, {
     name,
     fullPath: `/${name}`,
     isLocked: true
   });
 
-  expect(res1.status).toEqual(400);
+  expect(res.status).toEqual(400);
 
-  const body1 = await res1.json();
-  expect(body1).toMatchObject({
+  const body = await res.json();
+  expect(body).toMatchObject({
     error: 'Cannot set the isLocked column',
   });
+});
 
-  const name2 = getRandomName();
+test('POST /containers cannot set isLocked to false', async () => {
+  expect.assertions(2);
 
-  const res2 = await http.post(`${baseUrl}/containers`, {
-    name: name2,
-    fullPath: `/${name2}`,
+  const [name] = RM.genContainerNames(1);
+
+  const res = await http.post(`${baseUrl}/containers`, {
+    name,
+    fullPath: `/${name}`,
     isLocked: false
   });
 
-  expect(res2.status).toEqual(400);
+  expect(res.status).toEqual(400);
 
-  const body2 = await res2.json();
-  expect(body2).toMatchObject({
+  const body = await res.json();
+  expect(body).toMatchObject({
     error: 'Cannot set the isLocked column',
   });
 });
 
 test('POST /containers creates new Container successfully', async () => {
   expect.assertions(2);
-  const name = getRandomName();
+
+  const [name] = RM.genContainerNames(1);
 
   const res = await http.post(`${baseUrl}/containers`, {
     name: name,

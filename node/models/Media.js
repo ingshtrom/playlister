@@ -40,6 +40,8 @@ module.exports = function exportMedia(sequelize) {
       type: Sequelize.STRING,
       allowNull: true
     }
+  }, {
+    paranoid: true
   });
 };
 

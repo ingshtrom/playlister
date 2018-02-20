@@ -1,206 +1,31 @@
-test('GET /containers?path=/ gets container and content successfully', async () => {
-  expect.assertions(10);
+test('GET /containers?path=/{some-path} gets container and content successfully', async () => {
+  expect.assertions(4);
 
-  const [name1, name2, name3] = [
-    getRandomName(),
-    getRandomName(),
-    getRandomName()
-  ];
+  const { Container } = db.models;
+  const [name1, name2, name3, name4] = RM.genContainerNames(4);
 
-  const res1 = await http.post(`${baseUrl}/containers`, {
+  const parent = await Container.create({
     name: name1,
     fullPath: `/${name1}`,
     parentId: 1
   });
 
-  expect(res1.status).toEqual(201);
-
-  const body1 = await res1.json();
-  expect(body1).toMatchObject(
-    expect.objectContaining({
-      createdAt: expect.any(String),
-      fullPath: `/${name1}`,
-      id: expect.any(Number),
-      isLocked: false,
-      name: name1,
-      type: 'FOLDER',
-      updatedAt: expect.any(String),
-      parentId: 1
-    })
-  );
-
-  const res2 = await http.post(`${baseUrl}/containers`, {
-    name: name2,
-    fullPath: `/${name2}`,
-    parentId: 1
-  });
-
-  expect(res2.status).toEqual(201);
-
-  const body2 = await res2.json();
-  expect(body2).toMatchObject(
-    expect.objectContaining({
-      createdAt: expect.any(String),
-      fullPath: `/${name2}`,
-      id: expect.any(Number),
-      isLocked: false,
+  const children = await Container.bulkCreate([{
       name: name2,
-      type: 'FOLDER',
-      updatedAt: expect.any(String),
-      parentId: 1
-    })
-  );
-
-  const res3 = await http.post(`${baseUrl}/containers`, {
-    name: name3,
-    fullPath: `/${name3}`,
-    parentId: 1
-  });
-
-  expect(res3.status).toEqual(201);
-
-  const body3 = await res3.json();
-  expect(body3).toMatchObject(
-    expect.objectContaining({
-      createdAt: expect.any(String),
-      fullPath: `/${name3}`,
-      id: expect.any(Number),
-      isLocked: false,
-      name: name3,
-      type: 'FOLDER',
-      updatedAt: expect.any(String),
-      parentId: 1
-    })
-  );
-
-  const res4 = await http.get(`${baseUrl}/containers?path=/`);
-
-  expect(res4.status).toEqual(200);
-
-  const body4 = await res4.json();
-  expect(body4).toHaveProperty('data.content');
-  expect(body4.data.content).toHaveLength(3);
-
-  expect(body4.data).toMatchObject(
-    expect.objectContaining({
-      createdAt: expect.any(String),
-      fullPath: '/',
-      id: 1,
-      isLocked: true,
-      name: '/',
-      type: 'FOLDER',
-      updatedAt: expect.any(String),
-      createdBy: '__root__',
-      updatedBy: '__root__',
-      deletedAt: null,
-      deletedBy: null,
-      parentId: null,
-      content: expect.arrayContaining([
-        expect.objectContaining({
-          ...body1,
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          id: expect.any(Number),
-          isLocked: false,
-          parentId: 1,
-        }),
-        expect.objectContaining({
-          ...body2,
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          id: expect.any(Number),
-          isLocked: false,
-          parentId: 1,
-        }),
-        expect.objectContaining({
-          ...body3,
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          id: expect.any(Number),
-          isLocked: false,
-          parentId: 1,
-        })
-      ])
-    })
-  );
-});
-
-test('GET /containers/:id gets Container and content successfully', async () => {
-  expect.assertions(10);
-
- const [name1, name2, name3] = [
-    getRandomName(),
-    getRandomName(),
-    getRandomName()
-  ];
-
-  const res1 = await http.post(`${baseUrl}/containers`, {
-    name: name1,
-    fullPath: `/${name1}`,
-    parentId: 1
-  });
-
-  expect(res1.status).toEqual(201);
-
-  const body1 = await res1.json();
-  expect(body1).toMatchObject(
-    expect.objectContaining({
-      createdAt: expect.any(String),
-      fullPath: `/${name1}`,
-      id: expect.any(Number),
-      isLocked: false,
-      name: name1,
-      type: 'FOLDER',
-      updatedAt: expect.any(String),
-      parentId: 1
-    })
-  );
-
-  const res2 = await http.post(`${baseUrl}/containers`, {
-    name: name2,
-    fullPath: `/${name2}`,
-    parentId: 1
-  });
-
-  expect(res2.status).toEqual(201);
-
-  const body2 = await res2.json();
-  expect(body2).toMatchObject(
-    expect.objectContaining({
-      createdAt: expect.any(String),
       fullPath: `/${name2}`,
-      id: expect.any(Number),
-      isLocked: false,
-      name: name2,
-      type: 'FOLDER',
-      updatedAt: expect.any(String),
-      parentId: 1
-    })
-  );
-
-  const res3 = await http.post(`${baseUrl}/containers`, {
-    name: name3,
-    fullPath: `/${name3}`,
-    parentId: 1
-  });
-
-  expect(res3.status).toEqual(201);
-
-  const body3 = await res3.json();
-  expect(body3).toMatchObject(
-    expect.objectContaining({
-      createdAt: expect.any(String),
-      fullPath: `/${name3}`,
-      id: expect.any(Number),
-      isLocked: false,
+      parentId: parent.id
+    }, {
       name: name3,
-      type: 'FOLDER',
-      updatedAt: expect.any(String),
-      parentId: 1
-    })
-  ); 
+      fullPath: `/${name3}`,
+      parentId: parent.id
+    }, {
+      name: name4,
+      fullPath: `/${name4}`,
+      parentId: parent.id
+    }]);
 
-  const res = await http.get(`${baseUrl}/containers/1`);
+
+  const res = await http.get(`${baseUrl}/containers?path=${parent.fullPath}`);
 
   expect(res.status).toEqual(200);
 
@@ -210,42 +35,86 @@ test('GET /containers/:id gets Container and content successfully', async () => 
 
   expect(body.data).toMatchObject(
     expect.objectContaining({
-      createdAt: expect.any(String),
-      fullPath: '/',
-      id: 1,
-      isLocked: true,
-      name: '/',
+      fullPath: parent.fullPath,
+      id: parent.id,
+      name: parent.name,
       type: 'FOLDER',
-      updatedAt: expect.any(String),
-      createdBy: '__root__',
-      updatedBy: '__root__',
-      deletedAt: null,
-      deletedBy: null,
-      parentId: null,
       content: expect.arrayContaining([
         expect.objectContaining({
-          ...body1,
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          id: expect.any(Number),
-          isLocked: false,
-          parentId: 1,
+          id: children[0].id,
+          name: name2,
+          parentId: parent.id,
         }),
         expect.objectContaining({
-          ...body2,
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          id: expect.any(Number),
-          isLocked: false,
-          parentId: 1,
+          id: children[1].id,
+          name: name3,
+          parentId: parent.id,
         }),
         expect.objectContaining({
-          ...body3,
-          createdAt: expect.any(String),
-          updatedAt: expect.any(String),
-          id: expect.any(Number),
-          isLocked: false,
-          parentId: 1,
+          id: children[2].id,
+          name: name4,
+          parentId: parent.id,
+        })
+      ])
+    })
+  );
+});
+
+test('GET /containers/:id gets Container and content successfully', async () => {
+ expect.assertions(4);
+
+  const { Container } = db.models;
+  const [name1, name2, name3, name4] = RM.genContainerNames(4);
+
+  const parent = await Container.create({
+    name: name1,
+    fullPath: `/${name1}`,
+    parentId: 1
+  });
+
+  const children = await Container.bulkCreate([{
+      name: name2,
+      fullPath: `/${name2}`,
+      parentId: parent.id
+    }, {
+      name: name3,
+      fullPath: `/${name3}`,
+      parentId: parent.id
+    }, {
+      name: name4,
+      fullPath: `/${name4}`,
+      parentId: parent.id
+    }]);
+
+  const res = await http.get(`${baseUrl}/containers/${parent.id}`);
+
+  expect(res.status).toEqual(200);
+
+  const body = await res.json();
+  expect(body).toHaveProperty('data.content');
+  expect(body.data.content).toHaveLength(3);
+
+ expect(body.data).toMatchObject(
+    expect.objectContaining({
+      fullPath: parent.fullPath,
+      id: parent.id,
+      name: parent.name,
+      type: 'FOLDER',
+      content: expect.arrayContaining([
+        expect.objectContaining({
+          id: children[0].id,
+          name: name2,
+          parentId: parent.id,
+        }),
+        expect.objectContaining({
+          id: children[1].id,
+          name: name3,
+          parentId: parent.id,
+        }),
+        expect.objectContaining({
+          id: children[2].id,
+          name: name4,
+          parentId: parent.id,
         })
       ])
     })
@@ -256,7 +125,8 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
   const { Container, Media } = db.models;
   expect.assertions(4);
 
-  const name = getRandomName();
+  const [name] = RM.genContainerNames(1);
+  const [url1, url2] = RM.genMediaUrls(2);
 
   const playlist = await Container.create({
     name: name,
@@ -266,12 +136,12 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
     mediaContent: [
       {
         playlistIndex: 1,
-        url: `http://google.com/${name}.ico`,
+        url: url1,
         type: 'IMAGE',
       },
       {
         playlistIndex: 2,
-        url: `http://google.com/${name}2.ico`,
+        url: url2,
         type: 'IMAGE',
       }
     ]
@@ -298,12 +168,12 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
       mediaContent: expect.arrayContaining([
         expect.objectContaining({
           playlistIndex: 1,
-          url: `http://google.com/${name}.ico`,
+          url: url1,
           type: 'IMAGE',
         }),
         expect.objectContaining({
           playlistIndex: 2,
-          url: `http://google.com/${name}2.ico`,
+          url: url2,
           type: 'IMAGE',
         })
       ])
@@ -315,7 +185,9 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
   const { Container, Media } = db.models;
   expect.assertions(4);
 
-  const name = getRandomName();
+  const [name] = RM.genContainerNames(1);
+  const [url1, url2] = RM.genMediaUrls(2);
+
 
   const playlist = await Container.create({
     name: name,
@@ -325,12 +197,12 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
     mediaContent: [
       {
         playlistIndex: 1,
-        url: `http://google.com/${name}.ico`,
+        url: url1,
         type: 'IMAGE',
       },
       {
         playlistIndex: 2,
-        url: `http://google.com/${name}2.ico`,
+        url: url2,
         type: 'IMAGE',
       }
     ]
@@ -357,12 +229,12 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
       mediaContent: expect.arrayContaining([
         expect.objectContaining({
           playlistIndex: 1,
-          url: `http://google.com/${name}.ico`,
+          url: url1,
           type: 'IMAGE',
         }),
         expect.objectContaining({
           playlistIndex: 2,
-          url: `http://google.com/${name}2.ico`,
+          url: url2,
           type: 'IMAGE',
         })
       ])

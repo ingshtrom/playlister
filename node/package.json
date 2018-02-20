@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test-api": "SEQUELIZE_POOLING=false SEQUELIZE_SYNC_LOGGING=false jest api.spec.js --no-cache --setupTestFrameworkScriptFile='./__tests__/setup.js' --runInBand"
+    "test-api": "SEQUELIZE_LOGGING=false jest api.spec.js --no-cache --setupTestFrameworkScriptFile='./__tests__/setup.js' --runInBand"
   },
   "dependencies": {
     "body-parser": "~1.18.2",
