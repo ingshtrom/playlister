@@ -5,15 +5,30 @@ const { getDbInstance } = require('../services/mysql');
 
 const router = express.Router();
 
-// router.post('/media', async (req, res, next) => {
-//   // media object input
-// });
+router.post('/media', async (req, res, next) => {
+  try {
+    const body = req.body;
+
+    if (typeof body.id !== 'undefined') return res.status(400).json({ error: 'Cannot set the id column' });
+    if (typeof body.updatedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the updatedAt column' });
+    if (typeof body.createdAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the createdAt column' });
+    if (typeof body.deletedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the deletedAt column' });
+
+    const { Media } = req.app.get('db').models;
+    const container = await Media.create({
+      ...body
+    });
+
+    res.status(201).json(container);
+  } catch (err) {
+    console.error('Error creating media', err);
+    next(err);
+  }
+});
 
 // router.post('/media/:id/upload', async (req, res, next) => {
 //   // raw media data input
 // });
-
-
 
 router.delete('/media/:id', async (req, res, next) => {
   try {
