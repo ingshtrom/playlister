@@ -125,7 +125,7 @@ router.get('/containers', async (req, res, next) => {
 // 3rd position: media item with id=1
 // 4th position: media item with id=4
 // 5th position: media item with id=2
-router.put('/container/:id/order', async (req, res, next) => {
+router.put('/containers/:id/order', async (req, res, next) => {
   try {
     const playlistId = req.params.id;
     if (!playlistId) return res.status(400).json({ error: 'No id specified' });
@@ -148,14 +148,12 @@ router.put('/container/:id/order', async (req, res, next) => {
       }
     });
 
-    await db.transaction(t => {
-      return Promise.all(
-        media.map(mediaItem => {
-          mediaItem.playlistIndex = newOrdering.indexOf(mediaItem.id);
-          return mediaItem.save({ transaction: t });
-        })
-      );
-    });
+    await Promise.all(
+      media.map(mediaItem => {
+        mediaItem.playlistIndex = newOrdering.indexOf(mediaItem.id);
+        return mediaItem.save();
+      })
+    );
 
     res.status(204).end();
 

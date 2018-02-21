@@ -1,0 +1,27 @@
+version: "3.5"
+
+services:
+  api:
+    build: ./node
+    ports:
+      - 3001:3001
+    command: [ "pm2-dev", "./bin/www" ]
+    env_file:
+      - ./node/.env
+    links:
+      - db
+    volumes:
+      - ./node:/opt/app:consistent
+
+  db:
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=playlister
+    ports:
+      - 3306:3306
+
+volumes:
+  node-app-volume:
+    driver: local
+

@@ -1,41 +1,51 @@
-const mysql = require('mysql');
+const { createBlobService } = require('azure-storage');
 
-const host = process.env.MYSQL_HOST;
-const user = process.env.MYSQL_USER;
-const password = process.env.MYSQL_PASSWORD;
-const database = process.env.MYSQL_DATABASE;
+if (!process.env.AZURE_STORAGE_CONNECTION_STRING) throw new Error('AZURE_STORAGE_CONNECTION_STRING must be defined');
+if (!process.env.BLOB_MEDIA_CONTAINER) throw new Error('BLOB_MEDIA_CONTAINER must be defined');
 
-if (!host) throw new Error('MYSQL_HOST must be defined');
-if (!user) throw new Error('MYSQL_USER must be defined');
-if (!password) throw new Error('MYSQL_PASSWORD must be defined');
-if (!database) throw new Error('MYSQL_DATABASE must be defined');
+const MEDIA_CONTAINER = process.env.BLOB_MEDIA_CONTAINER || 'media';
+const blobService = createBlobService();
 
-const pool = mysql.createPool({
-  host, user, password, database
-});
+const initPromise = init();
 
-function getConnection() {
+function init() {
   return new Promise((resolve, reject) => {
-    pool.getConnection((err, connection) => {
-      if (err || !connection) return reject(err || new Error('Unknown error getting MySQL Connection'));
+    blobService.createContainerIfNotExists(MEDIA_CONTAINER, {
+      publicAccessLevel: 'blob' // can be 'private', 'blob', or 'container'
+    }, (err, result, res) => {
+      if (err) {
+        return reject(err);
+      }
 
-      resolve(connection);
+      resolve(result);
     });
   });
 }
 
-function returnConnection(connection) {
-  connection.release();
+async function createMedia(readStream, streamLength, mimeType, name) {
+  await initPromise;
+
+  const options = {
+    contentSettings: {
+      contentType: mimeType,
+      // contentEncoding: encoding
+    }
+  }
+
+  return await new Promise((resolve, reject) => {
+    blobService.createAppendBlobFromStream(MEDIA_CONTAINER, name, readStream, options, (err, result, res) => {
+      if (err) {
+        return reject(err);
+      }
+
+      resolve(result);
+    });
+  });
 }
 
-async function createContainer(path, type) {
-  const 
+function getMediaUrl(filename) {
+  return `https://playlister.blob.core.windows.net/${MEDIA_CONTAINER}/${filename}`;
 }
-function removeContainer(path) {}
 
-function getContainerContents(path) {}
-
-function getMediaById(id) {}
-function createMediaInContainer(path, media) {}
-function deleteMediaInContainer(path) {}
-
+module.exports.createMedia = createMedia;
+module.exports.getMediaUrl = getMediaUrl;

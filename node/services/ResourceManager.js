@@ -5,7 +5,7 @@ class ResourceManager {
   constructor(dbInstance) {
     this.db = dbInstance;
     this.containers = [];
-    this.mediaUrls = [];
+    this.mediaNames = [];
   }
 
   static genNames(count) {
@@ -23,50 +23,17 @@ class ResourceManager {
     return names;
   }
 
-  genMediaUrls(count) {
+  genMediaNames(count) {
     const names = ResourceManager.genNames(count);
-
-    return names.map(name => {
-      const url = `https://google.com/${name}.png`;
-      this.mediaUrls.push(url)
-      return url;
-    });
+    names.forEach(name => this.mediaNames.push(name));
+    return names;
   }
-
-  // static genTemplates(count, mediaCount) {
-  //   return ResourceManager.genNames(count).map(name => ({
-  //     name,
-  //     fullPath: `/${name}`,
-  //     mediaContent: genNames(mediaCount).map((mediaName, index) => ({
-  //       url: `https://google.com/${mediaName}.png`,
-  //       playlistIndex: index + 1,
-  //       type: 'IMAGE'
-  //     }))
-  //   }));
-  // }
-  //
-  // async requireContainers(count, mediaCount) {
-  //   const { Container, Media } = this.db.models;
-
-  //   const containerTemplates = ResourceManager.genTemplates(count, mediaCount);
-
-  //   const containers = await Container.bulkCreate(containerTemplates, {
-  //     include: [{
-  //       model: Media,
-  //       as: 'mediaContent'
-  //     }]
-  //   });
-
-  //   containers.forEach(container => this.containers.push(container.id));
-
-  //   return containers;
-  // }
 
   async teardown() {
     const { Container, Media } = this.db.models;
 
-    // console.log('found containers to cleanup. names: ', this.containers);
-    // console.log('found media to cleanup. urls: ', this.mediaUrls);
+    console.log('found containers to cleanup. names: ', this.containers);
+    console.log('found media to cleanup. names: ', this.mediaNames);
 
     const containersDeleted = await Container.destroy({
       where: {
@@ -79,8 +46,8 @@ class ResourceManager {
 
     const mediaDeleted = await Media.destroy({
       where: {
-        url: {
-          [Op.in]: this.mediaUrls
+        name: {
+          [Op.in]: this.mediaNames
         }
       },
       force: true

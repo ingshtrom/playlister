@@ -1,4 +1,4 @@
-test('PUT /container/:id/order fails with error if no mediaContent is supplied', async () => {
+test('PUT /containers/:id/order fails with error if no mediaContent is supplied', async () => {
   const { Container, Media } = db.models;
   const [name] = RM.genContainerNames(1);
 
@@ -8,7 +8,7 @@ test('PUT /container/:id/order fails with error if no mediaContent is supplied',
     type: 'PLAYLIST'
   });
 
-  const res = await http.put(`${baseUrl}/container/${container.id}/order`, []);
+  const res = await http.put(`${baseUrl}/containers/${container.id}/order`, []);
 
   expect(res.status).toEqual(400);
 
@@ -16,7 +16,7 @@ test('PUT /container/:id/order fails with error if no mediaContent is supplied',
   expect(body).toEqual({ error: 'No media specified for ordering' });
 });
 
-test('PUT /container/:id/order fails with error if mediaContent is not an array of numbers', async () => {
+test('PUT /containers/:id/order fails with error if mediaContent is not an array of numbers', async () => {
   const { Container } = db.models;
   const [name] = RM.genContainerNames(1);
 
@@ -26,7 +26,7 @@ test('PUT /container/:id/order fails with error if mediaContent is not an array 
     type: 'PLAYLIST'
   });
 
-  const res = await http.put(`${baseUrl}/container/${container.id}/order`, ['foo', 4, 5, 6]);
+  const res = await http.put(`${baseUrl}/containers/${container.id}/order`, ['foo', 4, 5, 6]);
 
   expect(res.status).toEqual(400);
 
@@ -34,19 +34,19 @@ test('PUT /container/:id/order fails with error if mediaContent is not an array 
   expect(body).toEqual({ error: 'Expected body to be an array of media IDs (numbers)' });
 });
 
-test('PUT /container/:id/order orders the content successfully', async () => {
+test('PUT /containers/:id/order orders the content successfully', async () => {
   // expect.assertions(2);
 
   const { Container, Media } = db.models;
   const [name] = RM.genContainerNames(1);
-  const urls = RM.genMediaUrls(4);
+  const mediaNames = RM.genMediaNames(4);
 
   let container = await Container.create({
     name,
     fullPath: `/${name}`,
     type: 'PLAYLIST',
-    mediaContent: urls.map((url, index) => ({
-      url,
+    mediaContent: mediaNames.map((name, index) => ({
+      name,
       playlistIndex: index,
       type: 'IMAGE'
     }))
@@ -59,7 +59,7 @@ test('PUT /container/:id/order orders the content successfully', async () => {
 
   const newOrder = shuffle(container.mediaContent.map(media => media.id));
 
-  const res = await http.put(`${baseUrl}/container/${container.id}/order`, newOrder);
+  const res = await http.put(`${baseUrl}/containers/${container.id}/order`, newOrder);
 
   expect(res.status).toEqual(204);
 

@@ -13,18 +13,5 @@
 
 # API
 
-```
-// DONE
-function createContainer(path, type) {}
-function removeContainer(path) {}
-
-// NOTE: these both return media as well
-function getContainerContentsById(id) {}
-function getContainerContentsByPath(path) {}
-
-// TODO
-function deleteMediaById(id) {}
-function createMediaInContainer(media) {}
-function uploadDataToBlob(mediaId, rawData) {}
-```
+see the `API.apiblueprint` file
 

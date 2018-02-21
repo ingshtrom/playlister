@@ -15,11 +15,11 @@ test('DELETE /media/:id deletes media successfully', async () => {
 
   expect.assertions(2);
 
-  const [url] = RM.genMediaUrls(1);
+  const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    name,
     type: 'IMAGE',
-    url: url,
     containerId: 1
   });
 

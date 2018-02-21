@@ -104,3 +104,12 @@ async function close() {
 module.exports.getDbInstance = getDbInstance;
 module.exports.close = close;
 
+process.on('SIGINT', function() {
+  close()
+    .then(() => process.exit(0))
+    .catch(err => {
+      console.error('Error shutting down on SIGINT', err);
+      process.exit(1);
+    });
+});
+

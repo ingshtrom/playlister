@@ -63,14 +63,14 @@ test('POST /media creates new Media successfully', async () => {
   const { Container, Media } = db.models;
 
   const [name] = RM.genContainerNames(1);
-  const [url] = RM.genMediaUrls(1);
+  const [mediaName] = RM.genMediaNames(1);
   const container = await Container.create({
     name,
     fullPath: `/${name}`
   });
 
   const res = await http.post(`${baseUrl}/media`, {
-    url,
+    name: mediaName,
     playlistId: 0,
     containerId: container.id,
   });
@@ -81,8 +81,8 @@ test('POST /media creates new Media successfully', async () => {
   expect(body).toMatchObject(
     expect.objectContaining({
       id: expect.any(Number),
+      name: mediaName,
       type: 'IMAGE',
-      url,
       playlistIndex: 0,
       containerId: container.id,
       createdAt: expect.any(String),
@@ -90,3 +90,4 @@ test('POST /media creates new Media successfully', async () => {
     })
   );
 });
+

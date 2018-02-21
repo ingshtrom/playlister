@@ -1,0 +1,29 @@
+
+# Data Structures
+
+## Container (object)
++ id: 1 (number)
++ name: foo (string)
++ fullPath: /foo (string)
++ createdOn:
+
+
+## Media (object)
+
+
+## Containers [/contianer
+## POST /containers
+## DELETE /containers/:id
+## GET /containers/:id
+## GET /containers?path=
+## PUT /contianers/:id/order
+
+
+# Media
+
+
+
+## POST /media
+## POST /media/:id/upload
+## DELETE /media/:id
+

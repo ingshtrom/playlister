@@ -126,7 +126,7 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
   expect.assertions(4);
 
   const [name] = RM.genContainerNames(1);
-  const [url1, url2] = RM.genMediaUrls(2);
+  const [mediaName1, mediaName2] = RM.genMediaNames(2);
 
   const playlist = await Container.create({
     name: name,
@@ -135,13 +135,13 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
     type: 'PLAYLIST',
     mediaContent: [
       {
+        name: mediaName1,
         playlistIndex: 1,
-        url: url1,
         type: 'IMAGE',
       },
       {
+        name: mediaName2,
         playlistIndex: 2,
-        url: url2,
         type: 'IMAGE',
       }
     ]
@@ -167,13 +167,12 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
       type: 'PLAYLIST',
       mediaContent: expect.arrayContaining([
         expect.objectContaining({
+          name: mediaName1,
           playlistIndex: 1,
-          url: url1,
           type: 'IMAGE',
         }),
         expect.objectContaining({
-          playlistIndex: 2,
-          url: url2,
+          name: mediaName2,
           type: 'IMAGE',
         })
       ])
@@ -186,7 +185,7 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
   expect.assertions(4);
 
   const [name] = RM.genContainerNames(1);
-  const [url1, url2] = RM.genMediaUrls(2);
+  const [mediaName1, mediaName2] = RM.genMediaNames(2);
 
 
   const playlist = await Container.create({
@@ -196,13 +195,13 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
     type: 'PLAYLIST',
     mediaContent: [
       {
-        playlistIndex: 1,
-        url: url1,
+        name: mediaName1,
+        playlistIndex: 0,
         type: 'IMAGE',
       },
       {
-        playlistIndex: 2,
-        url: url2,
+        name: mediaName2,
+        playlistIndex: 1,
         type: 'IMAGE',
       }
     ]
@@ -228,13 +227,13 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
       type: 'PLAYLIST',
       mediaContent: expect.arrayContaining([
         expect.objectContaining({
-          playlistIndex: 1,
-          url: url1,
+          name: mediaName1,
+          playlistIndex: 0,
           type: 'IMAGE',
         }),
         expect.objectContaining({
-          playlistIndex: 2,
-          url: url2,
+          name: mediaName2,
+          playlistIndex: 1,
           type: 'IMAGE',
         })
       ])

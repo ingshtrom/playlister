@@ -38,6 +38,14 @@ module.exports = function exportContainer(sequelize) {
     deletedBy: {
       type: Sequelize.STRING,
       allowNull: true
+    },
+    eventStart: {
+      type: Sequelize.DATE,
+      allowNull: true
+    },
+    eventEnd: {
+      type: Sequelize.DATE,
+      allowNull: true
     }
   }, {
     paranoid: true

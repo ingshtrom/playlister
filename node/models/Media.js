@@ -8,6 +8,11 @@ module.exports = function exportMedia(sequelize) {
       primaryKey: true,
       autoIncrement: true
     },
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false,
+      defaultValue: ''
+    },
     playlistIndex: {
       type: Sequelize.INTEGER,
       allowNull: false,
@@ -15,7 +20,7 @@ module.exports = function exportMedia(sequelize) {
     },
     url: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: true
     },
     type: {
       type: Sequelize.ENUM('IMAGE', 'VIDEO'),
@@ -31,6 +36,10 @@ module.exports = function exportMedia(sequelize) {
       allowNull: true
     },
     deletedBy: {
+      type: Sequelize.STRING,
+      allowNull: true
+    },
+    encoding: {
       type: Sequelize.STRING,
       allowNull: true
     }

@@ -5,7 +5,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const { getDbInstance } = require('./services/mysql');
 
-
 module.exports.getApp = async function getApp() {
   const app = express();
 
@@ -24,6 +23,7 @@ module.exports.getApp = async function getApp() {
   app.use(function(req, res, next) {
     const err = new Error('Not Found');
     err.status = 404;
+    console.error('Could not find a route for request', req.path);
     next(err);
   });
 
@@ -34,8 +34,18 @@ module.exports.getApp = async function getApp() {
 
     console.error('ERROR in Express', err);
 
+    if (res.headersSent) {
+      console.error(
+        'HEY! YOU! Check this out! So the error handler in ExpressJS was triggered, ' +
+        'but somehow the response has already been sent!! WTF MATE! I highly recommend ' +
+        'you check out who is sending responses but also triggering errors'
+      );
+      return;
+    }
+
     res.status(err.status || 500).send({ error: 'Unknown Error' });
   });
 
   return app;
 };
+
