@@ -1,29 +1,134 @@
+FORMAT: 1A
 
 # Data Structures
 
 ## Container (object)
-+ id: 1 (number)
-+ name: foo (string)
-+ fullPath: /foo (string)
-+ createdOn:
-
++ id: 2 (number) - auto-incrementing
++ name: foo (string) - the relative path to the container from it's direct parent
++ fullPath: /foo (string) - the absolute path to the container.
++ type: FOLDER (string) - "FOLDER" or "PLAYLIST". the type of container this is. Folders contain other folders. Playlists contain media.
++ updatedBy: bob (string) - name of user who updated the container
++ createdBy: bob (string) - name of user who created the container
++ isLocked: 1 (number) - 1 => true, 0 => false. For now, only the root is locked. READONLY
++ deletedBy: bob (string) - name of user who soft-deleted this
++ eventStart: '2018-02-21 18:12:34' (string) - this is really a date, but it is serialized as a string. Only usable when type==='PLAYLIST'
++ eventEnd: '2018-03-21 18:12:34' (string) - this is really a date, but it is serialized as a string. Only usable when the type==='PLAYLIST'
++ createdAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
++ updatedAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
++ deletedAt: '2018-04-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
++ parentId: 1 (number) - parent container id
 
 ## Media (object)
++ id: 1 (number) - auto-incrementing
++ name: foo (string) - more or less just a title
++ playlistIndex: 0 (number) - the playlist will be ASCENDING order based on this column value of all media in the playlist.
++ url: https://some-blob.windows.net/media/fdkjldsfakljdsfkljdsf.jpg (string) - The public url to the content this row represents
++ type: IMAGE (string) - "IMAGE" or "VIDEO". the type of media this is.
++ updatedBy: bob (string) - name of user who updated the container
++ createdBy: bob (string) - name of user who created the container
++ deletedBy: bob (string) - name of user who soft-deleted this
++ encoding: (string) - the encoding of the media in blob storage.
++ createdAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
++ updatedAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
++ deletedAt: '2018-04-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
++ containerId: 1 (number) - parent container id (should always be a playlist)
+
+## ErrorResponse (object)
++ error: 'Something bad happened' (string) - Error message of why something went wrong
 
 
-## Containers [/contianer
-## POST /containers
-## DELETE /containers/:id
-## GET /containers/:id
-## GET /containers?path=
+
+# Generic Errors for All APIs
+
++ Response 400 (application/json)
+  + (ErrorResponse)
+
++ Response 500 (appilcation/json)
+  + (ErrorResponse)
+
+
+
+
+# Containers [/containers]
+
+## Create Container [POST]
+
++ Request (application/json)
+  + (Container)
+
++ Response 201 (application/json)
+  + (Container)
+
+
+
+# Containers By Path [/containers?path={path}]
+
++ Parameters
+  + path (string) - the full path of the container to get
+
+## Get Container By Full Path [GET]
+
++ Response 200 (application/json)
+  + (Container)
+
+
+
+# Containers By ID [/containers/{id}]
+
++ Parameters
+  + id (number) - the id of the container
+
+## Delete Container [DELETE]
+
++ Response 204
+
+## Get Container [GET]
+
++ Response 200 (application/json)
+  + (Container)
+
 ## PUT /contianers/:id/order
 
-
-# Media
-
++ Response 204
 
 
-## POST /media
-## POST /media/:id/upload
-## DELETE /media/:id
+
+
+# Media [/media]
+
+## Create Media [POST]
+
++ Request (application/json)
+  + (Media)
+
++ Response 201 (application/json)
+  + (Media) - newly created media
+
+
+
+
+# Media Items [/media/{id}]
+
++ Parameters
+  + id (number) - id of the media
+
+### Delete Media [DELETE]
+
++ Response 204
+
+
+
+
+# Media Items Modification [/media/{id}/upload]
+
++ Parameters
+  + id (number) - id of the media
+
+# Upload File for Media [POST]
+
++ Request (multipart/form-data)
+  + media (file) - the file to upload
+
++ Response 200 (application/json)
+  + (Media) - the updated media
 
