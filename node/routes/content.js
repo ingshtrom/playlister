@@ -83,7 +83,7 @@ router.get('/containers/:id', async (req, res, next) => {
       }]
     });
 
-    res.status(200).json({ data: container });
+    res.status(200).json(container);
   } catch (err) {
     console.error('Error fetching container', err);
     next(err);
@@ -111,7 +111,7 @@ router.get('/containers', async (req, res, next) => {
       }]
     });
 
-    res.status(200).json({ data: container });
+    res.status(200).json(container);
   } catch (err) {
     console.error('Error fetching container', err);
     next(err);

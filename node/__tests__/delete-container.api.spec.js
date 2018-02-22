@@ -24,7 +24,7 @@ test('DELETE /containers/:id fails if the Container is locked', async () => {
 
   const res = await http.delete(`${baseUrl}/containers/${container.id}`);
 
-  container = await Container.find({ where: { id: container.id }});
+  container = await Container.find({ where: { id: container.id, deletedAt: null }});
 
   expect(res.status).toEqual(400);
 
@@ -47,7 +47,7 @@ test('DELETE /containers/:id deletes Container successfully', async () => {
 
   const res = await http.delete(`${baseUrl}/containers/${container.id}`);
 
-  container = await Container.find({ where: { id: container.id }});
+  container = await Container.find({ where: { id: container.id, deletedAt: null }});
 
   expect(res.status).toEqual(204);
   expect(container).toEqual(null);

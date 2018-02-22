@@ -25,7 +25,7 @@ test('DELETE /media/:id deletes media successfully', async () => {
 
   const res = await http.delete(`${baseUrl}/media/${media.id}`);
 
-  media = await Media.find({ where: { id: media.id }});
+  media = await Media.find({ where: { id: media.id, deletedAt: null }});
 
   expect(res.status).toEqual(204);
   expect(media).toEqual(null);

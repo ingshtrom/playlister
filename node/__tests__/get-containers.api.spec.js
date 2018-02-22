@@ -30,10 +30,10 @@ test('GET /containers?path=/{some-path} gets container and content successfully'
   expect(res.status).toEqual(200);
 
   const body = await res.json();
-  expect(body).toHaveProperty('data.content');
-  expect(body.data.content).toHaveLength(3);
+  expect(body).toHaveProperty('content');
+  expect(body.content).toHaveLength(3);
 
-  expect(body.data).toMatchObject(
+  expect(body).toMatchObject(
     expect.objectContaining({
       fullPath: parent.fullPath,
       id: parent.id,
@@ -91,10 +91,10 @@ test('GET /containers/:id gets Container and content successfully', async () => 
   expect(res.status).toEqual(200);
 
   const body = await res.json();
-  expect(body).toHaveProperty('data.content');
-  expect(body.data.content).toHaveLength(3);
+  expect(body).toHaveProperty('content');
+  expect(body.content).toHaveLength(3);
 
- expect(body.data).toMatchObject(
+ expect(body).toMatchObject(
     expect.objectContaining({
       fullPath: parent.fullPath,
       id: parent.id,
@@ -157,10 +157,10 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
   expect(res.status).toEqual(200);
 
   const body = await res.json();
-  expect(body).toHaveProperty('data.mediaContent');
-  expect(body.data.mediaContent).toHaveLength(2);
+  expect(body).toHaveProperty('mediaContent');
+  expect(body.mediaContent).toHaveLength(2);
 
-  expect(body.data).toMatchObject(
+  expect(body).toMatchObject(
     expect.objectContaining({
       fullPath: `/${name}`,
       name: name,
@@ -217,10 +217,10 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
   expect(res.status).toEqual(200);
 
   const body = await res.json();
-  expect(body).toHaveProperty('data.mediaContent');
-  expect(body.data.mediaContent).toHaveLength(2);
+  expect(body).toHaveProperty('mediaContent');
+  expect(body.mediaContent).toHaveLength(2);
 
-  expect(body.data).toMatchObject(
+  expect(body).toMatchObject(
     expect.objectContaining({
       fullPath: `/${name}`,
       name: name,
