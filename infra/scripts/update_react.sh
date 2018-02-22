@@ -12,6 +12,7 @@ cd /opt/playlister
 
 
 cd react
+sudo yarn install
 sudo yarn build
 
 
