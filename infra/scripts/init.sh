@@ -48,7 +48,7 @@ sudo apt-get install -y yarn
 sudo service nginx start
 
 source /opt/playlister/infra/scripts/update_docker.sh
-# source /opt/playlister/infra/scripts/update_pm2.sh
+source /opt/playlister/infra/scripts/update_react.sh
 source /opt/playlister/infra/scripts/update_nginx_config.sh
 source /opt/playlister/infra/scripts/update_ufw_rules.sh
 
