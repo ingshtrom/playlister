@@ -1,4 +1,4 @@
-import { List, Map } from 'immutable';
+import { Map } from 'immutable';
 
 import * as models from '../models';
 
@@ -25,7 +25,7 @@ export async function getContainerContent(path) {
         return prev.set(next.fullPath, next);
       }, Map());
 
-    folder = folder.set('content', List());
+    folder = folder.set('content', folder.content.map(obj => obj.name));
     data = data.set(folder.fullPath, folder);
     console.log('api.getContent done!', data);
     return data
@@ -83,6 +83,16 @@ export async function addContainer(parentId, name, fullPath, type) {
         'Content-Type': 'application/json'
       }
     });
+
+    if (fetchResult.status === 500) {
+      throw new Error('Unkown error adding container');
+    }
+
+    if (fetchResult.status === 400) {
+      const body = await fetchResult.json();
+      throw new Error(body.error);
+    }
+
     const body = await fetchResult.json();
     const newFolder = new models.Folder(body);
 

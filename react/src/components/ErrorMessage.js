@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-import NotFound from '../components/NotFound';
-
 class ErrorMessage extends React.Component {
   render() {
     const { message } = this.props;
@@ -13,8 +11,10 @@ class ErrorMessage extends React.Component {
 
     return (
       <div id='notfound-wrapper' className={classes}>
-        <NotFound />
-        <br />
+        <div className='alert alert-danger'>
+          {message}
+        </div>
+        <hr />
       </div>
     );
   }

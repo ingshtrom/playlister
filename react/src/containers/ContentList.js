@@ -29,6 +29,7 @@ export class ContentList extends Component {
           parent={content}
           addContainer={addContainer}
         />
+        <hr />
         { childContent.map(ContentList.renderContentItem) }
       </div>
     );
