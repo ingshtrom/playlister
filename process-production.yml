@@ -1,0 +1,13 @@
+apps:
+  - script: /opt/playlister/node/bin/www
+    name: api
+    watch: false
+    cwd: /opt/playlister/node
+    cluster: true
+    env:
+      NODE_ENV: production
+      PORT: 3001
+      BLOB_MEDIA_CONTAINER: media
+      MYSQL_DATABASE: playlister
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_USER: root

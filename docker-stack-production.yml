@@ -1,0 +1,44 @@
+version: "3.5"
+
+services:
+  api:
+    image: ingshtrom/playlister:latest
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: 256M
+    ports:
+      - 3001:3001
+    command: [ "pm2-runtime", "./bin/www" ]
+    env_file:
+      - /opt/api.env
+    networks:
+      - backend
+    links:
+      - db
+
+  db:
+    image: mysql:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.6"
+          memory: 512M
+    env_file:
+      - /opt/db.env
+    ports:
+      - 3306:3306
+    volumes:
+      - /data/mysql:/var/lib/mysql
+    networks:
+      - backend
+
+networks:
+  backend:
