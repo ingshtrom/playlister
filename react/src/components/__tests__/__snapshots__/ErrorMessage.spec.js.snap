@@ -6,25 +6,11 @@ exports[`ErrorMessage renders correctly if an error message is provided 1`] = `
   id="notfound-wrapper"
 >
   <div
-    className="jumbotron justify-content-middle text-center"
+    className="alert alert-danger"
   >
-    <p
-      className="lead h3"
-    >
-      We're trying to find what you are looking for... but it is proving difficult...
-    </p>
-    <img
-      alt="Fat Cat"
-      className="img-fluid"
-      src="cat.gif"
-      style={
-        Object {
-          "width": "80%",
-        }
-      }
-    />
+    Something crazy happened!
   </div>
-  <br />
+  <hr />
 </div>
 `;
 
@@ -34,24 +20,10 @@ exports[`ErrorMessage renders correctly if no message is provided 1`] = `
   id="notfound-wrapper"
 >
   <div
-    className="jumbotron justify-content-middle text-center"
+    className="alert alert-danger"
   >
-    <p
-      className="lead h3"
-    >
-      We're trying to find what you are looking for... but it is proving difficult...
-    </p>
-    <img
-      alt="Fat Cat"
-      className="img-fluid"
-      src="cat.gif"
-      style={
-        Object {
-          "width": "80%",
-        }
-      }
-    />
+    
   </div>
-  <br />
+  <hr />
 </div>
 `;

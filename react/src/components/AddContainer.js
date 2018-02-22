@@ -58,6 +58,7 @@ export default class AddContainer extends React.Component {
         <form className='form-inline'>
           <div className='form-group mr-3'>
             <input
+              id='new-container-name'
               className='form-control'
               type='text'
               value={name}
@@ -66,8 +67,8 @@ export default class AddContainer extends React.Component {
           </div>
           <div className='form-group mr-3'>
             <select
-              className="form-control"
-              id="container-type"
+              id='new-container-type'
+              className='form-control'
               value={type}
               onChange={this.updateType}
             >
@@ -76,6 +77,7 @@ export default class AddContainer extends React.Component {
             </select>
           </div>
           <button
+            id='new-container-submit'
             type='submit'
             className='btn btn-primary form-control'
             onClick={this.submitForm}

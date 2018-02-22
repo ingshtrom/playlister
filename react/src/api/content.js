@@ -94,10 +94,14 @@ export async function addContainer(parentId, name, fullPath, type) {
     }
 
     const body = await fetchResult.json();
-    const newFolder = new models.Folder(body);
 
-    console.log('api.addContainer done!', newFolder);
-    return newFolder;
+    console.log('api.addContainer done!', body);
+
+    if (body.type === 'PLAYLIST') {
+      return new models.Playlist(body);
+    }
+
+    return new models.Folder(body);
   } catch (err) {
     console.error('api.addContainer error', err);
     throw err;
