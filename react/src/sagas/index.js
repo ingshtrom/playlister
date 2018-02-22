@@ -1,10 +1,7 @@
 import { takeLatest } from 'redux-saga/effects';
 
 import {
-  addContainer
-} from './container';
-
-import {
+  addContainer,
   getContent,
   getMedia
 } from './content';

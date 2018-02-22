@@ -102,6 +102,8 @@ test('POST /containers creates new Container successfully', async () => {
   const res = await http.post(`${baseUrl}/containers`, {
     name: name,
     fullPath: `/${name}`,
+    parentId: 1,
+    type: 'FOLDER'
   });
 
   expect(res.status).toEqual(201);

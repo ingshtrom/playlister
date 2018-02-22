@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { List, Map } from 'immutable';
 
 import * as models from '../models';
 
@@ -8,16 +8,11 @@ export async function getContainerContent(path) {
     const fetchResult = await fetch(`/api/containers?path=${path}`)
     const body = await fetchResult.json();
 
-    const folder = new models.Folder(body);
+    let folder = new models.Folder(body);
     console.log(folder, body);
 
-    let data = Object.keys(folder.content)
-      .map(key => {
-        const obj = body[key];
-        if (!obj) return null
-
-        obj.fullPath = key;
-
+    let data = folder.content
+      .map(obj => {
         switch (obj.type) {
           case 'PLAYLIST':
             return new models.Playlist(obj);
@@ -30,6 +25,7 @@ export async function getContainerContent(path) {
         return prev.set(next.fullPath, next);
       }, Map());
 
+    folder = folder.set('content', List());
     data = data.set(folder.fullPath, folder);
     console.log('api.getContent done!', data);
     return data
@@ -68,6 +64,32 @@ export async function getMedia(ids) {
     return media;
   } catch (err) {
     console.error('api.getMedia error', err);
+    throw err;
+  }
+}
+
+export async function addContainer(parentId, name, fullPath, type) {
+  try {
+    console.log('starting api.addContainer', parentId, name, fullPath, type);
+    const fetchResult = await fetch('/api/containers', {
+      method: 'POST',
+      body: JSON.stringify({
+        parentId,
+        name,
+        fullPath,
+        type: type.toUpperCase()
+      }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const body = await fetchResult.json();
+    const newFolder = new models.Folder(body);
+
+    console.log('api.addContainer done!', newFolder);
+    return newFolder;
+  } catch (err) {
+    console.error('api.addContainer error', err);
     throw err;
   }
 }

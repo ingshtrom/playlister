@@ -10,7 +10,7 @@ import * as models from '../models';
 
 import {
   addContainer,
-} from '../modules/container-actions';
+} from '../modules/content-actions';
 
 import ContentListItem from '../components/ContentListItem';
 import AddContainer from '../components/AddContainer';

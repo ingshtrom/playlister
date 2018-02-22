@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import * as models from '../models';
+import { normalizeRootUrl } from '../util/url';
 
 export default class AddContainer extends React.Component {
   static propTypes = {
@@ -12,19 +13,76 @@ export default class AddContainer extends React.Component {
   constructor(props) {
     super(props);
 
-    this.openNewContainerDialog = this.openNewContainerDialog.bind(this);
+    this.updateName = this.updateName.bind(this);
+    this.updateType = this.updateType.bind(this);
+    this.submitForm = this.submitForm.bind(this);
+
+    this.state = {
+      name: '',
+      type: 'FOLDER'
+    };
   }
 
-  openNewContainerDialog() {
-    alert('new container?');
+
+  updateName(event) {
+    this.setState({
+      name: event.target.value
+    });
+  }
+
+  updateType(event) {
+    this.setState({
+      type: event.target.value
+    });
+  }
+
+  submitForm(event) {
+    const {
+      parent: {
+        id, fullPath
+      },
+      addContainer
+    } = this.props;
+    const { name, type } = this.state;
+    const prefix = normalizeRootUrl(fullPath);
+
+    addContainer(id, name, `${prefix}/${name}`, type);
+    event.preventDefault();
   }
 
   render() {
+    const { name, type } = this.state;
+
     return (
-      <div id='add-container-wrapper'>
-        <button className='btn btn-primary' onClick={this.openNewContainerDialog} >
-          New Container
-        </button>
+      <div id='add-container-wrapper' className='border-primary container'>
+        <form className='form-inline'>
+          <div className='form-group mr-3'>
+            <input
+              className='form-control'
+              type='text'
+              value={name}
+              onChange={this.updateName}
+            />
+          </div>
+          <div className='form-group mr-3'>
+            <select
+              className="form-control"
+              id="container-type"
+              value={type}
+              onChange={this.updateType}
+            >
+              <option value='FOLDER'>Folder</option>
+              <option value='PLAYLIST'>Playlist</option>
+            </select>
+          </div>
+          <button
+            type='submit'
+            className='btn btn-primary form-control'
+            onClick={this.submitForm}
+          >
+            Create New Container
+          </button>
+        </form>
       </div>
     );
   }
