@@ -13,7 +13,7 @@ test('New Playlist instances set the `content` to a List type', () => {
 test('New Playlist instances set the properties correctly as passed in', () => {
   const date = new Date();
   const f = new Playlist({
-    fullUrl: 'http://bar',
+    fullPath: 'http://bar',
     name: 'baz',
     content: [ 'foo' ],
     createdBy: 'Jack',
@@ -21,7 +21,7 @@ test('New Playlist instances set the properties correctly as passed in', () => {
     updatedOn: date
   });
 
-  expect(f.get('fullUrl')).toEqual('http://bar');
+  expect(f.get('fullPath')).toEqual('http://bar');
   expect(f.get('name')).toEqual('baz');
   expect(f.get('content')).toEqual(List(['foo']));
   expect(f.get('createdBy')).toEqual('Jack');

@@ -13,6 +13,16 @@ services:
     volumes:
       - ./node:/opt/app:consistent
 
+  web:
+    build: ./react
+    ports:
+      - 3000:3000
+    command: [ "node", "scripts/start.js" ]
+    volumes:
+      - ./react:/opt/app:consistent
+    links:
+      - api
+
   db:
     image: mysql:latest
     environment:

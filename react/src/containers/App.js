@@ -17,6 +17,7 @@ class App extends Component {
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <div>
+
             <Header />
 
             <main role='main' className='container'>

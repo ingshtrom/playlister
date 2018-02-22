@@ -10,7 +10,7 @@ class PlaylistListItem extends Component {
 
     return (
       <div>
-        <Link to={item.fullUrl}>
+        <Link to={item.fullPath}>
           Playlist: {item.name}
         </Link>
       </div>

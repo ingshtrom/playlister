@@ -1,13 +1,21 @@
 import { List, Record } from 'immutable';
 
 const PlaylistRecord = Record({
-  fullUrl: null,
+  id: null,
+  fullPath: null,
   name: null,
   type: 'PLAYLIST',
   content: List(),
+  isLocked: false,
+  eventStart: null,
+  eventEnd: null,
   createdBy: null,
   createdOn: null,
-  updatedOn: null
+  updatedOn: null,
+  updatedBy: null,
+  deletedBy: null,
+  deletedOn: null,
+  parentId: null,
 });
 
 class Playlist extends PlaylistRecord {

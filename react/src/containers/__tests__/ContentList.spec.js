@@ -7,7 +7,7 @@ const defaultState = {
   content: fromJS({
     data: {
       '/foo/bar': new models.Folder({
-        fullUrl: '/foo/bar',
+        fullPath: '/foo/bar',
         name: 'root',
         type: 'FOLDER',
         content: [],

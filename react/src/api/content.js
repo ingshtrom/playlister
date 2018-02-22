@@ -2,20 +2,21 @@ import { Map } from 'immutable';
 
 import * as models from '../models';
 
-export async function getContent() {
+export async function getContainerContent(path) {
   try {
     console.log('starting api.getContent');
-    const fetchResult = await fetch('/api/content/containers')
+    const fetchResult = await fetch(`/api/containers?path=${path}`)
     const body = await fetchResult.json();
 
-    const data = Object.keys(body)
+    const folder = new models.Folder(body);
+    console.log(folder, body);
+
+    let data = Object.keys(folder.content)
       .map(key => {
         const obj = body[key];
-
         if (!obj) return null
 
-
-        obj.fullUrl = key;
+        obj.fullPath = key;
 
         switch (obj.type) {
           case 'PLAYLIST':
@@ -26,9 +27,10 @@ export async function getContent() {
       })
       .filter(x => x)
       .reduce((prev, next) => {
-        return prev.set(next.fullUrl, next);
+        return prev.set(next.fullPath, next);
       }, Map());
 
+    data = data.set(folder.fullPath, folder);
     console.log('api.getContent done!', data);
     return data
   } catch (err) {

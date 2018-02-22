@@ -2,19 +2,33 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { List } from 'immutable';
 
 import { normalizeRootUrl } from '../util/url';
 import * as models from '../models';
 
+import {
+  addContainer,
+} from '../modules/container-actions';
+
 import ContentListItem from '../components/ContentListItem';
+import AddContainer from '../components/AddContainer';
 
 export class ContentList extends Component {
   render() {
-    const { childContent } = this.props;
+    const {
+      content,
+      childContent,
+      addContainer,
+    } = this.props;
 
     return (
       <div>
+        <AddContainer
+          parent={content}
+          addContainer={addContainer}
+        />
         { childContent.map(ContentList.renderContentItem) }
       </div>
     );
@@ -34,7 +48,8 @@ ContentList.propTypes = {
   ),
   match: PropTypes.shape({
     url: PropTypes.string.isRequired
-  }).isRequired
+  }).isRequired,
+  addContainer: PropTypes.func.isRequired
 };
 
 ContentList.renderContentItem = ci => {
@@ -49,7 +64,10 @@ ContentList.renderContentItem = ci => {
 export default connect(
   (state, props) => ({
     childContent: getChildContent(state, props)
-  })
+  }),
+  dispatch => bindActionCreators({
+    addContainer
+  }, dispatch)
 )(ContentList);
 
 export function getChildContent(state, props) {
@@ -61,8 +79,8 @@ export function getChildContent(state, props) {
 
   return content.get('content').map(childName => {
     try {
-      const fullUrl = `${normalizeRootUrl(props.match.url)}/${childName}`;
-      return state.content.getIn(['data', fullUrl]);
+      const fullPath = `${normalizeRootUrl(props.match.url)}/${childName}`;
+      return state.content.getIn(['data', fullPath]);
     } catch (err) {
       console.error('ERROR', err);
       return null;

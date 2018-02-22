@@ -4,7 +4,8 @@ import * as api from '../api/content';
 
 export function* getContent(action) {
   try {
-    const data = yield call(api.getContent);
+    console.log('saga getContent', action);
+    const data = yield call(api.getContainerContent, action.path);
     yield put({ type: 'GET_CONTENT_SUCCESS', data });
   } catch (e) {
     console.error('Error getting content', e);

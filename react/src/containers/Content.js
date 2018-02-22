@@ -28,6 +28,16 @@ export class Content extends React.Component {
     getContent(url);
   }
 
+  componentDidUpdate(prevProps) {
+    const oldUrl = prevProps.match.url;
+    const newUrl = this.props.match.url;
+    const { getContent } = this.props;
+
+    if (oldUrl !== newUrl) {
+      getContent(newUrl);
+    }
+  }
+
   render() {
     const {
       content,

@@ -13,7 +13,7 @@ test('New Folder instances set the `content` to a List type', () => {
 test('New Folder instances set the properties correctly as passed in', () => {
   const date = new Date();
   const f = new Folder({
-    fullUrl: 'http://foo',
+    fullPath: 'http://foo',
     name: 'foo',
     content: [ 'foo', 'bar'],
     createdBy: 'Jill',
@@ -21,7 +21,7 @@ test('New Folder instances set the properties correctly as passed in', () => {
     updatedOn: date
   });
 
-  expect(f.get('fullUrl')).toEqual('http://foo');
+  expect(f.get('fullPath')).toEqual('http://foo');
   expect(f.get('name')).toEqual('foo');
   expect(f.get('content')).toEqual(List(['foo', 'bar']));
   expect(f.get('createdBy')).toEqual('Jill');

@@ -10,7 +10,7 @@ class FolderListItem extends Component {
 
     return (
       <div>
-        <Link to={item.fullUrl}>
+        <Link to={item.fullPath}>
           Folder: {item.name}
         </Link>
       </div>

@@ -1,6 +1,7 @@
-export function getContent() {
+export function getContent(path) {
   return {
-    type: 'GET_CONTENT_REQUEST'
+    type: 'GET_CONTENT_REQUEST',
+    path
   };
 }
 
