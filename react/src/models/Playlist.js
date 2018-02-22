@@ -5,7 +5,7 @@ const PlaylistRecord = Record({
   fullPath: null,
   name: null,
   type: 'PLAYLIST',
-  content: List(),
+  mediaContent: List(),
   isLocked: false,
   eventStart: null,
   eventEnd: null,
@@ -21,7 +21,7 @@ const PlaylistRecord = Record({
 class Playlist extends PlaylistRecord {
   constructor(fromObject) {
     const record = super(fromObject);
-    return record.set('content', List(record.get('content')));
+    return record.set('mediaContent', List(record.get('mediaContent')));
   }
 }
 

@@ -10,23 +10,23 @@ const defaultState = fromJS({
 export default function contentReducer(state = defaultState, action) {
   switch(action.type) {
     case 'GET_CONTENT_REQUEST':
-    case 'GET_MEDIA_REQUEST':
     case 'ADD_CONTAINER_REQUEST':
+    case 'ADD_MEDIA_REQUEST':
       return handleRequest(state, action);
 
     case 'GET_CONTENT_FAILURE':
-    case 'GET_MEDIA_FAILURE':
     case 'ADD_CONTAINER_FAILURE':
+    case 'ADD_MEDIA_FAILURE':
       return handleFailure(state, action);
 
     case 'GET_CONTENT_SUCCESS':
       return getContentSuccess(state, action);
 
-    case 'GET_MEDIA_SUCCESS':
-      return getMediaSuccess(state, action);
-
     case 'ADD_CONTAINER_SUCCESS':
       return addContainerSuccess(state, action);
+
+    case 'ADD_MEDIA_SUCCESS':
+      return addMediaSuccess(state, action);
 
     default:
       return state;
@@ -47,13 +47,8 @@ function handleFailure(state, action) {
 
 function getContentSuccess(state, action) {
   return state
-    .updateIn(['data'], data => data.mergeDeep(action.data))
-    .set('isLoading', false);
-}
-
-function getMediaSuccess(state, action) {
-  return state
-    .updateIn(['media'], media => media.mergeDeep(action.data))
+    .updateIn(['data'], data => data.mergeDeep(action.data.data))
+    .updateIn(['media'], media => media.mergeDeep(action.data.media))
     .set('isLoading', false);
 }
 
@@ -62,7 +57,7 @@ function addContainerSuccess(state, action) {
   .updateIn(['data'], data => {
     const parent = data.find(val => val.id === action.data.parentId);
     if (!parent) {
-      console.log('could not find the parent when updating it to include the new container');
+      console.error('could not find the parent when updating it to include the new container');
       return data;
     }
 
@@ -71,5 +66,9 @@ function addContainerSuccess(state, action) {
     });
   })
   .set('isLoading', false);
+}
+
+function addMediaSuccess(state, action) {
+  return state;
 }
 

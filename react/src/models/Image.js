@@ -1,13 +1,18 @@
 import { Record } from 'immutable';
 
 const ImageRecord = Record({
-  id: null,
+ id: null,
   name: null,
+  playlistIndex: 0,
+  url: null,
   type: 'IMAGE',
-  blobUrl: null,
-  createdBy: null,
   createdOn: null,
-  updatedOn: null
+  createdBy: null,
+  updatedOn: null,
+  updatedBy: null,
+  deletedOn: null,
+  deletedBy: null,
+  containerId: null 
 });
 
 export default ImageRecord;

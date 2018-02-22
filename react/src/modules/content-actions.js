@@ -22,3 +22,13 @@ export function addContainer(parentId, name, fullPath, type) {
   };
 }
 
+export function addMedia(playlistId, name, playlistIndex, type) {
+  return {
+    type: 'ADD_MEDIA_REQUEST',
+    playlistId,
+    name,
+    playlistIndex,
+    mediaType: type
+  };
+}
+

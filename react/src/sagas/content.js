@@ -33,3 +33,12 @@ export function* addContainer(action) {
   }
 }
 
+export function* addMedia(action) {
+  try {
+    const data = yield call(api.addMedia, action.playlistId, action.name, action.playlistIndex, action.mediaType);
+    yield put({ type: 'ADD_MEDIA_SUCCESS', data });
+  } catch (e) {
+    console.error('Error getting content', e);
+    yield put({ type: 'ADD_MEDIA_FAILURE', errorMessage: 'Could not add media' });
+  }
+}

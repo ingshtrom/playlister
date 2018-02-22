@@ -3,11 +3,11 @@ import { List } from 'immutable';
 
 test('New Playlist instances set the `content` to a List type', () => {
   const instance = new Playlist({
-    content: [ 'foo', 'bar'],
+    mediaContent: [ 'foo', 'bar'],
   });
 
-  expect(instance.get('content')).toBeInstanceOf(List);
-  expect(instance.get('content')).toMatchObject(List(['foo', 'bar']));
+  expect(instance.get('mediaContent')).toBeInstanceOf(List);
+  expect(instance.get('mediaContent')).toMatchObject(List(['foo', 'bar']));
 });
 
 test('New Playlist instances set the properties correctly as passed in', () => {
@@ -15,7 +15,7 @@ test('New Playlist instances set the properties correctly as passed in', () => {
   const f = new Playlist({
     fullPath: 'http://bar',
     name: 'baz',
-    content: [ 'foo' ],
+    mediaContent: [ 'foo' ],
     createdBy: 'Jack',
     createdOn: date,
     updatedOn: date
@@ -23,7 +23,7 @@ test('New Playlist instances set the properties correctly as passed in', () => {
 
   expect(f.get('fullPath')).toEqual('http://bar');
   expect(f.get('name')).toEqual('baz');
-  expect(f.get('content')).toEqual(List(['foo']));
+  expect(f.get('mediaContent')).toEqual(List(['foo']));
   expect(f.get('createdBy')).toEqual('Jack');
   expect(f.get('createdOn')).toEqual(date);
   expect(f.get('updatedOn')).toEqual(date);

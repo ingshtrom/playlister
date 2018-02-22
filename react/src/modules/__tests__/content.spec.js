@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import contentReducer from '../content';
+import * as models from '../../models';
 
 test('GET_CONTENT_REQUEST action sets isLoading=true and wipes any existing errorMessage', () => {
   const startState = fromJS({
@@ -19,7 +20,7 @@ test('GET_CONTENT_REQUEST action sets isLoading=true and wipes any existing erro
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
 
-test('GET_MEDIA_REQUEST action sets isLoading=true and wipes any existing errorMessage', () => {
+test('ADD_CONTAINER_REQUEST action sets isLoading=true and wipes any existing errorMessage', () => {
   const startState = fromJS({
     data: {},
     media: {},
@@ -32,7 +33,7 @@ test('GET_MEDIA_REQUEST action sets isLoading=true and wipes any existing errorM
     errorMessage: '',
     isLoading: true
   });
-  const action = { type: 'GET_MEDIA_REQUEST' };
+  const action = { type: 'GET_CONTENT_REQUEST' };
 
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
@@ -56,7 +57,7 @@ test('GET_CONTENT_FAILURE action sets isLoading=false and sets the errorMessage 
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
 
-test('GET_MEDIA_FAILURE action sets isLoading=false and sets the errorMessage according to the action', () => {
+test('ADD_CONTAINER_FAILURE action sets isLoading=false and sets the errorMessage according to the action', () => {
   const startState = fromJS({
     data: {},
     media: {},
@@ -69,7 +70,7 @@ test('GET_MEDIA_FAILURE action sets isLoading=false and sets the errorMessage ac
     errorMessage: '!boobaz!',
     isLoading: false
   });
-  const action = { type: 'GET_MEDIA_FAILURE', errorMessage: '!boobaz!' };
+  const action = { type: 'GET_CONTENT_FAILURE', errorMessage: '!boobaz!' };
 
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
@@ -85,33 +86,112 @@ test('GET_CONTENT_SUCCESS action sets isLoading=false and sets the data accordin
     data: {
       does_not: 'matter what this is, just that it is set'
     },
-    media: {},
+    media: {
+      media_stuff: 'really does not matter'
+    },
     errorMessage: '',
     isLoading: false
   });
-  const action = { type: 'GET_CONTENT_SUCCESS', data: { does_not: 'matter what this is, just that it is set' }};
+  const action = {
+    type: 'GET_CONTENT_SUCCESS',
+    data: {
+      data: {
+        does_not: 'matter what this is, just that it is set'
+      },
+      media: {
+        media_stuff: 'really does not matter'
+      }
+    }
+  };
 
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
 
-test('GET_MEDIA_SUCCESS action sets isLoading=false and sets the media according to the action', () => {
+test('ADD_CONTAINER_SUCCESS action sets isLoading=false, adds the container to the parent, and adds the container to the data object. FOLDER', () => {
   const startState = fromJS({
-    data: {},
+    data: {
+      '/': new models.Folder({
+        id: 1,
+        fullPath: '/',
+        content: []
+      })
+    },
     media: {},
     errorMessage: '',
     isLoading: true
   });
   const endState = fromJS({
     data: {
+      '/': new models.Folder({
+        id: 1,
+        fullPath: '/',
+        content: [ 'foo' ]
+      }),
+      '/foo': new models.Folder({
+        id: 2,
+        type: 'FOLDER',
+        fullPath: '/foo',
+        name: 'foo',
+        parentId: 1
+      })
     },
-    media: {
-      does_not: 'matter what this is, just that it is set'
-    },
+    media: {},
     errorMessage: '',
     isLoading: false
   });
-  const action = { type: 'GET_MEDIA_SUCCESS', data: { does_not: 'matter what this is, just that it is set' }};
+  const action = {
+    type: 'ADD_CONTAINER_SUCCESS',
+    data: new models.Folder({
+      id: 2,
+      fullPath: '/foo',
+      name: 'foo',
+      parentId: 1
+    })
+  };
 
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
 
+test('ADD_CONTAINER_SUCCESS action sets isLoading=false, adds the container to the parent, and adds the container to the data object. PLAYLIST', () => {
+  const startState = fromJS({
+    data: {
+      '/': new models.Folder({
+        id: 1,
+        fullPath: '/',
+        content: []
+      })
+    },
+    media: {},
+    errorMessage: '',
+    isLoading: true
+  });
+  const endState = fromJS({
+    data: {
+      '/': new models.Folder({
+        id: 1,
+        fullPath: '/',
+        content: [ 'foo' ]
+      }),
+      '/foo': new models.Playlist({
+        id: 2,
+        fullPath: '/foo',
+        name: 'foo',
+        parentId: 1
+      })
+    },
+    media: {},
+    errorMessage: '',
+    isLoading: false
+  });
+  const action = {
+    type: 'ADD_CONTAINER_SUCCESS',
+    data: new models.Playlist({
+      id: 2,
+      fullPath: '/foo',
+      name: 'foo',
+      parentId: 1
+    })
+  };
+
+  expect(contentReducer(startState, action)).toMatchObject(endState);
+});
