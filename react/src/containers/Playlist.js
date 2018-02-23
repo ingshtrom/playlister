@@ -41,6 +41,7 @@ export class Playlist extends Component {
         <AddMedia
           parent={content}
           addMedia={addMedia}
+          nextIndex={childContent.size || 0}
         />
         <hr />
         <div className='h1'>

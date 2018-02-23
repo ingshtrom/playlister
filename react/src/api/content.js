@@ -64,10 +64,10 @@ function parsePlaylist(body) {
     })
     .filter(x => x)
     .reduce((prev, next) => {
-      return prev.set(next.fullPath, next);
+      return prev.set(next.id, next);
     }, Map());
 
-  playlist = playlist.set('mediaContent', playlist.mediaContent.map(obj => obj.name));
+  playlist = playlist.set('mediaContent', playlist.mediaContent.map(obj => obj.id));
   console.log('api.getContent done!', media);
 
   return {

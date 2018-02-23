@@ -22,11 +22,11 @@ router.post('/media', async (req, res, next) => {
     if (typeof body.deletedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the deletedAt column' });
 
     const { Media } = req.app.get('db').models;
-    const container = await Media.create({
+    const media = await Media.create({
       ...body
     });
 
-    res.status(201).json(container);
+    res.status(201).json(media);
   } catch (err) {
     console.error('Error creating media', err);
     next(err);

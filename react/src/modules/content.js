@@ -53,11 +53,11 @@ function getContentSuccess(state, action) {
 }
 
 function addContainerSuccess(state, action) {
-  return state.updateIn(['data'], data => data.mergeDeep({ [action.data.fullPath] : action.data }))
+  return state.updateIn(['data'], data => data.set(action.data.fullPath, action.data))
   .updateIn(['data'], data => {
     const parent = data.find(val => val.id === action.data.parentId);
     if (!parent) {
-      console.error('could not find the parent when updating it to include the new container');
+      console.error('Could not find the parent when updating it to include the new container', action.data.id);
       return data;
     }
 
@@ -69,6 +69,18 @@ function addContainerSuccess(state, action) {
 }
 
 function addMediaSuccess(state, action) {
-  return state;
+  return state.updateIn(['media'], media => media.set(action.data.id.toString(), action.data))
+    .updateIn(['data'], data => {
+      const parent = data.find(val => val.id === action.data.containerId);
+      if (!parent) {
+        console.error('Could not find the parent when updating it to include the new media', action.data.id);
+        return data;
+      }
+
+      return data.mergeDeep({
+        [parent.fullPath]: parent.updateIn(['mediaContent'], mediaContent => mediaContent.push(action.data.id.toString()))
+      });
+    })
+    .set('isLoading', false);
 }
 

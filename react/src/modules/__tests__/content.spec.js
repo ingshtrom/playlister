@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { List, fromJS } from 'immutable';
 import contentReducer from '../content';
 import * as models from '../../models';
 
@@ -33,7 +33,25 @@ test('ADD_CONTAINER_REQUEST action sets isLoading=true and wipes any existing er
     errorMessage: '',
     isLoading: true
   });
-  const action = { type: 'GET_CONTENT_REQUEST' };
+  const action = { type: 'ADD_CONTAINER_REQUEST' };
+
+  expect(contentReducer(startState, action)).toMatchObject(endState);
+});
+
+test('ADD_MEDIA_REQUEST action sets isLoading=true and wipes any existing errorMessage', () => {
+  const startState = fromJS({
+    data: {},
+    media: {},
+    errorMessage: '!foobar!',
+    isLoading: false
+  });
+  const endState = fromJS({
+    data: {},
+    media: {},
+    errorMessage: '',
+    isLoading: true
+  });
+  const action = { type: 'ADD_MEDIA_REQUEST' };
 
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
@@ -70,7 +88,25 @@ test('ADD_CONTAINER_FAILURE action sets isLoading=false and sets the errorMessag
     errorMessage: '!boobaz!',
     isLoading: false
   });
-  const action = { type: 'GET_CONTENT_FAILURE', errorMessage: '!boobaz!' };
+  const action = { type: 'ADD_CONTAINER_FAILURE', errorMessage: '!boobaz!' };
+
+  expect(contentReducer(startState, action)).toMatchObject(endState);
+});
+
+test('ADD_MEDIA_FAILURE action sets isLoading=false and sets the errorMessage according to the action', () => {
+  const startState = fromJS({
+    data: {},
+    media: {},
+    errorMessage: '',
+    isLoading: true
+  });
+  const endState = fromJS({
+    data: {},
+    media: {},
+    errorMessage: '!boobaz!',
+    isLoading: false
+  });
+  const action = { type: 'ADD_MEDIA_FAILURE', errorMessage: '!boobaz!' };
 
   expect(contentReducer(startState, action)).toMatchObject(endState);
 });
@@ -190,6 +226,96 @@ test('ADD_CONTAINER_SUCCESS action sets isLoading=false, adds the container to t
       fullPath: '/foo',
       name: 'foo',
       parentId: 1
+    })
+  };
+
+  expect(contentReducer(startState, action)).toMatchObject(endState);
+});
+
+test('ADD_MEDIA_SUCCESS action sets isLoading=false, adds the media to the playlist, and adds the media to the media object. IMAGE', () => {
+  const startState = fromJS({
+    data: {
+      '/': new models.Playlist({
+        id: 1,
+        fullPath: '/',
+        mediaContent: []
+      })
+    },
+    media: {},
+    errorMessage: '',
+    isLoading: true
+  });
+  const endState = fromJS({
+    data: {
+      '/': new models.Playlist({
+        id: 1,
+        fullPath: '/',
+        mediaContent: [ '5' ]
+      })
+    },
+    media: {
+      5: new models.Image({
+        id: 5,
+        name: 'foo',
+        playlistIndex: 0,
+        containerId: 1
+      })
+    },
+    errorMessage: '',
+    isLoading: false
+  });
+  const action = {
+    type: 'ADD_MEDIA_SUCCESS',
+    data:new models.Image({
+      id: 5,
+      name: 'foo',
+      playlistIndex: 0,
+      containerId: 1
+    })
+  };
+
+  expect(contentReducer(startState, action)).toMatchObject(endState);
+});
+
+test('ADD_MEDIA_SUCCESS action sets isLoading=false, adds the media to the playlist, and adds the media to the media object. VIDEO', () => {
+  const startState = fromJS({
+    data: {
+      '/': new models.Playlist({
+        id: 1,
+        fullPath: '/',
+        mediaContent: []
+      })
+    },
+    media: {},
+    errorMessage: '',
+    isLoading: true
+  });
+  const endState = fromJS({
+    data: {
+      '/': new models.Playlist({
+        id: 1,
+        fullPath: '/',
+        mediaContent: [ '5' ]
+      })
+    },
+    media: {
+      '5': new models.Video({
+        id: 5,
+        name: 'foo',
+        playlistIndex: 0,
+        containerId: 1
+      })
+    },
+    errorMessage: '',
+    isLoading: false
+  });
+  const action = {
+    type: 'ADD_MEDIA_SUCCESS',
+    data: new models.Video({
+      id: 5,
+      name: 'foo',
+      playlistIndex: 0,
+      containerId: 1
     })
   };
 
