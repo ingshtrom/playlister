@@ -15,11 +15,14 @@ export default class AddMedia extends React.Component {
 
     this.updateName = this.updateName.bind(this);
     this.updateType = this.updateType.bind(this);
+    this.updateFile = this.updateFile.bind(this);
     this.submitForm = this.submitForm.bind(this);
 
     this.state = {
       name: '',
-      type: 'IMAGE'
+      type: 'IMAGE',
+      file: '',
+      // imagePreviewUrl: ''
     };
   }
 
@@ -36,6 +39,23 @@ export default class AddMedia extends React.Component {
     });
   }
 
+  // http://www.hartzis.me/react-image-upload/
+  updateFile(event) {
+    event.preventDefault();
+
+    const reader = new FileReader();
+    const file = event.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        file: file,
+        // imagePreviewUrl: reader.result
+      });
+    }
+
+    reader.readAsDataURL(file)
+  }
+
   submitForm(event) {
     const {
       addMedia,
@@ -44,9 +64,9 @@ export default class AddMedia extends React.Component {
       },
       nextIndex
     } = this.props;
-    const { name, type } = this.state;
+    const { name, type, file } = this.state;
 
-    addMedia(id, name, nextIndex, type);
+    addMedia(id, name, nextIndex, type, file);
     event.preventDefault();
   }
 
@@ -75,6 +95,14 @@ export default class AddMedia extends React.Component {
               <option value='IMAGE'>Image</option>
               <option value='VIDEO'>Video</option>
             </select>
+          </div>
+          <div className='form-group mr-3'>
+            <input
+              id='new-media-file'
+              className='form-control'
+              type='file'
+              onChange={this.updateFile}
+            />
           </div>
           <button
             id='new-media-submit'

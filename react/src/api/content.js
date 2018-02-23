@@ -151,9 +151,14 @@ export async function addContainer(parentId, name, fullPath, type) {
   }
 }
 
-export async function addMedia(playlistId, name, playlistIndex, type) {
+export async function addMedia(playlistId, name, playlistIndex, type, file) {
   try {
     console.log('starting api.addMedia', playlistId, name, playlistIndex, type);
+
+    if (!name || !file) {
+      throw new Error('name or file not filled out for new media');
+    }
+
     const fetchResult = await fetch('/api/media', {
       method: 'POST',
       body: JSON.stringify({
@@ -178,13 +183,32 @@ export async function addMedia(playlistId, name, playlistIndex, type) {
 
     const body = await fetchResult.json();
 
-    console.log('api.addMedia done!', body);
+    const form = new FormData();
+    form.append('media', file);
 
-    if (body.type === 'IMAGE') {
-      return new models.Image(body);
+    const uploadResult = await fetch(`/api/media/${body.id}/upload`, {
+      method: 'POST',
+      body: form
+    });
+
+    if (uploadResult.status === 500) {
+      throw new Error('Unkown error adding media');
     }
 
-    return new models.Video(body);
+    if (uploadResult.status === 400) {
+      const error = await fetchResult.json();
+      throw new Error(error.error);
+    }
+
+    const media = await uploadResult.json();
+
+    console.log('api.addMedia done!', media);
+
+    if (media.type === 'IMAGE') {
+      return new models.Image(media);
+    }
+
+    return new models.Video(media);
   } catch (err) {
     console.error('api.addMedia error', err);
     throw err;
