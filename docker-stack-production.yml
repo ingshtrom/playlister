@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   api:
-    image: ingshtrom/playlister:latest
+    image: ingshtrom/playlister:master_f80b3c6e
     deploy:
       replicas: 2
       restart_policy:
