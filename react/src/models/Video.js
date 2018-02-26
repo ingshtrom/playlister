@@ -12,7 +12,8 @@ const VideoRecord = Record({
   updatedBy: null,
   deletedOn: null,
   deletedBy: null,
-  containerId: null
+  containerId: null,
+  isBeingPreviewed: false,
 });
 
 export default VideoRecord;

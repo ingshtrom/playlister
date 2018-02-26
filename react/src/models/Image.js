@@ -1,7 +1,7 @@
 import { Record } from 'immutable';
 
 const ImageRecord = Record({
- id: null,
+  id: null,
   name: null,
   playlistIndex: 0,
   url: null,
@@ -12,7 +12,8 @@ const ImageRecord = Record({
   updatedBy: null,
   deletedOn: null,
   deletedBy: null,
-  containerId: null 
+  containerId: null,
+  isBeingPreviewed: false,
 });
 
 export default ImageRecord;

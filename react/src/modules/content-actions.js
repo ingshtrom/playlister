@@ -33,16 +33,23 @@ export function addMedia(playlistId, name, playlistIndex, type, file) {
   };
 }
 
-export function moveMediaDown(id) {
+export function moveMediaDown(playlistId, id) {
   return {
     type: 'MOVE_MEDIA_DOWN_REQUEST',
     id
   };
 }
 
-export function moveMediaUp(id) {
+export function moveMediaUp(playlistId, id) {
   return {
     type: 'MOVE_MEDIA_UP_REQUEST',
+    id
+  };
+}
+
+export function toggleMediaPreview(id) {
+  return {
+    type: 'TOGGLE_PREVIEW_MEDIA_ITEM',
     id
   };
 }

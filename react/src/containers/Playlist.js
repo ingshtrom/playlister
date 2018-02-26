@@ -9,9 +9,10 @@ import {
   addMedia,
   moveMediaDown,
   moveMediaUp,
+  toggleMediaPreview,
 } from '../modules/content-actions';
 import AddMedia from '../components/AddMedia';
-import MediaListItem from '../components/MediaListItem';
+import MediaList from '../components/MediaList';
 
 export class Playlist extends Component {
   static propTypes = {
@@ -24,7 +25,8 @@ export class Playlist extends Component {
     ),
     addMedia: PropTypes.func.isRequired,
     moveMediaUp: PropTypes.func.isRequired,
-    moveMediaDown: PropTypes.func.isRequired
+    moveMediaDown: PropTypes.func.isRequired,
+    toggleMediaPreview: PropTypes.func.isRequired,
   }
 
   render() {
@@ -34,6 +36,7 @@ export class Playlist extends Component {
       content,
       moveMediaDown,
       moveMediaUp,
+      toggleMediaPreview,
     } = this.props;
 
     return (
@@ -47,10 +50,11 @@ export class Playlist extends Component {
         <div className='h1'>
           {content.name}
         </div>
-        <MediaListItem
+        <MediaList
           media={childContent}
           moveDown={moveMediaDown}
           moveUp={moveMediaUp}
+          togglePreview={toggleMediaPreview}
         />
       </div>
     );
@@ -77,5 +81,6 @@ export function mapDispatchToProps(dispatch) {
     addMedia,
     moveMediaDown,
     moveMediaUp,
+    toggleMediaPreview,
   }, dispatch);
 }

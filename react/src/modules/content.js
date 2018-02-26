@@ -28,6 +28,15 @@ export default function contentReducer(state = defaultState, action) {
     case 'ADD_MEDIA_SUCCESS':
       return addMediaSuccess(state, action);
 
+    case 'TOGGLE_PREVIEW_MEDIA_ITEM':
+      return toggleMediaPreview(state, action);
+
+    case 'MOVE_MEDIA_DOWN_REQUEST':
+      return moveMediaDownRequest(state, action);
+
+    case 'MOVE_MEDIA_UP_REQUEST':
+      return moveMediaUpRequest(state, action);
+
     default:
       return state;
   }
@@ -84,3 +93,62 @@ function addMediaSuccess(state, action) {
     .set('isLoading', false);
 }
 
+function toggleMediaPreview(state, action) {
+  return state.updateIn(['media', action.id.toString(), 'isBeingPreviewed'], isBeingPreviewed => !isBeingPreviewed);
+}
+
+function moveMediaDownRequest(state, action) {
+  let error = '';
+
+  return state.updateIn(['media'], media => {
+    if (error) return media;
+
+    let media1 = media.find(mediaItem => mediaItem.get('id') === action.id);
+    let media2 = media.find(
+      mediaItem =>
+        mediaItem.get('containerId') === media1.get('containerId')
+        && mediaItem.get('playlistIndex') === media1.get('playlistIndex') + 1
+    );
+
+    if (!media1 || !media2) {
+      console.log('cannot move down', action.id);
+      error = 'Cannot move media down. Already the last item in the list.';
+      return media;
+    }
+
+    media1 = media1.update('playlistIndex', index => index + 1);
+    media2 = media2.update('playlistIndex', index => index - 1);
+
+    return media
+      .update(media1.id.toString(), () => media1)
+      .update(media2.id.toString(), () => media2);
+  }).update('errorMessage', () => error);
+}
+
+function moveMediaUpRequest(state, action) {
+  let error = '';
+
+  return state.updateIn(['media'], media => {
+    if (error) return media;
+
+    let media1 = media.find(mediaItem => mediaItem.get('id') === action.id);
+    let media2 = media.find(
+      mediaItem =>
+        mediaItem.get('containerId') === media1.get('containerId')
+        && mediaItem.get('playlistIndex') === media1.get('playlistIndex') - 1
+    );
+
+    if (!media1 || !media2) {
+      console.log('cannot move media up', action.id);
+      error = 'Cannot move media up. Already the first item in the list.';
+      return media;
+    }
+
+    media1 = media1.update('playlistIndex', index => index - 1);
+    media2 = media2.update('playlistIndex', index => index + 1);
+
+    return media
+      .update(media1.id.toString(), () => media1)
+      .update(media2.id.toString(), () => media2);
+  }).update('errorMessage', () => error);
+}
