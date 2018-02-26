@@ -7,7 +7,7 @@ import store, { history } from '../store'
 import Content from './Content';
 
 import Header from '../components/Header';
-import Footer from '../components/Footer';
+// import Footer from '../components/Footer';
 
 import './App.css';
 
@@ -26,7 +26,7 @@ class App extends Component {
               </Switch>
             </main>
 
-            <Footer />
+            { /* <Footer /> */ }
           </div>
         </ConnectedRouter>
       </Provider>

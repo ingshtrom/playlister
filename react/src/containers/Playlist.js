@@ -5,8 +5,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import * as models from '../models';
-import { addMedia } from '../modules/content-actions';
+import {
+  addMedia,
+  moveMediaDown,
+  moveMediaUp,
+} from '../modules/content-actions';
 import AddMedia from '../components/AddMedia';
+import MediaListItem from '../components/MediaListItem';
 
 export class Playlist extends Component {
   static propTypes = {
@@ -16,24 +21,19 @@ export class Playlist extends Component {
         PropTypes.instanceOf(models.Image),
         PropTypes.instanceOf(models.Video)
       ])
-    )
-  }
-
-  static renderMediaItem = item => {
-    return (
-      <div key={item.id}>
-        <a href={item.url} target="_blank">
-          {item.id} | {item.name} | {item.type}
-        </a>
-      </div>
-    );
+    ),
+    addMedia: PropTypes.func.isRequired,
+    moveMediaUp: PropTypes.func.isRequired,
+    moveMediaDown: PropTypes.func.isRequired
   }
 
   render() {
     const {
       addMedia,
       childContent,
-      content
+      content,
+      moveMediaDown,
+      moveMediaUp,
     } = this.props;
 
     return (
@@ -47,7 +47,11 @@ export class Playlist extends Component {
         <div className='h1'>
           {content.name}
         </div>
-        { childContent.map(Playlist.renderMediaItem) }
+        <MediaListItem
+          media={childContent}
+          moveDown={moveMediaDown}
+          moveUp={moveMediaUp}
+        />
       </div>
     );
   }
@@ -70,6 +74,8 @@ export function mapStateToProps(state, props) {
 
 export function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    addMedia
+    addMedia,
+    moveMediaDown,
+    moveMediaUp,
   }, dispatch);
 }

@@ -33,3 +33,17 @@ export function addMedia(playlistId, name, playlistIndex, type, file) {
   };
 }
 
+export function moveMediaDown(id) {
+  return {
+    type: 'MOVE_MEDIA_DOWN_REQUEST',
+    id
+  };
+}
+
+export function moveMediaUp(id) {
+  return {
+    type: 'MOVE_MEDIA_UP_REQUEST',
+    id
+  };
+}
+
