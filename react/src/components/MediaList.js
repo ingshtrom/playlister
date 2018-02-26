@@ -6,7 +6,6 @@ import ArrowDownIcon from 'react-icons/lib/fa/arrow-down';
 import ImageFileIcon from 'react-icons/lib/fa/file-image-o';
 import VideoFileIcon from 'react-icons/lib/fa/file-movie-o';
 import DownloadIcon from 'react-icons/lib/fa/cloud-download';
-import throttle from 'lodash.throttle';
 
 import * as models from '../models';
 
@@ -29,14 +28,6 @@ export default class MediaList extends React.Component {
     this.renderMediaItem      = this.renderMediaItem.bind(this);
     this.renderMediaPreview   = this.renderMediaPreview.bind(this);
     this.getPreviewButtonText = this.getPreviewButtonText.bind(this);
-
-    // const fn = (direction, id) => {
-    //   console.log('moving item', direction, id);
-    //   if (direction === 'DOWN') return props.moveDown(id);
-
-    //   return props.moveUp(id);
-    // }
-    // this.throttledMoveItem = throttle(fn, 3 * 1000, { leading: false, trailing: true });
   }
 
   renderMediaPreview(preview, type, url, alt) {
