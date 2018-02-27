@@ -23,6 +23,7 @@ router.post('/media', async (req, res, next) => {
 
     const { Media } = req.app.get('db').models;
     const media = await Media.create({
+      id: uuid(),
       ...body
     });
 
@@ -42,7 +43,6 @@ router.post('/media/:id/upload', require('../middleware/formidable')(), async (r
 
     const file = req.files.media;
 
-    // console.log('file returned', file);
     if (!file) return res.status(400).json({ error: 'Must upload a file' });
     console.timeEnd(`${req.path} error conditions`);
 

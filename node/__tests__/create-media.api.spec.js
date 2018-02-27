@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4');
+
 test('POST /media cannot set id', async () => {
   expect.assertions(2);
 
@@ -65,13 +67,14 @@ test('POST /media creates new Media successfully', async () => {
   const [name] = RM.genContainerNames(1);
   const [mediaName] = RM.genMediaNames(1);
   const container = await Container.create({
+    id: uuid(),
     name,
     fullPath: `/${name}`
   });
 
   const res = await http.post(`${baseUrl}/media`, {
     name: mediaName,
-    playlistId: 0,
+    playlistIndex: 0,
     containerId: container.id,
   });
 
@@ -80,7 +83,7 @@ test('POST /media creates new Media successfully', async () => {
   const body = await res.json();
   expect(body).toMatchObject(
     expect.objectContaining({
-      id: expect.any(Number),
+      id: expect.any(String),
       name: mediaName,
       type: 'IMAGE',
       playlistIndex: 0,

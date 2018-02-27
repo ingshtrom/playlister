@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { Op } = Sequelize;
 const express = require('express');
+const uuid = require('uuid/v4');
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ router.post('/containers', async (req, res, next) => {
 
     const { Container, Media } = req.app.get('db').models;
     const container = await Container.create({
+      id: uuid(),
       ...body
     }, {
      include: [{
@@ -134,7 +136,7 @@ router.put('/containers/:id/order', async (req, res, next) => {
     if (!newOrdering || !newOrdering.length) return res.status(400).json({ error: 'No media specified for ordering' });
 
     for (let i = 0; i < newOrdering.length; i++) {
-      if (typeof newOrdering[i] !== 'number') return res.status(400).json({ error: 'Expected body to be an array of media IDs (numbers)' });
+      if (typeof newOrdering[i] !== 'string') return res.status(400).json({ error: 'Expected body to be an array of media IDs (string)' });
     }
 
     const db = req.app.get('db');

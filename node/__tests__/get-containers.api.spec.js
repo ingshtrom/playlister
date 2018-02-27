@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4');
+
 test('GET /containers?path=/{some-path} gets container and content successfully', async () => {
   expect.assertions(4);
 
@@ -5,20 +7,23 @@ test('GET /containers?path=/{some-path} gets container and content successfully'
   const [name1, name2, name3, name4] = RM.genContainerNames(4);
 
   const parent = await Container.create({
+    id: uuid(),
     name: name1,
-    fullPath: `/${name1}`,
-    parentId: 1
+    fullPath: `/${name1}`
   });
 
   const children = await Container.bulkCreate([{
+      id: uuid(),
       name: name2,
       fullPath: `/${name2}`,
       parentId: parent.id
     }, {
+      id: uuid(),
       name: name3,
       fullPath: `/${name3}`,
       parentId: parent.id
     }, {
+      id: uuid(),
       name: name4,
       fullPath: `/${name4}`,
       parentId: parent.id
@@ -67,20 +72,23 @@ test('GET /containers/:id gets Container and content successfully', async () => 
   const [name1, name2, name3, name4] = RM.genContainerNames(4);
 
   const parent = await Container.create({
+    id: uuid(),
     name: name1,
     fullPath: `/${name1}`,
-    parentId: 1
   });
 
   const children = await Container.bulkCreate([{
+      id: uuid(),
       name: name2,
       fullPath: `/${name2}`,
       parentId: parent.id
     }, {
+      id: uuid(),
       name: name3,
       fullPath: `/${name3}`,
       parentId: parent.id
     }, {
+      id: uuid(),
       name: name4,
       fullPath: `/${name4}`,
       parentId: parent.id
@@ -129,17 +137,19 @@ test('GET /containers/:id gets Container and mediaContent successfully', async (
   const [mediaName1, mediaName2] = RM.genMediaNames(2);
 
   const playlist = await Container.create({
+    id: uuid(),
     name: name,
     fullPath: `/${name}`,
-    parentId: 1,
     type: 'PLAYLIST',
     mediaContent: [
       {
+        id: uuid(),
         name: mediaName1,
         playlistIndex: 1,
         type: 'IMAGE',
       },
       {
+        id: uuid(),
         name: mediaName2,
         playlistIndex: 2,
         type: 'IMAGE',
@@ -189,17 +199,19 @@ test('GET /containers?path=/<some_path> gets Container and mediaContent successf
 
 
   const playlist = await Container.create({
+    id: uuid(),
     name: name,
     fullPath: `/${name}`,
-    parentId: 1,
     type: 'PLAYLIST',
     mediaContent: [
       {
+        id: uuid(),
         name: mediaName1,
         playlistIndex: 0,
         type: 'IMAGE',
       },
       {
+        id: uuid(),
         name: mediaName2,
         playlistIndex: 1,
         type: 'IMAGE',

@@ -3,10 +3,9 @@ const Sequelize = require('sequelize');
 module.exports = function exportMedia(sequelize) {
   return sequelize.define('Media', {
     id: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: false,
-      primaryKey: true,
-      autoIncrement: true
+      primaryKey: true
     },
     name: {
       type: Sequelize.STRING,

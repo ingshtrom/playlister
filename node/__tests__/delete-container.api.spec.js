@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4');
+
 test('DELETE /containers/:id fails if the Container cannot be found', async () => {
   expect.assertions(2);
 
@@ -17,6 +19,7 @@ test('DELETE /containers/:id fails if the Container is locked', async () => {
   const [name] = RM.genContainerNames(1);
 
   let container = await Container.create({
+    id: uuid(),
     name: name,
     fullPath: `/${name}`,
     isLocked: true
@@ -40,6 +43,7 @@ test('DELETE /containers/:id deletes Container successfully', async () => {
   const [name] = RM.genContainerNames(1);
 
   container = await Container.create({
+    id: uuid(),
     name: name,
     fullPath: `/${name}`,
     isLocked: false

@@ -3,7 +3,7 @@ FORMAT: 1A
 # Data Structures
 
 ## Container (object)
-+ id: 2 (number) - auto-incrementing
++ id: 103ed354-e5ef-4832-bdcb-91e7a2e91446 (string) - uuid/v4
 + name: foo (string) - the relative path to the container from it's direct parent
 + fullPath: /foo (string) - the absolute path to the container.
 + type: FOLDER (string) - "FOLDER" or "PLAYLIST". the type of container this is. Folders contain other folders. Playlists contain media.
@@ -16,10 +16,10 @@ FORMAT: 1A
 + createdAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
 + updatedAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
 + deletedAt: '2018-04-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
-+ parentId: 1 (number) - parent container id
++ parentId: 103ed354-e5ef-4832-bdcb-91e7a2e91446 (string) - uuid/v4. parent container id
 
 ## Media (object)
-+ id: 1 (number) - auto-incrementing
++ id: 103ed354-e5ef-4832-bdcb-91e7a2e91446 (string) - uuid/v4
 + name: foo (string) - more or less just a title
 + playlistIndex: 0 (number) - the playlist will be ASCENDING order based on this column value of all media in the playlist.
 + url: https://some-blob.windows.net/media/fdkjldsfakljdsfkljdsf.jpg (string) - The public url to the content this row represents
@@ -31,7 +31,7 @@ FORMAT: 1A
 + createdAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
 + updatedAt: '2018-01-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
 + deletedAt: '2018-04-21 18:12:34' (string) - this is really a date, but it is serialized as a string. READONLY
-+ containerId: 1 (number) - parent container id (should always be a playlist)
++ containerId: 103ed354-e5ef-4832-bdcb-91e7a2e91446 (string) - uuid/v4. parent container id (should always be a playlist)
 
 ## ErrorResponse (object)
 + error: 'Something bad happened' (string) - Error message of why something went wrong

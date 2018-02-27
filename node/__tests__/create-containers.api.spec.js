@@ -102,7 +102,6 @@ test('POST /containers creates new Container successfully', async () => {
   const res = await http.post(`${baseUrl}/containers`, {
     name: name,
     fullPath: `/${name}`,
-    parentId: 1,
     type: 'FOLDER'
   });
 
@@ -113,7 +112,7 @@ test('POST /containers creates new Container successfully', async () => {
     expect.objectContaining({
       createdAt: expect.any(String),
       fullPath: `/${name}`,
-      id: expect.any(Number),
+      id: expect.any(String),
       isLocked: false,
       name: name,
       type: 'FOLDER',

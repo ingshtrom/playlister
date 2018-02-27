@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
+const uuid = require('uuid/v4');
 
 const host = process.env.MYSQL_HOST;
 const user = process.env.MYSQL_USER;
@@ -62,6 +63,7 @@ async function setupDb(options) {
   });
 
 
+  // setting force=true here and running the API tests will FAIL them because the tests are run concurrently by CPU/test-file
   await sequelize.sync();
 
   // we always need a root record otherwise no other things will have a place to live
@@ -70,6 +72,7 @@ async function setupDb(options) {
       fullPath: '/'
     },
     defaults: {
+      id: uuid(),
       name: '/',
       fullPath: '/',
       type: 'FOLDER',

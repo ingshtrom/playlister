@@ -1,6 +1,7 @@
 const { createReadStream } = require('fs');
 const path                 = require('path');
 const FormData             = require('form-data');
+const uuid                 = require('uuid/v4');
 
 test('POST /media/:id/upload returns an error if the file is not specified', async () => {
  const { Media } = db.models;
@@ -10,10 +11,11 @@ test('POST /media/:id/upload returns an error if the file is not specified', asy
   const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    id: uuid(),
     name,
     type: 'IMAGE',
-    containerId: 1
   });
+
 
   const form = new FormData();
   const res = await http.post(`${baseUrl}/media/${media.id}/upload`, form);
@@ -32,9 +34,9 @@ test('POST /media/:id/upload returns an error if the file is not actually a file
   const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    id: uuid(),
     name,
     type: 'IMAGE',
-    containerId: 1
   });
 
   const form = new FormData();
@@ -55,9 +57,9 @@ test('POST /media/:id/upload works with a jpg', async () => {
   const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    id: uuid(),
     name,
     type: 'IMAGE',
-    containerId: 1
   });
 
   const form = new FormData();
@@ -75,9 +77,9 @@ test('POST /media/:id/upload works with another jpg', async () => {
   const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    id: uuid(),
     name,
     type: 'IMAGE',
-    containerId: 1
   });
 
   const form = new FormData();
@@ -95,9 +97,9 @@ test('POST /media/:id/upload works with a gif', async () => {
   const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    id: uuid(),
     name,
     type: 'IMAGE',
-    containerId: 1
   });
 
   const form = new FormData();
@@ -115,9 +117,9 @@ test.skip('POST /media/:id/upload works with a mp4', async () => {
   const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    id: uuid(),
     name,
     type: 'VIDEO',
-    containerId: 1
   });
 
   const form = new FormData();

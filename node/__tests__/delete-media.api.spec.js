@@ -1,3 +1,5 @@
+const uuid = require('uuid/v4');
+
 test('DELETE /media/:id fails if the media cannot be found', async () => {
   expect.assertions(2);
 
@@ -18,9 +20,9 @@ test('DELETE /media/:id deletes media successfully', async () => {
   const [name] = RM.genMediaNames(1);
 
   let media = await Media.create({
+    id: uuid(),
     name,
-    type: 'IMAGE',
-    containerId: 1
+    type: 'IMAGE'
   });
 
   const res = await http.delete(`${baseUrl}/media/${media.id}`);

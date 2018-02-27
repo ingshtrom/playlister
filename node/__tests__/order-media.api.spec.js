@@ -1,8 +1,11 @@
+const uuid = require('uuid/v4');
+
 test('PUT /containers/:id/order fails with error if no mediaContent is supplied', async () => {
   const { Container, Media } = db.models;
   const [name] = RM.genContainerNames(1);
 
   let container = await Container.create({
+    id: uuid(),
     name,
     fullPath: `/${name}`,
     type: 'PLAYLIST'
@@ -16,11 +19,12 @@ test('PUT /containers/:id/order fails with error if no mediaContent is supplied'
   expect(body).toEqual({ error: 'No media specified for ordering' });
 });
 
-test('PUT /containers/:id/order fails with error if mediaContent is not an array of numbers', async () => {
+test('PUT /containers/:id/order fails with error if mediaContent is not an array of strings', async () => {
   const { Container } = db.models;
   const [name] = RM.genContainerNames(1);
 
   let container = await Container.create({
+    id: uuid(),
     name,
     fullPath: `/${name}`,
     type: 'PLAYLIST'
@@ -31,21 +35,23 @@ test('PUT /containers/:id/order fails with error if mediaContent is not an array
   expect(res.status).toEqual(400);
 
   const body = await res.json();
-  expect(body).toEqual({ error: 'Expected body to be an array of media IDs (numbers)' });
+  expect(body).toEqual({ error: 'Expected body to be an array of media IDs (string)' });
 });
 
 test('PUT /containers/:id/order orders the content successfully', async () => {
-  // expect.assertions(2);
+  expect.assertions(3);
 
   const { Container, Media } = db.models;
   const [name] = RM.genContainerNames(1);
   const mediaNames = RM.genMediaNames(4);
 
   let container = await Container.create({
+    id: uuid(),
     name,
     fullPath: `/${name}`,
     type: 'PLAYLIST',
     mediaContent: mediaNames.map((name, index) => ({
+      id: uuid(),
       name,
       playlistIndex: index,
       type: 'IMAGE'
