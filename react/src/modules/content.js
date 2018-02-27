@@ -152,3 +152,13 @@ function moveMediaUpRequest(state, action) {
       .update(media2.id.toString(), () => media2);
   }).update('errorMessage', () => error);
 }
+
+// export function ensureStringMediaKeys(state) {
+//   return state.update('media', media => {
+//     const newMap = new Map();
+
+//     media.valueSeq().forEach(val => newMap.set(val.id.toString(), val));
+
+//     return newMap;
+//   });
+// }

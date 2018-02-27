@@ -1,10 +1,11 @@
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, throttle } from 'redux-saga/effects';
 
 import {
   addContainer,
   addMedia,
   getContent,
-  getMedia
+  getMedia,
+  reorderMedia,
 } from './content';
 
 function* sagas() {
@@ -12,6 +13,7 @@ function* sagas() {
   yield takeLatest('GET_MEDIA_REQUEST', getMedia);
   yield takeLatest('ADD_CONTAINER_REQUEST', addContainer);
   yield takeLatest('ADD_MEDIA_REQUEST', addMedia);
+  yield throttle(1.5 * 1000, [ 'MOVE_MEDIA_UP_REQUEST', 'MOVE_MEDIA_DOWN_REQUEST' ], reorderMedia);
 }
 
 export default sagas;

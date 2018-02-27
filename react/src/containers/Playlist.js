@@ -67,11 +67,40 @@ export default connect(
 )(Playlist);
 
 export function mapStateToProps(state, props) {
+  console.log('mapStateToProps', state.content.toJS());
   const content = props.content;
+  // const childContent = state.content.get('media')
+  //   .toList()
+  //   .filter(item => item.containerId === props.content.get('id'))
+  //   .filter(x => x)
+  //   .sort((a, b) => {
+  //     const aIndex = a.playlistIndex;
+  //     const bIndex = b.playlistIndex;
+
+  //     if (aIndex < bIndex) return -1;
+  //     if (aIndex > bIndex) return 1;
+  //     return 0;
+  //   });
+
   const childContent = content
     .get('mediaContent')
-    .map(id => state.content.getIn(['media', id]))
-    .filter(x => x);
+    .map(id => {
+      console.log('mapStateToProps inner', state.content.toJS(), state.content);
+      const r = state.content.getIn(['media', id])
+      console.log('mapper', id, r.toJS());
+      return r;
+    })
+    .filter(x => x)
+    .sort((a, b) => {
+      const aIndex = a.playlistIndex;
+      const bIndex = b.playlistIndex;
+
+      if (aIndex < bIndex) return -1;
+      if (aIndex > bIndex) return 1;
+      return 0;
+    });
+
+  console.log('childContent', childContent.toJS());
 
   return { content, childContent };
 }

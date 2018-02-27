@@ -11,18 +11,23 @@ Enzyme.configure({ adapter: new Adapter() });
 const defaultState = {
   content: fromJS({
     media: {
-      'media-4': new models.Image({
-        id: 'media-4',
+      '1': new models.Image({
+        id: 1,
         name: 'shotshotshotshotshots',
         type: 'IMAGE',
         url: 'https://some-url/io23ji2ff.png',
-        createdBy: null,
-        createdOn: null,
-        updatedOn: null
+        playlistIndex: 0,
+      }),
+      '2': new models.Image({
+        id: 2,
+        name: 'shotshotshotshotshots',
+        type: 'IMAGE',
+        url: 'https://some-url/io23ji2ff.png',
+        playlistIndex: 1,
       })
     }
   })
-}
+};
 
 const getMediaMock = jest.fn();
 
@@ -40,29 +45,13 @@ beforeEach(() => {
   getMediaMock.mockReset();
 });
 
-// test('Playlist does not call getMedia if ids are empty', () => {
-//   expect.assertions(1);
-
-//   setup();
-//   expect(getMediaMock).not.toHaveBeenCalled();
-// });
-
-// test('Playlist calls getMedia if ids has a positive size', () => {
-//   expect.assertions(1);
-
-//   setup({
-//     content: new models.Playlist({ content: ['foo'] })
-//   });
-//   expect(getMediaMock).toHaveBeenCalledWith(List(['foo']));
-// });
-
 test('Playlist.mapStateToProps correctly returns items from state', () => {
   expect.assertions(4);
 
   const state = defaultState;
   const props = {
     content: new models.Playlist({
-      mediaContent: [ 'media-4' ]
+      mediaContent: [ '1' ]
     }),
   };
 
@@ -71,7 +60,7 @@ test('Playlist.mapStateToProps correctly returns items from state', () => {
   expect(childContent).toBeInstanceOf(List);
   expect(childContent.size).toEqual(1);
   expect(childContent.get(0)).toBeInstanceOf(models.Image);
-  expect(childContent.get(0)).toMatchObject(state.content.getIn(['media', 'media-4']));
+  expect(childContent.get(0)).toMatchObject(state.content.getIn(['media', '1']));
 });
 
 test('Playlist.mapStateToProps correctly returns items from state, ignoring items not in state', () => {
@@ -80,7 +69,7 @@ test('Playlist.mapStateToProps correctly returns items from state, ignoring item
   const state = defaultState;
   const props = {
     content: new models.Playlist({
-      mediaContent: [ 'media-4', 'media-5' ]
+      mediaContent: [ '1', '3' ]
     }),
   };
 
@@ -89,6 +78,44 @@ test('Playlist.mapStateToProps correctly returns items from state, ignoring item
   expect(childContent).toBeInstanceOf(List);
   expect(childContent.size).toEqual(1);
   expect(childContent.get(0)).toBeInstanceOf(models.Image);
-  expect(childContent.get(0)).toMatchObject(state.content.getIn(['media', 'media-4']));
+  expect(childContent.get(0)).toMatchObject(state.content.getIn(['media', '1']));
+});
+
+test('Playlist.mapStateToProps correctly returns items from state ordered by playlistIndex', () => {
+  expect.assertions(5);
+
+  const state = {
+    content: fromJS({
+      media: {
+        '1': new models.Image({
+          id: 1,
+          name: 'shotshotshotshotshots',
+          type: 'IMAGE',
+          url: 'https://some-url/io23ji2ff.png',
+          playlistIndex: 1,
+        }),
+        '2': new models.Image({
+          id: 2,
+          name: 'shotshotshotshotshots',
+          type: 'IMAGE',
+          url: 'https://some-url/io23ji2ff.png',
+          playlistIndex: 0,
+        })
+      }
+    })
+  };
+  const props = {
+    content: new models.Playlist({
+      mediaContent: [ '1', '2' ]
+    }),
+  };
+
+  const { childContent } = mapStateToProps(state, props);
+
+  expect(childContent).toBeInstanceOf(List);
+  expect(childContent.size).toEqual(2);
+  expect(childContent.get(0)).toBeInstanceOf(models.Image);
+  expect(childContent.get(0)).toMatchObject(state.content.getIn(['media', '2']));
+  expect(childContent.get(1)).toMatchObject(state.content.getIn(['media', '1']));
 });
 

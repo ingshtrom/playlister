@@ -42,3 +42,14 @@ export function* addMedia(action) {
     yield put({ type: 'ADD_MEDIA_FAILURE', errorMessage: 'Could not add media' });
   }
 }
+
+export function* reorderMedia(action) {
+  try {
+    // TODO: actually get the real data from state and persist it
+    //
+    yield put({ type: 'REORDER_MEDIA_SUCCESS' });
+  } catch (err) {
+    console.error('Error reordering media in saga', err);
+    yield put({ type: 'REORDER_MEDIA_FAILURE', errorMessage: 'Could not persist playlist ordering to the server. Please, try again' });
+  }
+}
