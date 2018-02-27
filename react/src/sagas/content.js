@@ -1,4 +1,4 @@
-import { call, put } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 
 import * as api from '../api/content';
 
@@ -43,10 +43,30 @@ export function* addMedia(action) {
   }
 }
 
+// triggered from MOVE_MEDIA_UP_REQUEST or MOVE_MEDIA_DOWN_REQUEST, both pass through an ID of the media
 export function* reorderMedia(action) {
   try {
-    // TODO: actually get the real data from state and persist it
-    //
+    const reorderedPlaylistData = yield select(state => {
+      const mediaItem = state.content.getIn(['media', action.id]);
+      const orderedMedia = state.content.get('media')
+        .toList()
+        .filter(item => item.get('containerId') === mediaItem.get('containerId'))
+        .sort((a, b) => {
+          const aIndex = a.playlistIndex;
+          const bIndex = b.playlistIndex;
+
+          if (aIndex < bIndex) return -1;
+          if (aIndex > bIndex) return 1;
+          return 0;
+        })
+        .map(item => item.id);
+
+      return { playlistId: mediaItem.get('containerId'), orderedMedia };
+    });
+
+    console.log('FOOBAZFJDKSA', reorderedPlaylistData);
+
+    const orderedData = yield call(api.reorderMedia, reorderedPlaylistData.playlistId, reorderedPlaylistData.orderedMedia);
     yield put({ type: 'REORDER_MEDIA_SUCCESS' });
   } catch (err) {
     console.error('Error reordering media in saga', err);

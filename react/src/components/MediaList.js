@@ -66,7 +66,7 @@ export default class MediaList extends React.Component {
   renderMediaItem(item, index) {
     const { moveDown, moveUp, togglePreview } = this.props;
 
-    const mediaTypeIcon = item.type === 'VIDEO' ? <VideoFileIcon className='text-muted' /> : <ImageFileIcon className='text-muted' />;
+    const mediaTypeIcon = item.type === 'VIDEO' ? <VideoFileIcon className='text-primary' /> : <ImageFileIcon className='text-success' />;
 
     return (
       <div key={item.id} className='list-group-item'>

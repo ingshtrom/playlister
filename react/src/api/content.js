@@ -8,7 +8,7 @@ export async function getContainerContent(path) {
     const fetchResult = await fetch(`/api/containers?path=${path}`)
 
     if (fetchResult.status === 500) {
-      throw new Error('Unkown error getting data');
+      throw new Error('Unknown error getting data');
     }
 
     if (fetchResult.status === 400) {
@@ -128,7 +128,7 @@ export async function addContainer(parentId, name, fullPath, type) {
     });
 
     if (fetchResult.status === 500) {
-      throw new Error('Unkown error adding container');
+      throw new Error('Unknown error adding container');
     }
 
     if (fetchResult.status === 400) {
@@ -173,7 +173,7 @@ export async function addMedia(playlistId, name, playlistIndex, type, file) {
     });
 
     if (fetchResult.status === 500) {
-      throw new Error('Unkown error adding media');
+      throw new Error('Unknown error adding media');
     }
 
     if (fetchResult.status === 400) {
@@ -192,7 +192,7 @@ export async function addMedia(playlistId, name, playlistIndex, type, file) {
     });
 
     if (uploadResult.status === 500) {
-      throw new Error('Unkown error adding media');
+      throw new Error('Unknown error adding media');
     }
 
     if (uploadResult.status === 400) {
@@ -211,6 +211,31 @@ export async function addMedia(playlistId, name, playlistIndex, type, file) {
     return new models.Video(media);
   } catch (err) {
     console.error('api.addMedia error', err);
+    throw err;
+  }
+}
+
+export async function reorderMedia(playlistId, orderedMedia) {
+  try {
+    console.log('starting api.reorderMedia');
+    const fetchResult = await fetch(`/api/containers/${playlistId}/order`, {
+      method: 'PUT',
+      body: JSON.stringify(orderedMedia),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (fetchResult.status === 500) {
+      throw new Error('Unknown error reordering playlist media');
+    }
+
+    if (fetchResult.status === 400) {
+      const body = await fetchResult.json();
+      throw new Error(body.error);
+    }
+  } catch (err) {
+    console.error('api.reorderMedia error', err);
     throw err;
   }
 }
