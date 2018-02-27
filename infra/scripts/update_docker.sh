@@ -11,5 +11,5 @@ sudo docker build . --rm --no-cache -t ingshtrom/playlister:local
 
 cd /opt/playlister
 
-sudo docker stack deploy -c /opt/playlister/docker-stack-production.yml --prune prd
+sudo docker stack deploy -c /opt/playlister/docker-stack-production.yml prd
 
