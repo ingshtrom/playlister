@@ -2,9 +2,9 @@ version: "3.5"
 
 services:
   api:
-    image: ingshtrom/playlister:master_f80b3c6e
+    image: ingshtrom/playlister:local
     deploy:
-      replicas: 2
+      replicas: 1
       restart_policy:
         condition: on-failure
       resources:
