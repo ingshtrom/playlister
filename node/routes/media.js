@@ -74,8 +74,6 @@ router.post('/media/:id/upload', require('../middleware/formidable')(), async (r
     await media.save();
     console.timeEnd(`${req.path} update media record`);
 
-    // console.log('blob uploaded', file.name, blob);
-
     res.status(200).json(media);
   } catch (err) {
     console.error(`Error uploading media for media item ${id}`, err);

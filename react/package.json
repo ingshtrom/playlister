@@ -119,6 +119,10 @@
       "pathRewrite": {
         "^/api": ""
       }
+    },
+    "/media.*": {
+      "target": "https://playlister.blob.core.windows.net",
+      "changeOrigin": true
     }
   }
 }

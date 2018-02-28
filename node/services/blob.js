@@ -44,7 +44,7 @@ async function createMedia(readStream, streamLength, mimeType, name) {
 }
 
 function getMediaUrl(filename) {
-  return `https://playlister.blob.core.windows.net/${MEDIA_CONTAINER}/${filename}`;
+  return `/${MEDIA_CONTAINER}/${filename}`;
 }
 
 module.exports.createMedia = createMedia;
