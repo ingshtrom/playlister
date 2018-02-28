@@ -17,5 +17,5 @@ fi
 
 if [[ ! -f /opt/initial_stack_created ]]; then
   sudo docker stack deploy -c /opt/playlister/docker-stack-production.yml prd
-  touch /opt/initial_stack_created
+  sudo touch /opt/initial_stack_created
 fi
