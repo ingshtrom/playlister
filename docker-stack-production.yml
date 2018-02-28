@@ -7,7 +7,7 @@ services:
       replicas: 1
       update_config:
         parallelism: 1
-        monitor: 5m
+        monitor: 1m
         failure_action: rollback
         order: start-first
       restart_policy:
