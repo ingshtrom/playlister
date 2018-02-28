@@ -5,12 +5,19 @@ services:
     image: ingshtrom/playlister:local
     deploy:
       replicas: 1
+      update_config:
+        parallelism: 1
+        monitor: 5m
+        failure_action: rollback
+        order: start-first
       restart_policy:
         condition: on-failure
       resources:
         limits:
           cpus: "0.4"
           memory: 256M
+    depends_on:
+      - db
     ports:
       - 3001:3001
     command: [ "pm2-runtime", "./bin/www" ]

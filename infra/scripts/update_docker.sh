@@ -11,5 +11,11 @@ sudo docker build . --rm --no-cache -t ingshtrom/playlister:local
 
 cd /opt/playlister
 
-sudo docker stack deploy -c /opt/playlister/docker-stack-production.yml prd
+if [[ -f /opt/initial_stack_created ]]; then
+  sudo docker service update --image ingshtrom/playlister:local --force prd_api
+fi
 
+if [[ ! -f /opt/initial_stack_created ]]; then
+  sudo docker stack deploy -c /opt/playlister/docker-stack-production.yml prd
+  touch /opt/initial_stack_created
+fi
