@@ -25,15 +25,18 @@ function init() {
 async function createMedia(readStream, streamLength, mimeType, name) {
   await initPromise;
 
+  console.log('createMedia', mimeType, name);
+
   const options = {
     contentSettings: {
       contentType: mimeType,
+      cacheControl: 'no-cache'
       // contentEncoding: encoding
     }
   }
 
   return await new Promise((resolve, reject) => {
-    blobService.createAppendBlobFromStream(MEDIA_CONTAINER, name, readStream, options, (err, result, res) => {
+    blobService.createAppendBlobFromStream(MEDIA_CONTAINER, name, readStream, streamLength, options, (err, result, res) => {
       if (err) {
         return reject(err);
       }

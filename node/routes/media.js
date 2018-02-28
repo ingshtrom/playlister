@@ -71,6 +71,7 @@ router.post('/media/:id/upload', require('../middleware/formidable')(), async (r
 
     console.time(`${req.path} update media record`);
     media.url = getMediaUrl(newFilename);
+    media.contentType = file.type;
     await media.save();
     console.timeEnd(`${req.path} update media record`);
 

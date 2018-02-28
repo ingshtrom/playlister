@@ -41,6 +41,10 @@ module.exports = function exportMedia(sequelize) {
     encoding: {
       type: Sequelize.STRING,
       allowNull: true
+    },
+    contentType: {
+      type: Sequelize.STRING,
+      allowNull: true
     }
   }, {
     paranoid: true
