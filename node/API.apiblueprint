@@ -36,9 +36,6 @@ FORMAT: 1A
 ## ErrorResponse (object)
 + error: 'Something bad happened' (string) - Error message of why something went wrong
 
-## GeneralResponse (object)
-+ message: 'Yup, it happened' (string) - Message of something that happened. Specifically for media processing asynchronously
-
 
 
 # Generic Errors for All APIs
@@ -133,5 +130,4 @@ FORMAT: 1A
   + media (file) - the file to upload
 
 + Response 200 (application/json)
-  + (GeneralResponse)
 

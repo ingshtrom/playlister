@@ -49,7 +49,7 @@ router.post('/media/:id/upload', require('../middleware/formidable')(), async (r
     // write the metadata file for the process_media job to pick up
     await writeFile(`${file.path}.txt`, id);
 
-    res.status(200).json({ message: 'Media successfully submitted for processing' });
+    res.status(200).json();
   } catch (err) {
     console.error(`Error uploading media for media item ${id}`, err);
     next(err);
