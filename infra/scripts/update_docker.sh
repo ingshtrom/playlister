@@ -8,14 +8,12 @@ sudo chmod +rwx /data/mysql
 cd /opt/playlister/node
 
 sudo docker build . --rm --no-cache -t ingshtrom/playlister:local
+sudo docker build . --rm --no-cache -t ingshtrom/playlister-process-media:local
 
 cd /opt/playlister
 
-if [[ -f /opt/initial_stack_created ]]; then
-  sudo docker service update --image ingshtrom/playlister:local --force prd_api
-fi
+sudo docker stack deploy -c /opt/playlister/docker-stack-production.yml --resolve-image always --prune prd
 
-if [[ ! -f /opt/initial_stack_created ]]; then
-  sudo docker stack deploy -c /opt/playlister/docker-stack-production.yml prd
-  sudo touch /opt/initial_stack_created
-fi
+sudo docker service update --image ingshtrom/playlister:local --force prd_api
+sudo docker service update --image ingshtrom/playlister-process-media:local --force prd_process_media
+

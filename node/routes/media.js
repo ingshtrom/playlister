@@ -46,36 +46,10 @@ router.post('/media/:id/upload', require('../middleware/formidable')(), async (r
     if (!file) return res.status(400).json({ error: 'Must upload a file' });
     console.timeEnd(`${req.path} error conditions`);
 
-    console.time(`${req.path} db query`);
-    const { Media } = req.app.get('db').models;
-    const media = await Media.find({ where: { id }});
-    console.timeEnd(`${req.path} db query`);
+    // write the metadata file for the process_media job to pick up
+    await writeFile(`${file.path}.txt`, id);
 
-    if (!media) {
-      return res.status(400).json({ error: 'The media does not exist' });
-    }
-
-    console.time(`${req.path} create blob`);
-    const newFilename = `${uuid()}${path.extname(file.path)}`;
-    const blob = await createMedia(
-      fs.createReadStream(file.path),
-      file.size,
-      file.type,
-      newFilename
-    );
-    console.timeEnd(`${req.path} create blob`);
-
-    console.time(`${req.path} delete file`);
-    fs.unlinkSync(file.path);
-    console.timeEnd(`${req.path} delete file`);
-
-    console.time(`${req.path} update media record`);
-    media.url = getMediaUrl(newFilename);
-    media.contentType = file.type;
-    await media.save();
-    console.timeEnd(`${req.path} update media record`);
-
-    res.status(200).json(media);
+    res.status(200).json({ message: 'Media successfully submitted for processing' });
   } catch (err) {
     console.error(`Error uploading media for media item ${id}`, err);
     next(err);
@@ -101,5 +75,15 @@ router.delete('/media/:id', async (req, res, next) => {
     next(err);
   }
 });
+
+function writeFile(path, text) {
+  return new Promise((resolve, reject) => {
+    fs.writeFile(path, text, 'utf8', (err, result) => {
+      if (err) return reject(err);
+
+      resolve(result);
+    });
+  });
+}
 
 module.exports = router;

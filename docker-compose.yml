@@ -1,6 +1,19 @@
 version: "3.5"
 
 services:
+  process_media:
+    build:
+      context: ./node
+      dockerfile: process_media.Dockerfile
+    command: [ "pm2-dev", "./bin/process_media.js" ]
+    env_file:
+      - ./node/.env
+    links:
+      - db
+    volumes:
+      - ./node:/opt/app:consistent
+      - file_process:/data/playlister-upload:consistent
+
   api:
     build: ./node
     ports:
@@ -12,6 +25,7 @@ services:
       - db
     volumes:
       - ./node:/opt/app:consistent
+      - file_process:/data/playlister-upload:consistent
 
   web:
     build: ./react
@@ -32,6 +46,6 @@ services:
       - 3306:3306
 
 volumes:
-  node-app-volume:
+  file_process:
     driver: local
 

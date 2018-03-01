@@ -200,15 +200,13 @@ export async function addMedia(playlistId, name, playlistIndex, type, file) {
       throw new Error(error.error);
     }
 
-    const media = await uploadResult.json();
+    console.log('api.addMedia done!', body);
 
-    console.log('api.addMedia done!', media);
-
-    if (media.type === 'IMAGE') {
-      return new models.Image(media);
+    if (body.type === 'IMAGE') {
+      return new models.Image(body);
     }
 
-    return new models.Video(media);
+    return new models.Video(body);
   } catch (err) {
     console.error('api.addMedia error', err);
     throw err;

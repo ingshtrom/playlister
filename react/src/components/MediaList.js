@@ -37,7 +37,12 @@ export default class MediaList extends React.Component {
       return (
         <div>
           <hr />
-          'No preview for videos, sorry!'
+          No previews for videos, yet. Sorry!
+          { /*
+          <video width={100} height={100} src={url} controls>
+            <source src={url} type={type} />
+          </video>
+          */ }
         </div>
       );
     }

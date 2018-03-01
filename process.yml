@@ -9,3 +9,7 @@ apps:
     watch: false
     env:
       NODE_ENV: development
+  - script: bin/process_media.js
+    name: process_media
+    watch: true
+    cwd: ./node

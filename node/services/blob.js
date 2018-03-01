@@ -30,7 +30,7 @@ async function createMedia(readStream, streamLength, mimeType, name) {
   const options = {
     contentSettings: {
       contentType: mimeType,
-      cacheControl: 'no-cache'
+      cacheControl: 'max-age=2592000' // 30 days
       // contentEncoding: encoding
     }
   }

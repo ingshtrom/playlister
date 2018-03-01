@@ -1,6 +1,31 @@
 version: "3.5"
 
 services:
+  process_media:
+    image: ingshtrom/playlister-process-media:local
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        monitor: 15s
+        failure_action: rollback
+        order: start-first
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128M
+    depends_on:
+      - db
+    command: [ "pm2-runtime", "./bin/process_media.js" ]
+    volumes:
+      - file_process:/data/playlister-upload:consistent
+    env_file:
+      - /opt/api.env
+    networks:
+      - backend
+
   api:
     image: ingshtrom/playlister:local
     deploy:
@@ -14,8 +39,8 @@ services:
         condition: on-failure
       resources:
         limits:
-          cpus: "0.4"
-          memory: 256M
+          cpus: "0.2"
+          memory: 128M
     depends_on:
       - db
     ports:
@@ -23,6 +48,8 @@ services:
     command: [ "pm2-runtime", "./bin/www" ]
     env_file:
       - /opt/api.env
+    volumes:
+      - file_process:/data/playlister-upload:consistent
     networks:
       - backend
 
@@ -47,3 +74,6 @@ services:
 
 networks:
   backend:
+
+volumes:
+  file_process:

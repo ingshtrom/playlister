@@ -100,7 +100,10 @@ async function getDbInstance(options) {
 }
 
 async function close() {
-  await sequelize.close();
+  if (sequelize) {
+    await sequelize.close();
+  }
+
   syncPromise = null;
 }
 
