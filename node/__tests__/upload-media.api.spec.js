@@ -67,7 +67,7 @@ test('POST /media/:id/upload works with a jpg', async () => {
   const res = await http.post(`${baseUrl}/media/${media.id}/upload`, form);
 
   expect(res.status).toEqual(200);
-}, 20000);
+});
 
 test('POST /media/:id/upload works with another jpg', async () => {
  const { Media } = db.models;
@@ -87,7 +87,7 @@ test('POST /media/:id/upload works with another jpg', async () => {
   const res = await http.post(`${baseUrl}/media/${media.id}/upload`, form);
 
   expect(res.status).toEqual(200);
-}, 20000);
+});
 
 test('POST /media/:id/upload works with a gif', async () => {
  const { Media } = db.models;
@@ -107,7 +107,7 @@ test('POST /media/:id/upload works with a gif', async () => {
   const res = await http.post(`${baseUrl}/media/${media.id}/upload`, form);
 
   expect(res.status).toEqual(200);
-}, 20000);
+});
 
 test.skip('POST /media/:id/upload works with a mp4', async () => {
  const { Media } = db.models;
@@ -127,5 +127,5 @@ test.skip('POST /media/:id/upload works with a mp4', async () => {
   const res = await http.post(`${baseUrl}/media/${media.id}/upload`, form);
 
   expect(res.status).toEqual(200);
-}, 90000);
+});
 
