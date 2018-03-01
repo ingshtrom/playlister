@@ -11,7 +11,7 @@ services:
         failure_action: rollback
         order: start-first
       restart_policy:
-        condition: always
+        condition: any
       resources:
         limits:
           cpus: "0.2"
@@ -36,7 +36,7 @@ services:
         failure_action: rollback
         order: start-first
       restart_policy:
-        condition: always
+        condition: any
       resources:
         limits:
           cpus: "0.2"
