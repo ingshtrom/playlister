@@ -16,7 +16,6 @@ const {
   getMediaUrl
 }   = require('../services/blob');
 
-let timeout;
 let dbInstance;
 
 const MEDIA_REGEX = /\.?(jpg|jpeg|png|mp4|mov|avi|gif)/;
@@ -26,14 +25,10 @@ if (!UPLOAD_DIRECTORY) throw new Error('UPLOAD_DIRECTORY must be defined');
 
 console.log('process media', UPLOAD_DIRECTORY);
 
-process.on('SIGINT', function() {
-  if (timeout) clearTimeout(timeout);
-});
-
 scheduleProcessing(0);
 
 function scheduleProcessing(delay = 1000 * 60) {
-  timeout = setTimeout(() => {
+  setTimeout(() => {
     processDirectory()
       .catch(err => {
         console.error('Something bad happened while processing!', err);
