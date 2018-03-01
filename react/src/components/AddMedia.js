@@ -22,7 +22,6 @@ export default class AddMedia extends React.Component {
       name: '',
       type: 'IMAGE',
       file: '',
-      // imagePreviewUrl: ''
     };
   }
 
@@ -49,7 +48,6 @@ export default class AddMedia extends React.Component {
     reader.onloadend = () => {
       this.setState({
         file: file,
-        // imagePreviewUrl: reader.result
       });
     }
 
@@ -110,7 +108,7 @@ export default class AddMedia extends React.Component {
             className='btn btn-primary form-control'
             onClick={this.submitForm}
           >
-            Add Media
+            Upload Media
           </button>
         </form>
       </div>

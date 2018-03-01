@@ -27,6 +27,7 @@ export default class MediaList extends React.Component {
 
     this.renderMediaItem      = this.renderMediaItem.bind(this);
     this.renderMediaPreview   = this.renderMediaPreview.bind(this);
+    this.renderMediaItemConditionalToolbar = this.renderMediaItemConditionalToolbar.bind(this);
     this.getPreviewButtonText = this.getPreviewButtonText.bind(this);
   }
 
@@ -68,8 +69,45 @@ export default class MediaList extends React.Component {
     return 'Preview';
   }
 
-  renderMediaItem(item, index) {
-    const { moveDown, moveUp, togglePreview } = this.props;
+  renderMediaItemConditionalToolbar(item) {
+    const { togglePreview } = this.props;
+
+    if (!item.url) {
+      return (
+        <div className='btn-group btn-group-sm'>
+          <button
+            className='btn btn-outline-secondary'
+            disabled
+          >
+            Processing...
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <div className='btn-group btn-group-sm'>
+        <button
+          className='btn btn-outline-primary'
+          onClick={togglePreview.bind(null, item.id)}
+        >
+          { this.getPreviewButtonText(item.isBeingPreviewed) }
+        </button>
+        <a
+          className='btn btn-outline-primary'
+          href={item.url}
+          alt={item.name}
+          download={item.name}
+          target='_blank'
+        >
+          <DownloadIcon />
+        </a>
+      </div>
+    );
+  }
+
+  renderMediaItem(item) {
+    const { moveDown, moveUp } = this.props;
 
     const mediaTypeIcon = item.type === 'VIDEO' ? <VideoFileIcon className='text-primary' /> : <ImageFileIcon className='text-success' />;
 
@@ -83,23 +121,8 @@ export default class MediaList extends React.Component {
             </span>
           </div>
           <div className='btn-toolbar'>
-            <div className='btn-group btn-group-sm'>
-              <button
-                className='btn btn-outline-primary'
-                onClick={togglePreview.bind(null, item.id)}
-              >
-                { this.getPreviewButtonText(item.isBeingPreviewed) }
-              </button>
-              <a
-                className='btn btn-outline-primary'
-                href={item.url}
-                alt={item.name}
-                download={item.name}
-                target='_blank'
-              >
-                <DownloadIcon />
-              </a>
-            </div>
+            { this.renderMediaItemConditionalToolbar(item) }
+
             <div className='btn-group btn-group-sm ml-1'>
               <button className='btn btn-outline-secondary' onClick={moveUp.bind(null, item.containerId, item.id)}>
                 <ArrowUpIcon />
