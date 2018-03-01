@@ -14,8 +14,8 @@ services:
         condition: any
       resources:
         limits:
-          cpus: "0.2"
-          memory: 128M
+          cpus: "0.4"
+          memory: 512M
     depends_on:
       - db
     command: [ "pm2-runtime", "./bin/process_media.js" ]
@@ -39,8 +39,8 @@ services:
         condition: any
       resources:
         limits:
-          cpus: "0.2"
-          memory: 128M
+          cpus: "0.4"
+          memory: 512M
     depends_on:
       - db
     ports:
@@ -61,8 +61,8 @@ services:
         condition: on-failure
       resources:
         limits:
-          cpus: "0.6"
-          memory: 512M
+          cpus: "1.0"
+          memory: 1G
     env_file:
       - /opt/db.env
     ports:
