@@ -126,10 +126,8 @@ export default class MediaList extends React.Component {
           <div className='h2'>
             { mediaTypeIcon }
             <span className='align-middle ml-3'>
-              {item.playlistIndex} - 
               {item.name}
             </span>
-            <small>{item.id}</small>
           </div>
           <div className='btn-toolbar'>
             { this.renderMediaItemConditionalToolbar(item) }
