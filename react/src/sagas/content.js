@@ -66,10 +66,21 @@ export function* reorderMedia(action) {
 
     console.log('FOOBAZFJDKSA', reorderedPlaylistData);
 
-    const orderedData = yield call(api.reorderMedia, reorderedPlaylistData.playlistId, reorderedPlaylistData.orderedMedia);
+    yield call(api.reorderMedia, reorderedPlaylistData.playlistId, reorderedPlaylistData.orderedMedia);
     yield put({ type: 'REORDER_MEDIA_SUCCESS' });
   } catch (err) {
     console.error('Error reordering media in saga', err);
     yield put({ type: 'REORDER_MEDIA_FAILURE', errorMessage: 'Could not persist playlist ordering to the server. Please, try again' });
+  }
+}
+
+export function* deleteMedia(action) {
+  try {
+    yield call(api.deleteMedia, action.id);
+    yield call(reorderMedia, { id: action.id });
+    yield put({ type: 'DELETE_MEDIA_SUCCESS', id: action.id });
+  } catch (e) {
+    console.error('Error getting content', e);
+    yield put({ type: 'DELETE_MEDIA_FAILURE', errorMessage: 'Could not delete media' });
   }
 }

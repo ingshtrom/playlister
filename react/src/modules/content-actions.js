@@ -54,3 +54,10 @@ export function toggleMediaPreview(id) {
   };
 }
 
+export function deleteMedia(id) {
+  return {
+    type: 'DELETE_MEDIA_REQUEST',
+    id
+  };
+}
+

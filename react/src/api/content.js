@@ -238,3 +238,25 @@ export async function reorderMedia(playlistId, orderedMedia) {
   }
 }
 
+export async function deleteMedia(id) {
+  try {
+    console.log('starting api.deleteMedia', id);
+
+    const fetchResult = await fetch(`/api/media/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (fetchResult.status === 500) {
+      throw new Error('Unknown error deleting media');
+    }
+
+    if (fetchResult.status === 400) {
+      const body = await fetchResult.json();
+      throw new Error(body.error);
+    }
+  } catch (err) {
+    console.error('api.deleteMedia error', err);
+    throw err;
+  }
+}
+

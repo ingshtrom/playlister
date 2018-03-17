@@ -6,12 +6,14 @@ import ArrowDownIcon from 'react-icons/lib/fa/arrow-down';
 import ImageFileIcon from 'react-icons/lib/fa/file-image-o';
 import VideoFileIcon from 'react-icons/lib/fa/file-movie-o';
 import DownloadIcon from 'react-icons/lib/fa/cloud-download';
+import TrashIcon from 'react-icons/lib/fa/trash-o';
 
 import * as models from '../models';
 
 export default class MediaList extends React.Component {
   static propTypes = {
-   media: ImmutablePropTypes.listOf(
+    deleteMedia: PropTypes.func.isRequired,
+    media: ImmutablePropTypes.listOf(
       PropTypes.oneOfType([
         PropTypes.instanceOf(models.Image),
         PropTypes.instanceOf(models.Video)
@@ -25,10 +27,11 @@ export default class MediaList extends React.Component {
   constructor(props) {
     super(props);
 
-    this.renderMediaItem      = this.renderMediaItem.bind(this);
-    this.renderMediaPreview   = this.renderMediaPreview.bind(this);
+    this.deleteMediaWrapper                = this.deleteMediaWrapper.bind(this);
+    this.getPreviewButtonText              = this.getPreviewButtonText.bind(this);
+    this.renderMediaItem                   = this.renderMediaItem.bind(this);
+    this.renderMediaPreview                = this.renderMediaPreview.bind(this);
     this.renderMediaItemConditionalToolbar = this.renderMediaItemConditionalToolbar.bind(this);
-    this.getPreviewButtonText = this.getPreviewButtonText.bind(this);
   }
 
   renderMediaPreview(preview, type, url, alt) {
@@ -106,6 +109,12 @@ export default class MediaList extends React.Component {
     );
   }
 
+  deleteMediaWrapper(id, type, name) {
+    const confirmation = confirm(`Delete ${type} '${name}'`); // eslint-disable-line
+
+    if (confirmation) this.props.deleteMedia(id);
+  }
+
   renderMediaItem(item) {
     const { moveDown, moveUp } = this.props;
 
@@ -117,8 +126,10 @@ export default class MediaList extends React.Component {
           <div className='h2'>
             { mediaTypeIcon }
             <span className='align-middle ml-3'>
+              {item.playlistIndex} - 
               {item.name}
             </span>
+            <small>{item.id}</small>
           </div>
           <div className='btn-toolbar'>
             { this.renderMediaItemConditionalToolbar(item) }
@@ -129,6 +140,12 @@ export default class MediaList extends React.Component {
               </button>
               <button className='btn btn-outline-secondary' onClick={moveDown.bind(null, item.containerId, item.id)}>
                 <ArrowDownIcon />
+              </button>
+            </div>
+
+           <div className='btn-group btn-group-sm ml-1'>
+              <button className='btn btn-danger' onClick={this.deleteMediaWrapper.bind(null, item.id, item.type, item.name)}>
+                <TrashIcon />
               </button>
             </div>
           </div>

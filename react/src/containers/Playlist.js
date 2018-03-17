@@ -7,6 +7,7 @@ import { bindActionCreators } from 'redux';
 import * as models from '../models';
 import {
   addMedia,
+  deleteMedia,
   moveMediaDown,
   moveMediaUp,
   toggleMediaPreview,
@@ -23,6 +24,7 @@ export class Playlist extends Component {
         PropTypes.instanceOf(models.Video)
       ])
     ),
+    deleteMedia: PropTypes.func.isRequired,
     addMedia: PropTypes.func.isRequired,
     moveMediaUp: PropTypes.func.isRequired,
     moveMediaDown: PropTypes.func.isRequired,
@@ -34,6 +36,7 @@ export class Playlist extends Component {
       addMedia,
       childContent,
       content,
+      deleteMedia,
       moveMediaDown,
       moveMediaUp,
       toggleMediaPreview,
@@ -51,6 +54,7 @@ export class Playlist extends Component {
           {content.name}
         </div>
         <MediaList
+          deleteMedia={deleteMedia}
           media={childContent}
           moveDown={moveMediaDown}
           moveUp={moveMediaUp}
@@ -87,6 +91,7 @@ export function mapStateToProps(state, props) {
 export function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     addMedia,
+    deleteMedia,
     moveMediaDown,
     moveMediaUp,
     toggleMediaPreview,

@@ -12,11 +12,13 @@ export default function contentReducer(state = defaultState, action) {
     case 'GET_CONTENT_REQUEST':
     case 'ADD_CONTAINER_REQUEST':
     case 'ADD_MEDIA_REQUEST':
+    case 'DELETE_MEDIA_REQUEST':
       return handleRequest(state, action);
 
     case 'GET_CONTENT_FAILURE':
     case 'ADD_CONTAINER_FAILURE':
     case 'ADD_MEDIA_FAILURE':
+    case 'DELETE_MEDIA_FAILURE':
       return handleFailure(state, action);
 
     case 'GET_CONTENT_SUCCESS':
@@ -36,6 +38,9 @@ export default function contentReducer(state = defaultState, action) {
 
     case 'MOVE_MEDIA_UP_REQUEST':
       return moveMediaUpRequest(state, action);
+
+    case 'DELETE_MEDIA_SUCCESS':
+      return deleteMediaSuccess(state, action);
 
     default:
       return state;
@@ -153,12 +158,27 @@ function moveMediaUpRequest(state, action) {
   }).update('errorMessage', () => error);
 }
 
-// export function ensureStringMediaKeys(state) {
-//   return state.update('media', media => {
-//     const newMap = new Map();
+function deleteMediaSuccess(state, action) {
+  return state /* .deleteIn(['media', action.id]) */
+    .set('isLoading', false)
+    .updateIn(['media'], media => {
+      let media1 = media.find(mediaItem => mediaItem.get('id') === action.id);
+      let mediaInPlaylist = media
+        .deleteIn([action.id])
+        .filter(mediaItem => mediaItem.get('containerId') === media1.get('containerId'))
+        .sort((a, b) => {
+          const aIndex = a.playlistIndex;
+          const bIndex = b.playlistIndex;
 
-//     media.valueSeq().forEach(val => newMap.set(val.id.toString(), val));
+          if (aIndex < bIndex) return -1;
+          if (aIndex > bIndex) return 1;
+          return 0;
+        })
+        .toList()
+        .map((mediaItem, index) => mediaItem.set('playlistIndex', index))
+        .reduce((prev, next) => prev.set(next.id, next), new Map());
 
-//     return newMap;
-//   });
-// }
+      return media.mergeDeep(mediaInPlaylist);
+    });
+}
+
