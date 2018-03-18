@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { List } from 'immutable';
 
 import { normalizeRootUrl } from '../util/url';
-import Sort from '../util/sort';
+import * as Sort from '../util/sort';
 import * as models from '../models';
 
 import {
@@ -23,14 +23,20 @@ export class ContentList extends Component {
     super(props);
 
     this.setSort = this.setSort.bind(this);
+    this.setSecondarySort = this.setSecondarySort.bind(this);
 
     this.state = {
-      sort: Sort.Options[0]
+      sort: Sort.Options[0],
+      secondarySort: Sort.Options[0],
     };
   }
 
   setSort(sort) {
     this.setState({ sort });
+  }
+
+  setSecondarySort(sort) {
+    this.setState({ secondarySort: sort });
   }
 
   render() {
@@ -41,7 +47,7 @@ export class ContentList extends Component {
       deleteContainer,
     } = this.props;
 
-    const sortedChildContent = Sort.Sort(childContent);
+    const sortedChildContent = Sort.Sort(this.state.sort, this.state.secondarySort, childContent);
 
     return (
       <div>
@@ -50,7 +56,13 @@ export class ContentList extends Component {
           addContainer={addContainer}
         />
         <hr />
-        <ContentSorter setSort={this.setSort} options={Sort.Options} selectedSort={this.state.sort} />
+        <ContentSorter
+          options={Sort.Options}
+          selectedSort={this.state.sort}
+          selectedSecondarySort={this.state.secondarySort}
+          setSort={this.setSort}
+          setSecondarySort={this.setSecondarySort}
+        />
         <div className='list-group'>
           { sortedChildContent.map(ContentList.renderContentItem(deleteContainer)) }
         </div>

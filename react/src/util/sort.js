@@ -1,113 +1,117 @@
-class Sort {
-  static Options = [
-    'Name ASC',
-    'Name DESC',
-    'Type ASC',
-    'Type DESC',
-    'Updated ASC',
-    'Updated DESC',
-    'Created ASC',
-    'Created DESC',
-  ];
+const Options = [
+  'Name ASC',
+  'Name DESC',
+  'Type ASC',
+  'Type DESC',
+  'Updated ASC',
+  'Updated DESC',
+  'Created ASC',
+  'Created DESC',
+];
 
-  static Sort(type, items) {
-    const sorter = Sort.GetSorter(type);
+function Sort(primaryType, secondaryType, items) {
+  if (!items) return items;
 
-    return sorter(items);
-  }
+  const primarySorter = GetSorter(primaryType);
+  const secondarySorter = GetSorter(secondaryType);
+  return items.sort((a, b) => {
+    const sorter = primarySorter(a, b);
 
-  static GetSorter(option) {
-    switch (option) {
-      case Sort.Options[1]:
-        return Sort.NameDESC;
-      case Sort.Options[2]:
-        return Sort.TypeASC;
-      case Sort.Options[3]:
-        return Sort.TypeDESC;
-      case Sort.Options[4]:
-        return Sort.UpdatedASC;
-      case Sort.Options[5]:
-        return Sort.UpdatedDESC;
-      case Sort.Options[6]:
-        return Sort.CreatedASC;
-      case Sort.Options[7]:
-        return Sort.CreatedDESC;
-      default:
-        return Sort.NameASC;
-    }
-  }
+    if (sorter === 0) return secondarySorter(a, b);
+    return sorter;
+  });
+}
 
-  static NameASC(items) {
-    return items.sort((a, b) => {
-      if (a.name < b.name) return -1;
-      if (a.name > b.name) return 1;
-      return 0;
-    });
-  }
-
-  static NameDESC(items) {
-    return items.sort((a, b) => {
-      if (a.name > b.name) return -1;
-      if (a.name < b.name) return 1;
-      return 0;
-    });
-  }
-
-  static TypeASC(items) {
-    return items.sort((a, b) => {
-      if (a.type < b.type) return -1;
-      if (a.type > b.type) return 1;
-      return 0;
-    });
-  }
-
-  static TypeDESC(items) {
-    return items.sort((a, b) => {
-      if (a.type > b.type) return -1;
-      if (a.type < b.type) return 1;
-      return 0;
-    });
-  }
-
-  static UpdatedASC(items) {
-    return items.sort((a, b) => {
-      const dateA = new Date(a.updatedOn).getTime();
-      const dateB = new Date(b.updatedOn).getTime();
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
-      return 0;
-    });
-  }
-
-  static UpdatedDESC(items) {
-    return items.sort((a, b) => {
-      const dateA = new Date(a.updatedOn).getTime();
-      const dateB = new Date(b.updatedOn).getTime();
-      if (dateA > dateB) return -1;
-      if (dateA < dateB) return 1;
-      return 0;
-    });
-  }
-
-  static CreatedASC(items) {
-    return items.sort((a, b) => {
-      const dateA = new Date(a.createdOn).getTime();
-      const dateB = new Date(b.createdOn).getTime();
-      if (dateA < dateB) return -1;
-      if (dateA > dateB) return 1;
-      return 0;
-    });
-  }
-
-  static CreatedDESC(items) {
-    return items.sort((a, b) => {
-      const dateA = new Date(a.createdOn).getTime();
-      const dateB = new Date(b.createdOn).getTime();
-      if (dateA > dateB) return -1;
-      if (dateA < dateB) return 1;
-      return 0;
-    });
+function GetSorter(option) {
+  switch (option) {
+    case Options[1]:
+      return NameDESC;
+    case Options[2]:
+      return TypeASC;
+    case Options[3]:
+      return TypeDESC;
+    case Options[4]:
+      return UpdatedASC;
+    case Options[5]:
+      return UpdatedDESC;
+    case Options[6]:
+      return CreatedASC;
+    case Options[7]:
+      return CreatedDESC;
+    default:
+      return NameASC;
   }
 }
 
-export default Sort;
+function NameASC(a, b) {
+  const nameA = a.name.toLowerCase();
+  const nameB = b.name.toLowerCase();
+  if (nameA < nameB) return -1;
+  if (nameA > nameB) return 1;
+  return 0;
+}
+
+function NameDESC(a, b) {
+  const nameA = a.name.toLowerCase();
+  const nameB = b.name.toLowerCase();
+  if (nameA > nameB) return -1;
+  if (nameA < nameB) return 1;
+  return 0;
+}
+
+function TypeASC(a, b) {
+  if (a.type < b.type) return -1;
+  if (a.type > b.type) return 1;
+  return 0;
+}
+
+function TypeDESC(a, b) {
+  if (a.type > b.type) return -1;
+  if (a.type < b.type) return 1;
+  return 0;
+}
+
+function UpdatedASC(a, b) {
+  const dateA = new Date(a.updatedOn).getTime();
+  const dateB = new Date(b.updatedOn).getTime();
+  if (dateA < dateB) return -1;
+  if (dateA > dateB) return 1;
+  return 0;
+}
+
+function UpdatedDESC(a, b) {
+  const dateA = new Date(a.updatedOn).getTime();
+  const dateB = new Date(b.updatedOn).getTime();
+  if (dateA > dateB) return -1;
+  if (dateA < dateB) return 1;
+  return 0;
+}
+
+function CreatedASC(a, b) {
+  const dateA = new Date(a.createdOn).getTime();
+  const dateB = new Date(b.createdOn).getTime();
+  if (dateA < dateB) return -1;
+  if (dateA > dateB) return 1;
+  return 0;
+}
+
+function CreatedDESC(a, b) {
+  const dateA = new Date(a.createdOn).getTime();
+  const dateB = new Date(b.createdOn).getTime();
+  if (dateA > dateB) return -1;
+  if (dateA < dateB) return 1;
+  return 0;
+}
+
+module.exports.Options = Options;
+module.exports.Sort = Sort;
+module.exports.GetSorter = GetSorter;
+module.exports.NameASC = NameASC;
+module.exports.NameDESC = NameDESC;
+module.exports.TypeASC = TypeASC;
+module.exports.TypeDESC = TypeDESC;
+module.exports.UpdatedASC = UpdatedASC;
+module.exports.UpdatedDESC = UpdatedDESC;
+module.exports.CreatedASC = CreatedASC;
+module.exports.CreatedDESC = CreatedDESC;
+
