@@ -10,6 +10,7 @@ import * as models from '../models';
 
 import {
   addContainer,
+  deleteContainer,
 } from '../modules/content-actions';
 
 import ContentListItem from '../components/ContentListItem';
@@ -18,9 +19,10 @@ import AddContainer from '../components/AddContainer';
 export class ContentList extends Component {
   render() {
     const {
+      addContainer,
       content,
       childContent,
-      addContainer,
+      deleteContainer,
     } = this.props;
 
     return (
@@ -30,13 +32,14 @@ export class ContentList extends Component {
           addContainer={addContainer}
         />
         <hr />
-        { childContent.map(ContentList.renderContentItem) }
+        { childContent.map(ContentList.renderContentItem(deleteContainer)) }
       </div>
     );
   }
 }
 
 ContentList.propTypes = {
+  addContainer: PropTypes.func.isRequired,
   content: PropTypes.oneOfType([
     PropTypes.instanceOf(models.Folder),
     PropTypes.instanceOf(models.Playlist)
@@ -47,19 +50,22 @@ ContentList.propTypes = {
       PropTypes.instanceOf(models.Playlist)
     ])
   ),
+  deleteContainer: PropTypes.func.isRequired,
   match: PropTypes.shape({
     url: PropTypes.string.isRequired
   }).isRequired,
-  addContainer: PropTypes.func.isRequired
 };
 
-ContentList.renderContentItem = ci => {
-  return (
-    <ContentListItem
-      key={`${ci.name}_${ci.type}`}
-      item={ci}
-    />
-  );
+ContentList.renderContentItem = (deleteContainer) => {
+  return ci => {
+    return (
+      <ContentListItem
+        key={`${ci.name}_${ci.type}`}
+        item={ci}
+        deleteContainer={deleteContainer}
+      />
+    );
+  };
 };
 
 export default connect(
@@ -67,7 +73,8 @@ export default connect(
     childContent: getChildContent(state, props)
   }),
   dispatch => bindActionCreators({
-    addContainer
+    addContainer,
+    deleteContainer,
   }, dispatch)
 )(ContentList);
 

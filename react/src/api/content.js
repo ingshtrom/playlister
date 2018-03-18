@@ -260,3 +260,25 @@ export async function deleteMedia(id) {
   }
 }
 
+export async function deleteContainer(id) {
+  try {
+    console.log('starting api.deleteContainer', id);
+
+    const fetchResult = await fetch(`/api/containers/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (fetchResult.status === 500) {
+      throw new Error('Unknown error deleting container');
+    }
+
+    if (fetchResult.status === 400) {
+      const body = await fetchResult.json();
+      throw new Error(body.error);
+    }
+  } catch (err) {
+    console.error('api.deleteContainer error', err);
+    throw err;
+  }
+}
+

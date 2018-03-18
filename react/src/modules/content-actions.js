@@ -22,6 +22,13 @@ export function addContainer(parentId, name, fullPath, type) {
   };
 }
 
+export function deleteContainer(id) {
+  return {
+    type: 'DELETE_CONTAINER_REQUEST',
+    id
+  };
+}
+
 export function addMedia(playlistId, name, playlistIndex, type, file) {
   return {
     type: 'ADD_MEDIA_REQUEST',

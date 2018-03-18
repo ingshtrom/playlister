@@ -13,12 +13,14 @@ export default function contentReducer(state = defaultState, action) {
     case 'ADD_CONTAINER_REQUEST':
     case 'ADD_MEDIA_REQUEST':
     case 'DELETE_MEDIA_REQUEST':
+    case 'DELETE_CONTAINER_REQUEST':
       return handleRequest(state, action);
 
     case 'GET_CONTENT_FAILURE':
     case 'ADD_CONTAINER_FAILURE':
     case 'ADD_MEDIA_FAILURE':
     case 'DELETE_MEDIA_FAILURE':
+    case 'DELETE_CONTAINER_FAILURE':
       return handleFailure(state, action);
 
     case 'GET_CONTENT_SUCCESS':
@@ -41,6 +43,9 @@ export default function contentReducer(state = defaultState, action) {
 
     case 'DELETE_MEDIA_SUCCESS':
       return deleteMediaSuccess(state, action);
+
+    case 'DELETE_CONTAINER_SUCCESS':
+      return deleteContainerSuccess(state, action);
 
     default:
       return state;
@@ -159,7 +164,7 @@ function moveMediaUpRequest(state, action) {
 }
 
 function deleteMediaSuccess(state, action) {
-  return state /* .deleteIn(['media', action.id]) */
+  return state
     .set('isLoading', false)
     .updateIn(['media'], media => {
       let media1 = media.find(mediaItem => mediaItem.get('id') === action.id);
@@ -180,5 +185,15 @@ function deleteMediaSuccess(state, action) {
 
       return media.mergeDeep(mediaInPlaylist);
     });
+}
+
+function deleteContainerSuccess(state, action) {
+  return state
+    .updateIn(['data'], containers => {
+      const containerToDelete = containers.find(c => c.id === action.id);
+
+      return containers.delete(containerToDelete.get('fullPath'));
+    })
+    .set('isLoading', false);
 }
 

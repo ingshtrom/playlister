@@ -80,7 +80,18 @@ export function* deleteMedia(action) {
     yield call(reorderMedia, { id: action.id });
     yield put({ type: 'DELETE_MEDIA_SUCCESS', id: action.id });
   } catch (e) {
-    console.error('Error getting content', e);
+    console.error('Error deleting media', e);
     yield put({ type: 'DELETE_MEDIA_FAILURE', errorMessage: 'Could not delete media' });
   }
 }
+
+export function* deleteContainer(action) {
+  try {
+    yield call(api.deleteContainer, action.id);
+    yield put({ type: 'DELETE_CONTAINER_SUCCESS', id: action.id });
+  } catch (e) {
+    console.error('Error deleting container', e);
+    yield put({ type: 'DELETE_CONTAINER_FAILURE', errorMessage: 'Could not delete container' });
+  }
+}
+
