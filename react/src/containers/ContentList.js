@@ -6,6 +6,7 @@ import { bindActionCreators } from 'redux';
 import { List } from 'immutable';
 
 import { normalizeRootUrl } from '../util/url';
+import Sort from '../util/sort';
 import * as models from '../models';
 
 import {
@@ -15,8 +16,23 @@ import {
 
 import ContentListItem from '../components/ContentListItem';
 import AddContainer from '../components/AddContainer';
+import ContentSorter from '../components/ContentSorter';
 
 export class ContentList extends Component {
+  constructor(props) {
+    super(props);
+
+    this.setSort = this.setSort.bind(this);
+
+    this.state = {
+      sort: Sort.Options[0]
+    };
+  }
+
+  setSort(sort) {
+    this.setState({ sort });
+  }
+
   render() {
     const {
       addContainer,
@@ -25,6 +41,8 @@ export class ContentList extends Component {
       deleteContainer,
     } = this.props;
 
+    const sortedChildContent = Sort.Sort(childContent);
+
     return (
       <div>
         <AddContainer
@@ -32,7 +50,10 @@ export class ContentList extends Component {
           addContainer={addContainer}
         />
         <hr />
-        { childContent.map(ContentList.renderContentItem(deleteContainer)) }
+        <ContentSorter setSort={this.setSort} options={Sort.Options} selectedSort={this.state.sort} />
+        <div className='list-group'>
+          { sortedChildContent.map(ContentList.renderContentItem(deleteContainer)) }
+        </div>
       </div>
     );
   }
