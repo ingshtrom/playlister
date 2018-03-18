@@ -46,9 +46,10 @@ export default class AddMedia extends React.Component {
     const file = event.target.files[0];
 
     reader.onloadend = () => {
-      this.setState({
+      this.setState(prevState => ({
         file: file,
-      });
+        name: prevState.name || file.name.replace(/\.[^/.]+$/, '')
+      }));
     }
 
     reader.readAsDataURL(file)
