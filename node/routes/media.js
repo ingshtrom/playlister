@@ -56,6 +56,38 @@ router.post('/media/:id/upload', require('../middleware/formidable')(), async (r
   }
 });
 
+router.put('/media/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) return res.status(400).json({ error: 'No id specified' });
+
+    const body = req.body;
+
+    if (typeof body.id !== 'undefined') return res.status(400).json({ error: 'Cannot set the id column' });
+    if (typeof body.updatedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the updatedAt column' });
+    if (typeof body.createdAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the createdAt column' });
+    if (typeof body.deletedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the deletedAt column' });
+
+    const { Media } = req.app.get('db').models;
+    const media = await Media.find({
+      where: {
+        id
+      }
+    });
+
+    if (!media) return res.status(404).json({ error: 'Could not find media item' });
+
+    media.name = body.name;
+    await media.save();
+
+    res.status(200).json(media);
+  } catch (err) {
+    console.error('Error creating media', err);
+    next(err);
+  }
+});
+
 router.delete('/media/:id', async (req, res, next) => {
   try {
     const id = req.params.id;

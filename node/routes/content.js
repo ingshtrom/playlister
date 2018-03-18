@@ -65,6 +65,40 @@ router.delete('/containers/:id', async (req, res, next) => {
   }
 });
 
+router.put('/containers/:id', async (req, res, next) => {
+  try {
+    const id = req.params.id;
+
+    if (!id) return res.status(400).json({ error: 'No id specified' });
+
+    const body = req.body;
+
+    if (typeof body.isLocked !== 'undefined') return res.status(400).json({ error: 'Cannot set the isLocked column' });
+    if (typeof body.id !== 'undefined') return res.status(400).json({ error: 'Cannot set the id column' });
+    if (typeof body.updatedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the updatedAt column' });
+    if (typeof body.createdAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the createdAt column' });
+    if (typeof body.deletedAt !== 'undefined') return res.status(400).json({ error: 'Cannot set the deletedAt column' });
+
+    const { Container } = req.app.get('db').models;
+    const container = await Container.find({
+      where: {
+        id,
+        isLocked: false
+      }
+    });
+
+    if (!container) return res.status(404).json({ error: 'Could not find container' });
+
+    container.name = body.name;
+    await container.save();
+
+    res.status(200).json(container);
+  } catch (err) {
+    console.error('Error creating container', err);
+    next(err);
+  }
+});
+
 // GET container contents by container id
 router.get('/containers/:id', async (req, res, next) => {
   try {
