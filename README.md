@@ -43,3 +43,10 @@ SSH in to server and run:
 - docker-compose.yml          => local docker compose file
 - docker-stack-production.yml => production compose file for using Docker Swarm
 - Vagrantfile                 => used for testing out VM config localy
+
+
+# TODO
+[] add authentication via Auth0 or something
+[] add a progress bar of some sort for uploading media
+[] some sort of odd bug where you delete a media item and it shows up in the parent container list after using the back button to navigate?
+[] make the breadcrumbs clickable

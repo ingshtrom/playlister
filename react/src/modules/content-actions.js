@@ -68,3 +68,19 @@ export function deleteMedia(id) {
   };
 }
 
+export function updateContainer(id, containerUpdates) {
+  return {
+    type: 'UPDATE_CONTAINER_REQUEST',
+    id,
+    containerUpdates
+  };
+}
+
+export function updateMedia(id, mediaUpdates) {
+  return {
+    type: 'UPDATE_MEDIA_REQUEST',
+    id,
+    mediaUpdates
+  };
+}
+

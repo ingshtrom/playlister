@@ -89,6 +89,7 @@ router.put('/containers/:id', async (req, res, next) => {
 
     if (!container) return res.status(404).json({ error: 'Could not find container' });
 
+    container.fullPath = container.fullPath.replace(new RegExp(`/${container.name}$`), `/${body.name}`);
     container.name = body.name;
     await container.save();
 

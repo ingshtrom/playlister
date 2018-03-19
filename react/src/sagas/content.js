@@ -95,3 +95,23 @@ export function* deleteContainer(action) {
   }
 }
 
+export function* updateContainer(action) {
+  try {
+    const data = yield call(api.updateContainer, action.id, action.containerUpdates);
+    yield put({ type: 'UPDATE_CONTAINER_SUCCESS', data });
+  } catch (e) {
+    console.error('Error updating container', e);
+    yield put({ type: 'UPDATE_CONTAINER_FAILURE', errorMessage: 'Could not update container' });
+  }
+}
+
+export function* updateMedia(action) {
+  try {
+    const data = yield call(api.updateMedia, action.id, action.mediaUpdates);
+    yield put({ type: 'UPDATE_MEDIA_SUCCESS', data });
+  } catch (e) {
+    console.error('Error updating media', e);
+    yield put({ type: 'UPDATE_MEDIA_FAILURE', errorMessage: 'Could not update media' });
+  }
+}
+

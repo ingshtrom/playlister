@@ -7,6 +7,7 @@ import ImageFileIcon from 'react-icons/lib/fa/file-image-o';
 import VideoFileIcon from 'react-icons/lib/fa/file-movie-o';
 import DownloadIcon from 'react-icons/lib/fa/cloud-download';
 import TrashIcon from 'react-icons/lib/fa/trash-o';
+import PencilIcon from 'react-icons/lib/fa/pencil';
 
 import * as models from '../models';
 
@@ -22,6 +23,7 @@ export default class MediaList extends React.Component {
     moveDown: PropTypes.func.isRequired,
     moveUp: PropTypes.func.isRequired,
     togglePreview: PropTypes.func.isRequired,
+    updateMedia: PropTypes.func.isRequired,
   }
 
   constructor(props) {
@@ -32,6 +34,19 @@ export default class MediaList extends React.Component {
     this.renderMediaItem                   = this.renderMediaItem.bind(this);
     this.renderMediaPreview                = this.renderMediaPreview.bind(this);
     this.renderMediaItemConditionalToolbar = this.renderMediaItemConditionalToolbar.bind(this);
+    this.renameMedia                       = this.renameMedia.bind(this);
+  }
+
+  renameMedia(item) {
+    const { updateMedia } = this.props;
+
+    return event => {
+      event.preventDefault();
+
+
+      const newName = prompt('Please enter new name:', item.name);
+      if (newName) updateMedia(item.id, { name: newName });
+    };
   }
 
   renderMediaPreview(preview, type, url, alt) {
@@ -128,6 +143,10 @@ export default class MediaList extends React.Component {
             <span className='align-middle ml-3'>
               {item.name}
             </span>
+            <PencilIcon
+              className='text-primary ml-1'
+              onClick={this.renameMedia(item)}
+            />
           </div>
           <div className='btn-toolbar'>
             { this.renderMediaItemConditionalToolbar(item) }

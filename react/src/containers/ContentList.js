@@ -12,6 +12,7 @@ import * as models from '../models';
 import {
   addContainer,
   deleteContainer,
+  updateContainer,
 } from '../modules/content-actions';
 
 import ContentListItem from '../components/ContentListItem';
@@ -45,6 +46,7 @@ export class ContentList extends Component {
       content,
       childContent,
       deleteContainer,
+      updateContainer,
     } = this.props;
 
     const sortedChildContent = Sort.Sort(this.state.sort, this.state.secondarySort, childContent);
@@ -64,7 +66,7 @@ export class ContentList extends Component {
           setSecondarySort={this.setSecondarySort}
         />
         <div className='list-group'>
-          { sortedChildContent.map(ContentList.renderContentItem(deleteContainer)) }
+          { sortedChildContent.map(ContentList.renderContentItem(deleteContainer, updateContainer)) }
         </div>
       </div>
     );
@@ -87,15 +89,17 @@ ContentList.propTypes = {
   match: PropTypes.shape({
     url: PropTypes.string.isRequired
   }).isRequired,
+  updateContainer: PropTypes.func.isRequired,
 };
 
-ContentList.renderContentItem = (deleteContainer) => {
+ContentList.renderContentItem = (deleteContainer, updateContainer) => {
   return ci => {
     return (
       <ContentListItem
         key={`${ci.name}_${ci.type}`}
         item={ci}
         deleteContainer={deleteContainer}
+        updateContainer={updateContainer}
       />
     );
   };
@@ -108,6 +112,7 @@ export default connect(
   dispatch => bindActionCreators({
     addContainer,
     deleteContainer,
+    updateContainer,
   }, dispatch)
 )(ContentList);
 

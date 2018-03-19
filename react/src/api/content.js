@@ -282,3 +282,75 @@ export async function deleteContainer(id) {
   }
 }
 
+export async function updateContainer(id, containerUpdates) {
+  try {
+    console.log('starting api.updateContainer', id, containerUpdates);
+
+    const fetchResult = await fetch(`/api/containers/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(containerUpdates),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (fetchResult.status === 500) {
+      throw new Error('Unknown error updating container');
+    }
+
+    if (fetchResult.status === 400) {
+      const body = await fetchResult.json();
+      throw new Error(body.error);
+    }
+
+    const body = await fetchResult.json();
+
+    console.log('api.updateContainer done!', body);
+
+    if (body.type === 'PLAYLIST') {
+      return new models.Playlist(body);
+    }
+
+    return new models.Folder(body);
+  } catch (err) {
+    console.error('api.updateContainer error', err);
+    throw err;
+  }
+}
+
+export async function updateMedia(id, mediaUpdates) {
+  try {
+    console.log('starting api.updateMedia', id, mediaUpdates);
+
+    const fetchResult = await fetch(`/api/media/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(mediaUpdates),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (fetchResult.status === 500) {
+      throw new Error('Unknown error updating media');
+    }
+
+    if (fetchResult.status === 400) {
+      const body = await fetchResult.json();
+      throw new Error(body.error);
+    }
+
+    const body = await fetchResult.json();
+
+    console.log('api.updateMedia done!', body);
+
+    if (body.type === 'IMAGE') {
+      return new models.Image(body);
+    }
+
+    return new models.Video(body);
+  } catch (err) {
+    console.error('api.updateMedia error', err);
+    throw err;
+  }
+}
+

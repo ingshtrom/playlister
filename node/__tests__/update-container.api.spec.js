@@ -142,23 +142,24 @@ test('PUT /containers/:id updates the name of a Container successfully', async (
   const { Container } = db.models;
   expect.assertions(2);
 
-  const [name] = RM.genContainerNames(1);
+  const [name1, name2] = RM.genContainerNames(2);
 
   let container = await Container.create({
     id: uuid(),
-    name: 'foobar',
-    fullPath: `/${name}`,
+    name: name1,
+    fullPath: `/${name1}`,
     isLocked: false
   });
 
-  const res = await http.put(`${baseUrl}/containers/${container.id}`, { name });
+  const res = await http.put(`${baseUrl}/containers/${container.id}`, { name: name2 });
 
   expect(res.status).toEqual(200);
 
   const body = await res.json();
   expect(body).toMatchObject(
     expect.objectContaining({
-      name: name,
+      name: name2,
+      fullPath: `/${name2}`
     })
   );
 });

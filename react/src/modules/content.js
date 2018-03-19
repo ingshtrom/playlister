@@ -12,15 +12,19 @@ export default function contentReducer(state = defaultState, action) {
     case 'GET_CONTENT_REQUEST':
     case 'ADD_CONTAINER_REQUEST':
     case 'ADD_MEDIA_REQUEST':
-    case 'DELETE_MEDIA_REQUEST':
     case 'DELETE_CONTAINER_REQUEST':
+    case 'DELETE_MEDIA_REQUEST':
+    case 'UPDATE_CONTAINER_REQUEST':
+    case 'UPDATE_MEDIA_REQUEST':
       return handleRequest(state, action);
 
     case 'GET_CONTENT_FAILURE':
     case 'ADD_CONTAINER_FAILURE':
     case 'ADD_MEDIA_FAILURE':
-    case 'DELETE_MEDIA_FAILURE':
     case 'DELETE_CONTAINER_FAILURE':
+    case 'DELETE_MEDIA_FAILURE':
+    case 'UPDATE_CONTAINER_FAILURE':
+    case 'UPDATE_MEDIA_FAILURE':
       return handleFailure(state, action);
 
     case 'GET_CONTENT_SUCCESS':
@@ -46,6 +50,12 @@ export default function contentReducer(state = defaultState, action) {
 
     case 'DELETE_CONTAINER_SUCCESS':
       return deleteContainerSuccess(state, action);
+
+    case 'UPDATE_CONTAINER_SUCCESS':
+      return updateContainerSuccess(state, action);
+
+    case 'UPDATE_MEDIA_SUCCESS':
+      return updateMediaSuccess(state, action);
 
     default:
       return state;
@@ -193,6 +203,48 @@ function deleteContainerSuccess(state, action) {
       const containerToDelete = containers.find(c => c.id === action.id);
 
       return containers.delete(containerToDelete.get('fullPath'));
+    })
+    .set('isLoading', false);
+}
+
+function updateContainerSuccess(state, action) {
+  return state
+    .updateIn(['data'], containers => {
+      const containerToUpdate = containers.find(c => c.id === action.data.id);
+      const parentContainer = containers.find(c => c.id === containerToUpdate.parentId);
+
+      return containers
+        .deleteIn([containerToUpdate.fullPath])
+        .set(action.data.fullPath, action.data)
+        .updateIn([parentContainer.fullPath, 'content'], content => {
+          return content
+            .filter(i => i !== containerToUpdate.name)
+            .push(action.data.name);
+        });
+    })
+    .set('isLoading', false);
+}
+
+function updateMediaSuccess(state, action) {
+  return state
+    .updateIn(['media', action.data.id.toString()], media => {
+      return media.merge(action.data);
+    })
+    .set('isLoading', false);
+
+  const parentContainer = state.data.find(c => c.id === action.data.containerId);
+
+  return state
+    .updateIn(['media'], media => {
+      return media
+        .updateIn(['media', action.id.toString()], media => {
+          return media.merge(action.data);
+        })
+    })
+    .updateIn([parentContainer.fullPath, 'mediaContent'], content => {
+      return content
+        .filter(i => i !== action.data.id)
+        .push(action.data.id);
     })
     .set('isLoading', false);
 }

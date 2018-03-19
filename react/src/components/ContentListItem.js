@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PlaylistIcon from 'react-icons/lib/fa/list-alt'
 import FolderIcon from 'react-icons/lib/fa/folder-o'
 import TrashIcon from 'react-icons/lib/fa/trash-o';
+import PencilIcon from 'react-icons/lib/fa/pencil';
 
 import FolderModel from '../models/Folder';
 import PlaylistModel from '../models/Playlist';
@@ -14,13 +15,15 @@ class ContentListItem extends Component {
     item: PropTypes.oneOfType([
       PropTypes.instanceOf(FolderModel),
       PropTypes.instanceOf(PlaylistModel)
-    ]).isRequired
+    ]).isRequired,
+    updateContainer: PropTypes.func.isRequired,
   }
 
   constructor(props) {
     super(props);
 
     this.deleteContainer = this.deleteContainer.bind(this);
+    this.renameContainer = this.renameContainer.bind(this);
   }
 
   deleteContainer(event) {
@@ -30,6 +33,15 @@ class ContentListItem extends Component {
     const confirmation = confirm(`Delete ${item.type} '${item.name}'`); // eslint-disable-line
 
     if (confirmation) this.props.deleteContainer(item.id);
+  }
+
+  renameContainer(event) {
+    event.preventDefault();
+
+    const { item, updateContainer } = this.props;
+
+    const newName = prompt('Please enter new name:', item.name);
+    if (newName) updateContainer(item.id, { name: newName });
   }
 
   render() {
@@ -46,6 +58,10 @@ class ContentListItem extends Component {
               <span className='align-middle ml-3'>
                 {item.name}
               </span>
+              <PencilIcon
+                className='text-primary ml-1'
+                onClick={this.renameContainer}
+              />
             </div>
             <div className='btn-toolbar'>
               <div className='btn-group btn-group-sm ml-1'>
