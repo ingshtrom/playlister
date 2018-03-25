@@ -106,7 +106,7 @@ router.put('/containers/:id', async (req, res, next) => {
     await container.save();
 
     for (let i = 0; i < container.content.length; i++) {
-      container.content[i].save();
+      await container.content[i].save();
     }
 
     res.status(200).json(container);

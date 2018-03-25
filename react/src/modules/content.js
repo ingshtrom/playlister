@@ -201,8 +201,11 @@ function deleteContainerSuccess(state, action) {
   return state
     .updateIn(['data'], containers => {
       const containerToDelete = containers.find(c => c.id === action.id);
+      const parentContainer = containers.find(c => c.id === containerToDelete.parentId);
 
-      return containers.delete(containerToDelete.get('fullPath'));
+      return containers
+        .delete(containerToDelete.get('fullPath'))
+        .updateIn([parentContainer.fullPath, 'content'], content => content.filter(cid => cid !== containerToDelete.name));
     })
     .set('isLoading', false);
 }

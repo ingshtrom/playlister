@@ -164,3 +164,40 @@ test('PUT /containers/:id updates the name of a Container successfully', async (
   );
 });
 
+test('PUT /containers/:id updates the fullPath of Container content successfully', async () => {
+  const { Container } = db.models;
+  expect.assertions(3);
+
+  const [parentName, newParentName, childName] = RM.genContainerNames(3);
+
+  let container = await Container.create({
+    id: uuid(),
+    name: parentName,
+    fullPath: `/${parentName}`,
+    isLocked: false
+  });
+  let child = await Container.create({
+    id: uuid(),
+    name: childName,
+    fullPath: `/${parentName}/${childName}`,
+    isLocked: false,
+    parentId: container.id
+  });
+
+
+  const res = await http.put(`${baseUrl}/containers/${container.id}`, { name: newParentName });
+
+  expect(res.status).toEqual(200);
+
+  const body = await res.json();
+  expect(body).toMatchObject(
+    expect.objectContaining({
+      name: newParentName,
+      fullPath: `/${newParentName}`
+    })
+  );
+
+  child = await Container.find({ where: { id: child.id }});
+  expect(child.fullPath).toEqual(`/${newParentName}/${childName}`);
+});
+
