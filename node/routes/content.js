@@ -50,7 +50,7 @@ router.delete('/containers/:id', async (req, res, next) => {
         model: Container,
         as: 'content'
       }, {
-        mode: Media,
+        model: Media,
         as: 'mediaContent'
       }]
     });
@@ -84,14 +84,30 @@ router.put('/containers/:id', async (req, res, next) => {
       where: {
         id,
         isLocked: false
-      }
+      },
+      include: [
+        {
+          model: Container,
+          as: 'content'
+        }
+      ]
     });
 
     if (!container) return res.status(404).json({ error: 'Could not find container' });
 
     container.fullPath = container.fullPath.replace(new RegExp(`/${container.name}$`), `/${body.name}`);
+
+    container.content = container.content.map(child => {
+      child.fullPath = `${container.fullPath}/${child.name}`
+      return child;
+    });
+
     container.name = body.name;
     await container.save();
+
+    for (let i = 0; i < container.content.length; i++) {
+      container.content[i].save();
+    }
 
     res.status(200).json(container);
   } catch (err) {
