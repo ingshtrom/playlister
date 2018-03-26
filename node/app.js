@@ -1,9 +1,29 @@
 const express = require('express');
-const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const jwt = require('express-jwt');
+// const jwtAuthz = require('express-jwt-authz');
+const jwksRsa = require('jwks-rsa');
+
+const contentRoutes = require('./routes/content');
+const mediaRoutes = require('./routes/media');
+
 const { getDbInstance } = require('./services/mysql');
+
+const checkJwt = jwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://northview-playlister.auth0.com/.well-known/jwks.json',
+  }),
+
+  // Validate the audience and the issuer.
+  // audience: 'playlister-api',
+  issuer: 'https://northview-playlister.auth0.com/',
+  algorithms: ['RS256'],
+});
 
 module.exports.getApp = async function getApp() {
   const app = express();
@@ -13,14 +33,15 @@ module.exports.getApp = async function getApp() {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(cookieParser());
 
-  app.use(require('./routes/content'));
-  app.use(require('./routes/media'));
+  app.use(checkJwt);
+  app.use(contentRoutes);
+  app.use(mediaRoutes);
 
   // set the app sequelize instance onto the express global context
   app.set('db', await getDbInstance());
 
   // catch 404 and forward to error handler
-  app.use(function(req, res, next) {
+  app.use((req, res, next) => {
     const err = new Error('Not Found');
     err.status = 404;
     console.error('Could not find a route for request', req.path);
@@ -28,7 +49,7 @@ module.exports.getApp = async function getApp() {
   });
 
   // error handler
-  app.use(function(err, req, res, next) {
+  app.use((err, req, res) => {
     res.locals.message = err.message;
     res.locals.error = err;
 
@@ -38,7 +59,7 @@ module.exports.getApp = async function getApp() {
       console.error(
         'HEY! YOU! Check this out! So the error handler in ExpressJS was triggered, ' +
         'but somehow the response has already been sent!! WTF MATE! I highly recommend ' +
-        'you check out who is sending responses but also triggering errors'
+        'you check out who is sending responses but also triggering errors',
       );
       return;
     }

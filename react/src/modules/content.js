@@ -234,21 +234,5 @@ function updateMediaSuccess(state, action) {
       return media.merge(action.data);
     })
     .set('isLoading', false);
-
-  const parentContainer = state.data.find(c => c.id === action.data.containerId);
-
-  return state
-    .updateIn(['media'], media => {
-      return media
-        .updateIn(['media', action.id.toString()], media => {
-          return media.merge(action.data);
-        })
-    })
-    .updateIn([parentContainer.fullPath, 'mediaContent'], content => {
-      return content
-        .filter(i => i !== action.data.id)
-        .push(action.data.id);
-    })
-    .set('isLoading', false);
 }
 

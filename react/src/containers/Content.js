@@ -40,11 +40,30 @@ export class Content extends React.Component {
 
   render() {
     const {
+      auth,
       content,
       errorMessage,
       isLoading,
       match,
     } = this.props;
+
+    if (!auth.isAuthenticated()) {
+      return (
+        <div
+          className='alert alert-warning text-center'
+        >
+          You are not logged in! Please{' '}
+          <a // eslint-disable-line
+            href='#'
+            className='alert-link'
+            onClick={auth.login.bind(auth)}
+          >
+            Log In
+          </a>
+          {' '}to continue.
+        </div>
+      );
+    }
 
     const MainComponent = Content.getComponentToLoad(content);
 

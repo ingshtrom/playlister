@@ -9,7 +9,7 @@ export function* getContent(action) {
     yield put({ type: 'GET_CONTENT_SUCCESS', data });
   } catch (e) {
     console.error('Error getting content', e);
-    yield put({ type: 'GET_CONTENT_FAILURE', errorMessage: 'Could not find content' });
+    yield put({ type: 'GET_CONTENT_FAILURE', errorMessage: e.message || 'Could not find content' });
   }
 }
 
@@ -19,7 +19,7 @@ export function* getMedia(action) {
     yield put({ type: 'GET_MEDIA_SUCCESS', data });
   } catch (e) {
     console.error('Error getting media', e);
-    yield put({ type: 'GET_MEDIA_FAILURE', errorMessage: 'Could not find media' });
+    yield put({ type: 'GET_MEDIA_FAILURE', errorMessage: e.message || 'Could not find media' });
   }
 }
 
@@ -29,7 +29,7 @@ export function* addContainer(action) {
     yield put({ type: 'ADD_CONTAINER_SUCCESS', data });
   } catch (e) {
     console.error('Error getting content', e);
-    yield put({ type: 'ADD_CONTAINER_FAILURE', errorMessage: 'Could not add container' });
+    yield put({ type: 'ADD_CONTAINER_FAILURE', errorMessage: e.message || 'Could not add container' });
   }
 }
 
@@ -39,7 +39,7 @@ export function* addMedia(action) {
     yield put({ type: 'ADD_MEDIA_SUCCESS', data });
   } catch (e) {
     console.error('Error getting content', e);
-    yield put({ type: 'ADD_MEDIA_FAILURE', errorMessage: 'Could not add media' });
+    yield put({ type: 'ADD_MEDIA_FAILURE', errorMessage: e.message || 'Could not add media' });
   }
 }
 
@@ -64,13 +64,11 @@ export function* reorderMedia(action) {
       return { playlistId: mediaItem.get('containerId'), orderedMedia };
     });
 
-    console.log('FOOBAZFJDKSA', reorderedPlaylistData);
-
     yield call(api.reorderMedia, reorderedPlaylistData.playlistId, reorderedPlaylistData.orderedMedia);
     yield put({ type: 'REORDER_MEDIA_SUCCESS' });
-  } catch (err) {
-    console.error('Error reordering media in saga', err);
-    yield put({ type: 'REORDER_MEDIA_FAILURE', errorMessage: 'Could not persist playlist ordering to the server. Please, try again' });
+  } catch (e) {
+    console.error('Error reordering media in saga', e);
+    yield put({ type: 'REORDER_MEDIA_FAILURE', errorMessage: e.message || 'Could not persist playlist ordering to the server. Please, try again' });
   }
 }
 
@@ -81,7 +79,7 @@ export function* deleteMedia(action) {
     yield put({ type: 'DELETE_MEDIA_SUCCESS', id: action.id });
   } catch (e) {
     console.error('Error deleting media', e);
-    yield put({ type: 'DELETE_MEDIA_FAILURE', errorMessage: 'Could not delete media' });
+    yield put({ type: 'DELETE_MEDIA_FAILURE', errorMessage: e.message || 'Could not delete media' });
   }
 }
 
@@ -91,7 +89,7 @@ export function* deleteContainer(action) {
     yield put({ type: 'DELETE_CONTAINER_SUCCESS', id: action.id });
   } catch (e) {
     console.error('Error deleting container', e);
-    yield put({ type: 'DELETE_CONTAINER_FAILURE', errorMessage: 'Could not delete container' });
+    yield put({ type: 'DELETE_CONTAINER_FAILURE', errorMessage: e.message || 'Could not delete container' });
   }
 }
 
@@ -101,7 +99,7 @@ export function* updateContainer(action) {
     yield put({ type: 'UPDATE_CONTAINER_SUCCESS', data });
   } catch (e) {
     console.error('Error updating container', e);
-    yield put({ type: 'UPDATE_CONTAINER_FAILURE', errorMessage: 'Could not update container' });
+    yield put({ type: 'UPDATE_CONTAINER_FAILURE', errorMessage: e.message || 'Could not update container' });
   }
 }
 
@@ -111,7 +109,7 @@ export function* updateMedia(action) {
     yield put({ type: 'UPDATE_MEDIA_SUCCESS', data });
   } catch (e) {
     console.error('Error updating media', e);
-    yield put({ type: 'UPDATE_MEDIA_FAILURE', errorMessage: 'Could not update media' });
+    yield put({ type: 'UPDATE_MEDIA_FAILURE', errorMessage: e.message || 'Could not update media' });
   }
 }
 

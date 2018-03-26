@@ -1,29 +1,22 @@
 import { List, Map } from 'immutable';
 
 import * as models from '../models';
+import Auth from '../services/Auth';
 
-export async function getContainerContent(path) {
-  try {
-    console.log('starting api.getContent');
-    const fetchResult = await fetch(`/api/containers?path=${path}`)
+const auth = new Auth();
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error getting data');
-    }
+async function assertStatusCode(fetchResult) {
+  if (fetchResult.status === 500) {
+    throw new Error('Unknown error getting data');
+  }
 
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
+  if (fetchResult.status === 401) {
+    throw new Error('You are not authorized to perform that action! Please try to login again or contact your administrator.');
+  }
 
+  if (fetchResult.status === 400) {
     const body = await fetchResult.json();
-
-    if (body.type === 'PLAYLIST') return parsePlaylist(body);
-
-    return parseFolder(body);
-  } catch (err) {
-    console.error('api.getContent error', err);
-    throw err;
+    throw new Error(body.error);
   }
 }
 
@@ -78,11 +71,39 @@ function parsePlaylist(body) {
   }
 }
 
+export async function getContainerContent(path) {
+  try {
+    console.log('starting api.getContent');
+    const fetchResult = await fetch(`/api/containers?path=${path}`, {
+      headers: {
+        'Authorization': `Bearer ${auth.getIdToken()}`
+      }
+    })
+
+    await assertStatusCode(fetchResult);
+
+    const body = await fetchResult.json();
+
+    if (body.type === 'PLAYLIST') return parsePlaylist(body);
+
+    return parseFolder(body);
+  } catch (err) {
+    console.error('api.getContent error', err);
+    throw err;
+  }
+}
+
 export async function getMedia(ids) {
   try {
     console.log('starting api.getMedia', ids);
-    const fetchResult = await fetch(`/api/content/media?ids=${ids.join(',')}`)
+    const fetchResult = await fetch(`/api/content/media?ids=${ids.join(',')}`, {
+      headers: {
+        'Authorization': `Bearer ${auth.getIdToken()}`
+      }
+    })
     const body = await fetchResult.json();
+
+    await assertStatusCode(fetchResult);
 
     const media = ids.map(id => {
       const mediaObject = body[id]
@@ -123,18 +144,12 @@ export async function addContainer(parentId, name, fullPath, type) {
         type: type.toUpperCase()
       }),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth.getIdToken()}`,
       }
     });
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error adding container');
-    }
-
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
+    await assertStatusCode(fetchResult);
 
     const body = await fetchResult.json();
 
@@ -168,18 +183,12 @@ export async function addMedia(playlistId, name, playlistIndex, type, file) {
         type: type.toUpperCase()
       }),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth.getIdToken()}`,
       }
     });
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error adding media');
-    }
-
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
+    await assertStatusCode(fetchResult);
 
     const body = await fetchResult.json();
 
@@ -191,14 +200,7 @@ export async function addMedia(playlistId, name, playlistIndex, type, file) {
       body: form
     });
 
-    if (uploadResult.status === 500) {
-      throw new Error('Unknown error adding media');
-    }
-
-    if (uploadResult.status === 400) {
-      const error = await fetchResult.json();
-      throw new Error(error.error);
-    }
+    await assertStatusCode(uploadResult);
 
     console.log('api.addMedia done!', body);
 
@@ -220,18 +222,13 @@ export async function reorderMedia(playlistId, orderedMedia) {
       method: 'PUT',
       body: JSON.stringify(orderedMedia),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth.getIdToken()}`,
       }
     });
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error reordering playlist media');
-    }
+    await assertStatusCode(fetchResult);
 
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
   } catch (err) {
     console.error('api.reorderMedia error', err);
     throw err;
@@ -243,17 +240,13 @@ export async function deleteMedia(id) {
     console.log('starting api.deleteMedia', id);
 
     const fetchResult = await fetch(`/api/media/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${auth.getIdToken()}`,
+      }
     });
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error deleting media');
-    }
-
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
+    await assertStatusCode(fetchResult);
   } catch (err) {
     console.error('api.deleteMedia error', err);
     throw err;
@@ -265,17 +258,13 @@ export async function deleteContainer(id) {
     console.log('starting api.deleteContainer', id);
 
     const fetchResult = await fetch(`/api/containers/${id}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: {
+        'Authorization': `Bearer ${auth.getIdToken()}`,
+      }
     });
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error deleting container');
-    }
-
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
+    await assertStatusCode(fetchResult);
   } catch (err) {
     console.error('api.deleteContainer error', err);
     throw err;
@@ -290,18 +279,12 @@ export async function updateContainer(id, containerUpdates) {
       method: 'PUT',
       body: JSON.stringify(containerUpdates),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth.getIdToken()}`,
       }
     });
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error updating container');
-    }
-
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
+    await assertStatusCode(fetchResult);
 
     const body = await fetchResult.json();
 
@@ -326,18 +309,12 @@ export async function updateMedia(id, mediaUpdates) {
       method: 'PUT',
       body: JSON.stringify(mediaUpdates),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth.getIdToken()}`,
       }
     });
 
-    if (fetchResult.status === 500) {
-      throw new Error('Unknown error updating media');
-    }
-
-    if (fetchResult.status === 400) {
-      const body = await fetchResult.json();
-      throw new Error(body.error);
-    }
+    await assertStatusCode(fetchResult);
 
     const body = await fetchResult.json();
 

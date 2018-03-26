@@ -1,0 +1,12 @@
+---
+extends: airbnb
+
+rules:
+  'no-console': off
+  'function-paren-newline': off
+
+globals:
+  beforeEach: true
+  afterEach: true
+  beforeAll: true
+  afterAll: true
