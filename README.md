@@ -23,7 +23,7 @@ NOTE: I did have to scale down the `prd_api` service to 1 replica in order for i
 
 ## Update Node App
 
-SSH in to server and run:
+SSH in to server, set the environment variable `REACT_APP_AUTH0_LOGIN_CALLBACK_URL` (stage and prod should have it set in `.bashrc`) and run:
 ```
 /opt/playlister/infra/scripts/update_react.sh
 ```
