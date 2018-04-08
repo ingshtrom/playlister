@@ -21,10 +21,15 @@ sudo /usr/bin/git clone -c /opt/playlister https://github.com/ingshtrom/playlist
 
 NOTE: I did have to scale down the `prd_api` service to 1 replica in order for it to have the DNS be refreshed. ¯\_(ツ)_/¯
 
-## Update Node App
+## Update React App
 
-SSH in to server, set the environment variable `REACT_APP_AUTH0_LOGIN_CALLBACK_URL` (stage and prod should have it set in `.bashrc`) and run:
+SSH in to server and run:
 ```
+# only needs to be done the first time
+sudo touch /opt/playlister/react/.env.local
+echo "REACT_APP_AUTH0_LOGIN_CALLBACK_URL=http://<env_url>/callback" >> /opt/playlister/react/.env.local
+
+# run every time after pulling the latest from master
 /opt/playlister/infra/scripts/update_react.sh
 ```
 

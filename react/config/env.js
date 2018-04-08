@@ -65,6 +65,7 @@ function getClientEnvironment(publicUrl) {
     .filter(key => REACT_APP.test(key))
     .reduce(
       (env, key) => {
+        console.log(key, process.env[key]);
         env[key] = process.env[key];
         return env;
       },
