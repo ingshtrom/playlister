@@ -2,25 +2,21 @@ body {
   margin-top: 4em;
 }
 
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
-  opacity: 1;
-}
+/* .loader { */
+/*   border: 16px solid #f3f3f3; */
+/*   border-radius: 50%; */
+/*   border-top: 16px solid #3498db; */
+/*   width: 120px; */
+/*   height: 120px; */
+/*   animation: spin 2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite; */
+/*   opacity: 1; */
+/* } */
 
 .loading-modal {
   position: fixed;
   z-index: 99999;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: gray;
-  opacity: .9;
+  width: 50%;
+  height: 100px;
 }
 
 /* Safari */

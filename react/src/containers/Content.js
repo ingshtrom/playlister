@@ -10,7 +10,6 @@ import { getContent } from '../modules/content-actions';
 
 import Breadcrumbs from '../components/Breadcrumbs';
 import ErrorMessage from '../components/ErrorMessage';
-import Loader from '../components/Loader';
 import Pass from '../components/Pass';
 
 import ContentList from '../containers/ContentList';
@@ -43,7 +42,6 @@ export class Content extends React.Component {
       auth,
       content,
       errorMessage,
-      isLoading,
       match,
     } = this.props;
 
@@ -71,7 +69,6 @@ export class Content extends React.Component {
       <div>
         <Breadcrumbs match={match} />
         <ErrorMessage message={errorMessage} />
-        <Loader isLoading={isLoading} />
 
         <Pass id='content-main-component-pass'>
           <MainComponent match={match} content={content} />
@@ -88,7 +85,6 @@ Content.propTypes = {
   ]),
   errorMessage: PropTypes.string,
   getContent: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
   match: PropTypes.shape({
     url: PropTypes.string.isRequired
   }).isRequired
@@ -112,7 +108,6 @@ export default connect(
   (state, props) => ({
     content: state.content.getIn(['data', props.match.url]),
     errorMessage: state.content.get('errorMessage'),
-    isLoading: state.content.get('isLoading')
   }),
   dispatch => bindActionCreators({
     getContent

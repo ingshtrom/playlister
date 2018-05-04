@@ -197,7 +197,10 @@ export async function addMedia(playlistId, name, playlistIndex, type, file) {
 
     const uploadResult = await fetch(`/api/media/${body.id}/upload`, {
       method: 'POST',
-      body: form
+      body: form,
+      headers: {
+        'Authorization': `Bearer ${auth.getIdToken()}`,
+      }
     });
 
     await assertStatusCode(uploadResult);

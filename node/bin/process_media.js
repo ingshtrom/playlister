@@ -70,7 +70,7 @@ async function processFile(filePath, fileSize, fileType, tries = 0) {
 
     console.time(`${filePath} => db query`);
     const { Media } = dbInstance.models;
-    const media = await Media.find({ where: { id: mediaId }});
+    const media = await Media.find({ where: { id: mediaId } });
     console.timeEnd(`${filePath} => db query`);
 
     if (!media) {
@@ -79,17 +79,13 @@ async function processFile(filePath, fileSize, fileType, tries = 0) {
 
     console.time(`${filePath} => create blob`);
     const newFilename = `${uuid()}${path.extname(filePath)}`;
-    const blob = await createMedia(
+    await createMedia(
       fs.createReadStream(filePath),
       fileSize,
       fileType,
-      newFilename
+      newFilename,
     );
     console.timeEnd(`${filePath} => create blob`);
-
-    console.time(`${filePath} => delete file`);
-    fs.unlinkSync(filePath);
-    console.timeEnd(`${filePath} => delete file`);
 
     console.time(`${filePath} => update media record`);
     media.url = getMediaUrl(newFilename);
@@ -97,7 +93,12 @@ async function processFile(filePath, fileSize, fileType, tries = 0) {
     await media.save();
     console.timeEnd(`${filePath} => update media record`);
 
-    console.time(`${filePath} => processFile`);
+    console.time(`${filePath} => delete file`);
+    fs.unlinkSync(filePath);
+    fs.unlinkSync(`${filePath}.txt`);
+    console.timeEnd(`${filePath} => delete file`);
+
+    console.timeEnd(`${filePath} => processFile`);
   } catch (err) {
     console.error('An error ocurred while trying to process the file. Will try up to 5 times.', err, filePath, fileSize, fileType, tries);
 

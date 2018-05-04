@@ -4,7 +4,8 @@ const defaultState = fromJS({
   data: {},
   media: {},
   errorMessage: '',
-  isLoading: false
+  isLoading: false,
+  loadingProgress: 45,
 });
 
 export default function contentReducer(state = defaultState, action) {
@@ -178,8 +179,8 @@ function deleteMediaSuccess(state, action) {
     .set('isLoading', false)
     .updateIn(['media'], media => {
       let media1 = media.find(mediaItem => mediaItem.get('id') === action.id);
-      let mediaInPlaylist = media
-        .deleteIn([action.id])
+      let mediaWithoutDeletedItem = media.deleteIn([action.id]);
+      let mediaInPlaylist = mediaWithoutDeletedItem
         .filter(mediaItem => mediaItem.get('containerId') === media1.get('containerId'))
         .sort((a, b) => {
           const aIndex = a.playlistIndex;
@@ -193,7 +194,7 @@ function deleteMediaSuccess(state, action) {
         .map((mediaItem, index) => mediaItem.set('playlistIndex', index))
         .reduce((prev, next) => prev.set(next.id, next), new Map());
 
-      return media.mergeDeep(mediaInPlaylist);
+      return mediaWithoutDeletedItem.mergeDeep(mediaInPlaylist);
     });
 }
 

@@ -4,24 +4,32 @@ import classnames from 'classnames';
 
 class Loader extends React.Component {
   render() {
-    const { isLoading } = this.props;
+    const { isLoading, loadingProgress } = this.props;
     const classes = classnames({
-      'content-loader': true,
+      'fixed-bottom': true,
       'loading-modal': true,
-      'justify-content-center': true,
-      'display-none': !isLoading,
+      // 'display-none': !isLoading,
     });
 
     return (
       <div className={classes}>
-        <div className='loader'></div>
+        <div className="progress">
+          <div
+            className="progress-bar progress-bar-striped progress-bar-animated"
+            role="progressbar"
+            aria-valuenow={loadingProgress}
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
       </div>
     );
   }
 }
 
 Loader.propTypes= {
-  isLoading: PropTypes.bool.isRequired
+  isLoading: PropTypes.bool.isRequired,
+  loadingProgress: PropTypes.number.isRequired,
 };
 
 export default Loader;

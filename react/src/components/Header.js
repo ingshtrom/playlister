@@ -1,16 +1,20 @@
 import React, { Component }  from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 class Header extends Component {
   static propTypes = {
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    loadingProgress: PropTypes.number.isRequired,
   }
 
   constructor(props) {
     super(props);
 
     this.renderUser = this.renderUser.bind(this);
+    this.renderLoadingBar = this.renderLoadingBar.bind(this);
   }
 
   renderUser() {
@@ -46,6 +50,27 @@ class Header extends Component {
     );
   }
 
+  renderLoadingBar() {
+    const { isLoading, loadingProgress } = this.props;
+
+    // if (!isLoading) {
+    //   return (null);
+    // }
+
+    return (
+      <div className="progress">
+        <div
+          className="progress-bar progress-bar-striped progress-bar-animated"
+          role="progressbar"
+          aria-valuenow={loadingProgress}
+          aria-valuemin="0"
+          aria-valuemax="100"
+          style={{ width: `${loadingProgress}%` }}
+        ></div>
+      </div>
+    );
+  }
+
   render() {
     return (
       <header>
@@ -54,10 +79,17 @@ class Header extends Component {
 
           {this.renderUser()}
         </nav>
+
+        { this.renderLoadingBar() }
       </header>
     );
   }
 }
 
-export default Header;
+export default connect(
+  state => ({
+    isLoading: state.content.get('isLoading'),
+    loadingProgress: state.content.get('loadingProgress'),
+  }),
+)(Header);
 
